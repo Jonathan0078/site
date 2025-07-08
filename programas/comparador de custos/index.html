@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Comparador de Custos de Manutenção</title>
   <link rel="stylesheet" href="style.css">
+  <script src="grafico.js"></script>
+  <script src="historico.js"></script>
+  <script src="export.js"></script>
+  <script src="ajuda.js"></script>
 </head>
 <body>
   <header>
@@ -17,43 +21,57 @@
       <h2>Entrada de Dados</h2>
       <form id="form-custos">
         <div class="input-group">
-          <label for="custo-parada">Custo de Parada (R$):</label>
+          <label for="custo-parada">Custo de Parada (R$):<span class="ajuda-icone" tabindex="0">❓</span></label>
           <input type="number" id="custo-parada" required placeholder="Ex: 5000">
         </div>
         <div class="input-group">
-          <label for="custo-pecas">Custo de Peças (R$):</label>
+          <label for="custo-pecas">Custo de Peças (R$):<span class="ajuda-icone" tabindex="0">❓</span></label>
           <input type="number" id="custo-pecas" required placeholder="Ex: 1000">
         </div>
         <div class="input-group">
-          <label for="custo-mao-obra">Custo de Mão de Obra (R$):</label>
+          <label for="custo-mao-obra">Custo de Mão de Obra (R$):<span class="ajuda-icone" tabindex="0">❓</span></label>
           <input type="number" id="custo-mao-obra" required placeholder="Ex: 800">
         </div>
         <div class="input-group">
-          <label for="falhas-ano">Frequência de Falhas por Ano:</label>
+          <label for="falhas-ano">Frequência de Falhas por Ano:<span class="ajuda-icone" tabindex="0">❓</span></label>
           <input type="number" id="falhas-ano" required placeholder="Ex: 3">
         </div>
         <div class="input-group">
-          <label for="intervalo-prev">Intervalo de Manutenção Preventiva (meses):</label>
+          <label for="intervalo-prev">Intervalo de Manutenção Preventiva (meses):<span class="ajuda-icone" tabindex="0">❓</span></label>
           <input type="number" id="intervalo-prev" required placeholder="Ex: 6">
         </div>
         <div class="input-group">
-          <label for="custo-prev">Custo da Preventiva (R$):</label>
+          <label for="custo-prev">Custo da Preventiva (R$):<span class="ajuda-icone" tabindex="0">❓</span></label>
           <input type="number" id="custo-prev" required placeholder="Ex: 1500">
+        </div>
+        <div class="input-group">
+          <label for="inflacao">Inflação Anual (%):<span class="ajuda-icone" tabindex="0">❓</span></label>
+          <input type="number" id="inflacao" value="0" min="0" step="0.1" placeholder="Ex: 4">
         </div>
         <button type="submit" id="calcular-btn">Comparar</button>
       </form>
+    </div>
+    <div id="historico-container" style="display:none;margin:24px 0 0 0;">
+      <h2>Histórico de Comparações</h2>
+      <ul id="historico-list" style="padding-left:0;list-style:none;"></ul>
+      <button id="limpar-historico-btn" type="button">Limpar Histórico</button>
+    </div>
+    <div id="simulacao-container" style="display:none;margin:24px 0 0 0;">
+      <h2>Simulação de Cenários</h2>
+      <div id="simulacao-list"></div>
     </div>
 
     <div class="resultado-container hidden" id="resultado-container">
       <h2>Resultado da Comparação</h2>
       <div id="resultado"></div>
       <canvas id="graficoCustos" width="380" height="220" style="display:block;margin:30px auto 0 auto;"></canvas>
-      <button id="exportar-pdf">Exportar Resultado em PDF</button>
+      <div id="tabelaCustos" style="margin:30px auto 0 auto;max-width:420px;"></div>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="simulacao.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

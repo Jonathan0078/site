@@ -85,7 +85,9 @@ h2, h3 {
     background-color: #fff;
 }
 
-#calcular-btn, #exportar-pdf {
+
+/* Padronização global de botões */
+button, .btn, #calcular-btn, #exportar-pdf, #exportar-csv, #limpar-historico-btn {
     width: 100%;
     padding: 1rem;
     font-size: 1.1rem;
@@ -94,20 +96,37 @@ h2, h3 {
     border: none;
     color: white;
     font-weight: bold;
-    background-color: var(--cor-secundaria); /* Alterado para combinar mais com o tema */
-    transition: transform 0.2s ease, background-color 0.2s ease;
+    background-color: var(--cor-secundaria);
+    transition: transform 0.2s, background-color 0.2s;
     margin-top: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    outline: none;
 }
 
-#calcular-btn:hover, #exportar-pdf:hover {
+button:hover, .btn:hover, #calcular-btn:hover, #exportar-pdf:hover, #exportar-csv:hover, #limpar-historico-btn:hover {
     transform: scale(1.02);
-    background-color: var(--cor-destaque); /* Hover para o destaque */
+    background-color: var(--cor-destaque);
     color: var(--cor-primaria);
 }
 
-#exportar-pdf {
-    margin-top: 2rem; /* Espaçamento maior para o botão de exportar */
-    background-color: var(--cor-primaria); /* Cor mais forte para o exportar */
+#exportar-pdf, #exportar-csv {
+    margin-top: 1.2rem;
+    background-color: var(--cor-primaria);
+}
+
+#exportar-pdf:hover, #exportar-csv:hover {
+    background-color: var(--cor-destaque);
+    color: var(--cor-primaria);
+}
+
+#limpar-historico-btn {
+    background-color: var(--cor-erro);
+    color: #fff;
+    margin-top: 0.5rem;
+}
+#limpar-historico-btn:hover {
+    background-color: #b71c1c;
+    color: #fff;
 }
 
 .resultado-container {
