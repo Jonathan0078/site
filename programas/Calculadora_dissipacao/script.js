@@ -1,11 +1,15 @@
 document.getElementById('form-mancal').addEventListener('submit', function(e) {
   e.preventDefault();
 
-  // Esconder resultados e erros anteriores
-  document.getElementById('resultado-container').classList.add('hidden');
-  document.getElementById('erro-container').classList.add('hidden');
-  document.getElementById('resultado-container').classList.remove('dissipacao-elevada', 'dissipacao-moderada', 'dissipacao-baixa');
+  const resultadoContainer = document.getElementById('resultado-container');
+  const erroContainer = document.getElementById('erro-container');
+  const resultadoDisplay = document.getElementById('resultado-display');
 
+  // Esconder resultados e erros anteriores ao iniciar um novo cálculo
+  resultadoContainer.classList.add('hidden');
+  erroContainer.classList.add('hidden');
+  // Remover quaisquer classes de estilo de borda anteriores
+  resultadoContainer.classList.remove('dissipacao-elevada', 'dissipacao-moderada', 'dissipacao-baixa');
 
   const tipoMancal = document.getElementById('tipo-mancal').value;
   const carga = parseFloat(document.getElementById('carga').value);
@@ -18,18 +22,15 @@ document.getElementById('form-mancal').addEventListener('submit', function(e) {
   let C = tipoMancal === 'Rolamento' ? 0.00045 : 0.0009;
   let F = tipoLub === 'Óleo' ? 1.0 : 1.15;
 
-  const resultadoDisplay = document.getElementById('resultado-display');
-  const erroContainer = document.getElementById('erro-container');
-
   // Validação de dados
   if (isNaN(carga) || isNaN(velocidade) || isNaN(tempOper) || isNaN(tempAmb) || carga < 0 || velocidade < 0) {
     erroContainer.innerHTML = 'Preencha todos os campos corretamente com valores numéricos positivos.';
-    erroContainer.classList.remove('hidden');
+    erroContainer.classList.remove('hidden'); // Mostrar o contêiner de erro
     return;
   }
   if (tempOper <= tempAmb) {
     erroContainer.innerHTML = 'A temperatura de operação deve ser maior que a temperatura ambiente.';
-    erroContainer.classList.remove('hidden');
+    erroContainer.classList.remove('hidden'); // Mostrar o contêiner de erro
     return;
   }
 
@@ -42,20 +43,20 @@ document.getElementById('form-mancal').addEventListener('submit', function(e) {
   if (dissipacao > 100) {
     statusMsg = 'Atenção: Dissipação elevada! Verifique lubrificação, refrigeração e condições de operação.';
     statusClass = 'elevada';
-    document.getElementById('resultado-container').classList.add('dissipacao-elevada');
+    resultadoContainer.classList.add('dissipacao-elevada');
   } else if (dissipacao < 10) {
     statusMsg = 'Dissipação baixa. Condições normais.';
     statusClass = 'baixa';
-    document.getElementById('resultado-container').classList.add('dissipacao-baixa');
+    resultadoContainer.classList.add('dissipacao-baixa');
   } else {
     statusMsg = 'Dissipação moderada. Fique atento a variações.';
     statusClass = 'moderada';
-    document.getElementById('resultado-container').classList.add('dissipacao-moderada');
+    resultadoContainer.classList.add('dissipacao-moderada');
   }
 
   resultadoDisplay.innerHTML = `
     <div class="dissipacao-valor">${dissipacao.toFixed(2)} W</div>
     <div class="dissipacao-status ${statusClass}">${statusMsg}</div>
   `;
-  document.getElementById('resultado-container').classList.remove('hidden');
+  resultadoContainer.classList.remove('hidden'); // Mostrar o contêiner de resultado
 });
