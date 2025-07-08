@@ -1,40 +1,115 @@
-    // --- Tema claro/escuro ---
-    const themeToggleBtn = document.getElementById('theme-toggle-btn');
-    const themeIcon = document.getElementById('theme-icon');
-    function setTheme(dark) {
-        if (dark) {
-            document.documentElement.classList.add('dark-theme');
-            localStorage.setItem('aemi_theme', 'dark');
-            if (themeIcon) themeIcon.textContent = 'light_mode';
-        } else {
-            document.documentElement.classList.remove('dark-theme');
-            localStorage.setItem('aemi_theme', 'light');
-            if (themeIcon) themeIcon.textContent = 'dark_mode';
-        }
+// --- Tema claro/escuro ---
+const themeToggleBtn = document.getElementById('theme-toggle-btn');
+const themeIcon = document.getElementById('theme-icon');
+function setTheme(dark) {
+    if (dark) {
+        document.documentElement.classList.add('dark-theme');
+        localStorage.setItem('aemi_theme', 'dark');
+        if (themeIcon) themeIcon.textContent = 'light_mode';
+    } else {
+        document.documentElement.classList.remove('dark-theme');
+        localStorage.setItem('aemi_theme', 'light');
+        if (themeIcon) themeIcon.textContent = 'dark_mode';
     }
-    if (themeToggleBtn) {
-        themeToggleBtn.addEventListener('click', () => {
-            setTheme(!document.documentElement.classList.contains('dark-theme'));
-        });
-    }
-    // Carrega tema salvo
-    const savedTheme = localStorage.getItem('aemi_theme');
-    if (savedTheme === 'dark') setTheme(true);
-    else setTheme(false);
+}
+if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', () => {
+        setTheme(!document.documentElement.classList.contains('dark-theme'));
+    });
+}
+// Carrega tema salvo
+const savedTheme = localStorage.getItem('aemi_theme');
+if (savedTheme === 'dark') setTheme(true);
+else setTheme(false);
 
-    // Sugestões rápidas
-    document.querySelectorAll('.suggestion-btn').forEach(btn => {
-        btn.addEventListener('click', e => {
+// Sugestões rápidas (Se você as tiver no HTML)
+document.querySelectorAll('.suggestion-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+        const chatInput = document.querySelector(".chat-input textarea");
+        if (chatInput) {
             chatInput.value = btn.dataset.msg;
             chatInput.focus();
-        });
+        }
     });
-// script.js - Versão com URL de Backend Dinâmica
+});
 
 
-// script.js - Versão com Sidebar, Animações e Conversas Salvas
+// =================================================================================
+// Início do Bloco Principal do Script
+// =================================================================================
+
 document.addEventListener("DOMContentLoaded", () => {
-    // --- Seletores do DOM ---
+
+    // ==================================================
+    // INÍCIO: NOVO CÓDIGO DO MENU LATERAL (SIDEBAR)
+    // ==================================================
+    const sideMenu = document.getElementById("side-menu");
+    const openMenuBtn = document.getElementById("open-menu-btn");
+    const menuOverlay = document.getElementById("menu-overlay");
+
+    // Verifica se os elementos do menu existem antes de adicionar eventos
+    if (sideMenu && openMenuBtn && menuOverlay) {
+        // Abrir menu via botão
+        openMenuBtn.addEventListener("click", () => {
+            sideMenu.classList.add("open");
+            menuOverlay.classList.add("show"); // Use 'show' ou 'active' dependendo do seu CSS
+        });
+
+        // Fechar menu via overlay
+        menuOverlay.addEventListener("click", () => {
+            sideMenu.classList.remove("open");
+            menuOverlay.classList.remove("show"); // Use 'show' ou 'active' dependendo do seu CSS
+        });
+
+        // Fechar com a tecla 'Escape' para melhor acessibilidade
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && sideMenu.classList.contains('open')) {
+                sideMenu.classList.remove("open");
+                menuOverlay.classList.remove("show");
+            }
+        });
+
+        // Swipe para abrir (mobile)
+        let startX = null;
+        document.addEventListener("touchstart", function(e) {
+            // Pega apenas o primeiro toque
+            if (e.touches.length === 1) {
+                startX = e.touches[0].clientX;
+            }
+        }, { passive: true }); // Otimização para rolagem suave
+
+        document.addEventListener("touchend", function(e) {
+            if (!startX) return; // Se o toque não começou, ignora
+
+            let endX = e.changedTouches[0].clientX;
+            let diffX = endX - startX;
+
+            // Condições para abrir:
+            // 1. O toque inicial foi perto da borda esquerda (startX < 50 pixels)
+            // 2. O deslize foi para a direita e de tamanho suficiente (diffX > 60 pixels)
+            // 3. O menu já não está aberto
+            if (startX < 50 && diffX > 60 && !sideMenu.classList.contains("open")) {
+                sideMenu.classList.add("open");
+                menuOverlay.classList.add("show");
+            }
+
+            // Condições para fechar:
+            // 1. O deslize foi da direita para a esquerda e de tamanho suficiente (diffX < -60 pixels)
+            // 2. O menu está aberto
+            if (diffX < -60 && sideMenu.classList.contains("open")) {
+                sideMenu.classList.remove("open");
+                menuOverlay.classList.remove("show");
+            }
+
+            startX = null; // Reseta a posição inicial do toque
+        });
+    }
+    // ==================================================
+    // FIM: NOVO CÓDIGO DO MENU LATERAL (SIDEBAR)
+    // ==================================================
+
+
+    // --- Seletores do DOM (Restante do código) ---
     const chatInput = document.querySelector(".chat-input textarea");
     const sendChatBtn = document.querySelector("#send-btn");
     const chatbox = document.querySelector(".chatbox");
@@ -75,6 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- UI Sidebar ---
     function renderSidebar() {
         const convs = getConvs();
+        if(!convsList) return; // Segurança caso o elemento não exista
         convsList.innerHTML = "";
         if (convs.length === 0) {
             const li = document.createElement("li");
@@ -100,37 +176,39 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- Conversa Atual ---
     function saveCurrentConv() {
-        if (!currentConvId) return;
+        if (!currentConvId || !chatbox) return;
         const conv = { id: currentConvId, title: getConvTitle(), history: getCurrentHistory() };
         updateConv(currentConvId, conv);
     }
     function getCurrentHistory() {
-        // Extrai mensagens do chatbox
         const lis = chatbox.querySelectorAll("li.chat");
         const history = [];
         lis.forEach(li => {
             const isUser = li.classList.contains("outgoing");
             const text = li.querySelector("p")?.textContent || "";
-            if (text.trim()) {
+            if (text.trim() && !li.querySelector(".typing-animation")) { // Não salva "typing"
                 history.push({ role: isUser ? "user" : "assistant", content: text });
             }
         });
         return history;
     }
     function getConvTitle() {
-        // Usa a primeira mensagem do usuário como título
         const lis = chatbox.querySelectorAll("li.outgoing p");
         return lis.length > 0 ? lis[0].textContent.slice(0, 32) : "Nova Conversa";
     }
     function loadConv(id) {
         const conv = getConvById(id);
-        if (!conv) return;
+        if (!conv || !chatbox) return;
         currentConvId = id;
         chatbox.innerHTML = "";
-        conv.history.forEach(msg => {
-            const li = createChatLi(msg.content, msg.role === "user" ? "outgoing" : "incoming");
-            chatbox.appendChild(li);
-        });
+        if (conv.history.length === 0) {
+             chatbox.innerHTML = `<li class="chat incoming"><span class="material-symbols-outlined">smart_toy</span><p>Olá. Sou AEMI, uma IA da Manutenção Industrial. Envie uma mensagem para começarmos.</p></li>`;
+        } else {
+             conv.history.forEach(msg => {
+                const li = createChatLi(msg.content, msg.role === "user" ? "outgoing" : "incoming");
+                chatbox.appendChild(li);
+            });
+        }
         renderSidebar();
     }
 
@@ -141,7 +219,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const conv = { id, title: "Nova Conversa", history: [] };
         addConv(conv);
         currentConvId = id;
-        chatbox.innerHTML = `<li class="chat incoming"><span class="material-symbols-outlined">smart_toy</span><p>Olá. Sou AEMI, uma IA da Manutenção Industrial. Envie uma mensagem para começarmos.</p></li>`;
+        if(chatbox) chatbox.innerHTML = `<li class="chat incoming"><span class="material-symbols-outlined">smart_toy</span><p>Olá. Sou AEMI, uma IA da Manutenção Industrial. Envie uma mensagem para começarmos.</p></li>`;
         renderSidebar();
     }
 
@@ -170,54 +248,56 @@ document.addEventListener("DOMContentLoaded", () => {
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: new URLSearchParams({ message: userMessage })
         };
-        const typingElement = incomingChatLi.querySelector(".typing-animation");
+        const pElement = incomingChatLi.querySelector("p") || document.createElement("p");
+        if(!incomingChatLi.querySelector("p")){
+            incomingChatLi.querySelector(".typing-animation").replaceWith(pElement);
+        }
+        
         fetch(API_URL_CHAT, requestOptions)
             .then(res => res.ok ? res.json() : Promise.reject(res))
             .then(data => {
-                const pElement = document.createElement("p");
                 pElement.textContent = data.response || "Desculpe, não recebi uma resposta válida.";
-                if (typingElement) {
-                    typingElement.replaceWith(pElement);
-                }
-                saveCurrentConv();
             })
             .catch(() => {
-                const errorPElement = document.createElement("p");
-                errorPElement.classList.add("error");
-                errorPElement.textContent = "Oops! Algo deu errado. Não foi possível conectar ao servidor. Verifique sua conexão ou tente novamente mais tarde.";
-                if (typingElement) {
-                    typingElement.replaceWith(errorPElement);
-                }
+                pElement.classList.add("error");
+                pElement.textContent = "Oops! Algo deu errado. Não foi possível conectar ao servidor. Verifique sua conexão ou tente novamente mais tarde.";
             })
             .finally(() => {
-                chatInput.disabled = false;
-                sendChatBtn.disabled = false;
-                chatbox.scrollTo(0, chatbox.scrollHeight);
+                if(chatInput) chatInput.disabled = false;
+                if(sendChatBtn) sendChatBtn.disabled = false;
+                if(chatbox) chatbox.scrollTo(0, chatbox.scrollHeight);
+                saveCurrentConv();
             });
     };
 
     // --- Envio de Mensagem ---
     const handleChat = () => {
+        if(!chatInput) return;
         userMessage = chatInput.value.trim();
         if (!userMessage) return;
+        
         chatInput.value = "";
         chatInput.disabled = true;
         sendChatBtn.disabled = true;
-        chatbox.appendChild(createChatLi(userMessage, "outgoing"));
-        chatbox.scrollTo(0, chatbox.scrollHeight);
-        setTimeout(() => {
-            const incomingChatLi = createChatLi("typing", "incoming");
-            chatbox.appendChild(incomingChatLi);
+
+        if(chatbox) {
+            chatbox.appendChild(createChatLi(userMessage, "outgoing"));
             chatbox.scrollTo(0, chatbox.scrollHeight);
-            generateResponse(incomingChatLi);
-        }, 600);
+        
+            setTimeout(() => {
+                const incomingChatLi = createChatLi("typing", "incoming");
+                chatbox.appendChild(incomingChatLi);
+                chatbox.scrollTo(0, chatbox.scrollHeight);
+                generateResponse(incomingChatLi);
+            }, 600);
+        }
         saveCurrentConv();
     };
 
     // --- Limpar Chat ---
     const clearChat = () => {
         if (confirm("Você tem certeza que deseja limpar o histórico desta conversa?")) {
-            chatbox.innerHTML = `<li class="chat incoming"><span class="material-symbols-outlined">smart_toy</span><p>Olá. Sou AEMI, uma IA da Manutenção Industrial. Envie uma mensagem para começarmos.</p></li>`;
+            if(chatbox) chatbox.innerHTML = `<li class="chat incoming"><span class="material-symbols-outlined">smart_toy</span><p>Olá. Sou AEMI, uma IA da Manutenção Industrial. Envie uma mensagem para começarmos.</p></li>`;
             fetch(API_URL_CLEAR, { method: "POST" }).catch(() => {});
             saveCurrentConv();
         }
@@ -229,41 +309,29 @@ document.addEventListener("DOMContentLoaded", () => {
         if (convs.length === 0) {
             startNewConv();
         } else {
-            currentConvId = convs[convs.length - 1].id;
-            loadConv(currentConvId);
+            const lastConvId = convs[convs.length - 1].id;
+            loadConv(lastConvId);
         }
-        renderSidebar();
     }
 
     // --- Event Listeners ---
-    sendChatBtn.addEventListener("click", handleChat);
-    clearChatBtn.addEventListener("click", clearChat);
-    chatInput.addEventListener("keydown", (e) => {
+    if(sendChatBtn) sendChatBtn.addEventListener("click", handleChat);
+    if(clearChatBtn) clearChatBtn.addEventListener("click", clearChat);
+    if(chatInput) chatInput.addEventListener("keydown", (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
             handleChat();
         }
     });
-    newConvBtn.addEventListener("click", startNewConv);
-
-    // Sidebar toggle para mobile
-    const sidebar = document.querySelector('.sidebar');
-    const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
-    if (sidebarToggleBtn) {
-        sidebarToggleBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('aberta');
-        });
-    }
-    // Fecha sidebar ao clicar fora (mobile)
-    document.addEventListener('click', (e) => {
-        if (window.innerWidth <= 900 && sidebar.classList.contains('aberta')) {
-            if (!sidebar.contains(e.target) && e.target !== sidebarToggleBtn) {
-                sidebar.classList.remove('aberta');
-            }
-        }
-    });
-
+    if(newConvBtn) newConvBtn.addEventListener("click", startNewConv);
+    
+    // --- Salvar Conversa ao Sair ---
     window.addEventListener("beforeunload", saveCurrentConv);
 
+    // --- Inicia a aplicação ---
     init();
+
+    /* O CÓDIGO ANTIGO DO SIDEBAR QUE ESTAVA AQUI FOI REMOVIDO 
+    PARA EVITAR CONFLITO COM A NOVA IMPLEMENTAÇÃO NO INÍCIO DO ARQUIVO.
+    */
 });
