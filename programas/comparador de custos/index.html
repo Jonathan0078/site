@@ -7,20 +7,52 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Comparador de Custos: Corretiva vs. Preventiva</h1>
-  <form id="form-custos">
-    <label>Custo de Parada (R$): <input type="number" id="custo-parada" required></label><br>
-    <label>Custo de Peças (R$): <input type="number" id="custo-pecas" required></label><br>
-    <label>Custo de Mão de Obra (R$): <input type="number" id="custo-mao-obra" required></label><br>
-    <label>Frequência de Falhas por Ano: <input type="number" id="falhas-ano" required></label><br>
-    <label>Intervalo de Manutenção Preventiva (meses): <input type="number" id="intervalo-prev" required></label><br>
-    <label>Custo da Preventiva (R$): <input type="number" id="custo-prev" required></label><br>
-    <button type="submit">Comparar</button>
-  </form>
-  <div id="resultado"></div>
-  <canvas id="graficoCustos" width="380" height="220" style="display:block;margin:30px auto 0 auto;"></canvas>
-  <button id="exportar-pdf" style="display:block;margin:20px auto 0 auto;">Exportar Resultado em PDF</button>
-  <script src="chart.min.js"></script>
+  <header>
+    <h1>Comparador de Custos: Corretiva vs. Preventiva</h1>
+    <p>Analise e compare o impacto financeiro dos diferentes tipos de manutenção.</p>
+  </header>
+
+  <div class="main-container">
+    <div class="calculator-container">
+      <h2>Entrada de Dados</h2>
+      <form id="form-custos">
+        <div class="input-group">
+          <label for="custo-parada">Custo de Parada (R$):</label>
+          <input type="number" id="custo-parada" required placeholder="Ex: 5000">
+        </div>
+        <div class="input-group">
+          <label for="custo-pecas">Custo de Peças (R$):</label>
+          <input type="number" id="custo-pecas" required placeholder="Ex: 1000">
+        </div>
+        <div class="input-group">
+          <label for="custo-mao-obra">Custo de Mão de Obra (R$):</label>
+          <input type="number" id="custo-mao-obra" required placeholder="Ex: 800">
+        </div>
+        <div class="input-group">
+          <label for="falhas-ano">Frequência de Falhas por Ano:</label>
+          <input type="number" id="falhas-ano" required placeholder="Ex: 3">
+        </div>
+        <div class="input-group">
+          <label for="intervalo-prev">Intervalo de Manutenção Preventiva (meses):</label>
+          <input type="number" id="intervalo-prev" required placeholder="Ex: 6">
+        </div>
+        <div class="input-group">
+          <label for="custo-prev">Custo da Preventiva (R$):</label>
+          <input type="number" id="custo-prev" required placeholder="Ex: 1500">
+        </div>
+        <button type="submit" id="calcular-btn">Comparar</button>
+      </form>
+    </div>
+
+    <div class="resultado-container hidden" id="resultado-container">
+      <h2>Resultado da Comparação</h2>
+      <div id="resultado"></div>
+      <canvas id="graficoCustos" width="380" height="220" style="display:block;margin:30px auto 0 auto;"></canvas>
+      <button id="exportar-pdf">Exportar Resultado em PDF</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="script.js"></script>
 </body>
