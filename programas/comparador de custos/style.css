@@ -1,131 +1,251 @@
-/* =================================================================== */
-/* CSS COM IDENTIDADE VISUAL DO SITE E LAYOUT RESPONSIVO               */
-/* =================================================================== */
-
-/* --- Importação de Fontes e Variáveis Globais --- */
+/* Importando fontes e usando variáveis de cor do seu projeto */
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto:wght@400;700&display=swap');
 
+/* --- GERAL E VARIÁVEIS DE TEMA (IDENTIDADE VISUAL APLICADA) --- */
 :root {
-    --cor-primaria: #003366;
-    --cor-secundaria: #005a9c;
-    --cor-destaque: #ffc107;
-    --cor-fundo: #f8f9fa;
-    --cor-texto: #212529;
-    --cor-superficie: #ffffff;
-    --cor-borda: #ced4da;
-    --cor-sombra: rgba(0, 51, 102, 0.15);
+    --cor-primaria: #003366;      /* Azul Escuro */
+    --cor-secundaria: #005a9c;     /* Azul Médio */
+    --cor-destaque: #ffc107;      /* Amarelo/Dourado */
+    --cor-fundo: #f8f9fa;         /* Cinza bem claro */
+    --cor-texto: #212529;         /* Preto Suave */
+    --cor-sucesso: #28a745;       /* Verde */
+    --cor-erro: #dc3545;          /* Vermelho */
+    --cor-borda: #dee2e6;        /* Cinza para bordas */
+    --cor-texto-claro: #ffffff;    /* Branco para fundos escuros */
+    --sombra-cor: rgba(0, 0, 0, 0.08);
+    --raio-borda: 6px;
+    --velocidade-transicao: 0.3s;
+    --background-color-light: #ffffff;
 }
 
-/* --- Estilos de Base --- */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+/* TEMA ESCURO (DARK MODE) */
+body.dark-theme {
+    --cor-primaria: #005a9c;
+    --cor-secundaria: #007bff;
+    --cor-destaque: #ffc107;
+    --cor-fundo: #0a1929;
+    --cor-texto: #e9ecef;
+    --cor-borda: #334b61;
+    --sombra-cor: rgba(0, 0, 0, 0.4);
+    --background-color-light: #112233; 
 }
 
 body {
     font-family: 'Roboto', sans-serif;
-    background: var(--cor-fundo);
+    background-color: var(--cor-fundo);
     color: var(--cor-texto);
-    line-height: 1.6;
+    margin: 0;
+    transition: background-color var(--velocidade-transicao), color var(--velocidade-transicao);
 }
 
-/* --- Cabeçalho com a Identidade do Site --- */
-header {
+/* --- LAYOUT PRINCIPAL --- */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.app-header {
     background: linear-gradient(90deg, var(--cor-primaria), var(--cor-secundaria));
-    color: var(--cor-superficie);
-    padding: 1.5rem 1rem;
-    text-align: center;
+    color: var(--cor-texto-claro);
+    padding: 1rem 2rem;
+    box-shadow: 0 4px 12px var(--sombra-cor);
     border-bottom: 5px solid var(--cor-destaque);
+    z-index: 1000;
 }
 
-header h1 {
-    font-family: 'Oswald', sans-serif;
-    font-size: 2.2rem;
-}
-
-/* --- Container Principal --- */
-.container {
-    padding: 2rem 1rem;
-    max-width: 450px; /* Ajustado para o formulário */
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1600px;
     margin: 0 auto;
 }
 
-/* --- Estilos do Formulário --- */
-form {
-    background: var(--cor-superficie);
-    padding: 2em;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px var(--cor-sombra);
-}
-
-form h2 {
-    color: var(--cor-primaria);
+.header-content h1 {
+    margin: 0;
     font-family: 'Oswald', sans-serif;
-    text-align: center;
-    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
 }
 
-label {
-    display: block;
-    margin-bottom: 1.2rem;
-    font-weight: bold;
-    color: var(--cor-texto-secundario);
-}
-
-input {
+.app-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    max-width: 1600px;
+    margin: 0 auto;
     width: 100%;
-    padding: 0.8em;
-    margin-top: 0.4em;
-    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+#inputs-column, #outputs-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* --- CARDS --- */
+.card {
+    background-color: var(--background-color-light);
+    border-radius: var(--raio-borda);
     border: 1px solid var(--cor-borda);
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px var(--sombra-cor);
+    transition: all var(--velocidade-transicao);
+    border-top: 4px solid var(--cor-secundaria);
+}
+
+.card h2 {
+    margin-top: 0;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.5rem;
+    color: var(--cor-primaria);
+    border-bottom: 2px solid var(--cor-borda);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* --- FORMULÁRIOS E INPUTS --- */
+.input-group label {
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--cor-secundaria);
+}
+
+.input-group input[type="text"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio-borda);
+    background-color: var(--background-color-light);
+    color: var(--cor-texto);
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color var(--velocidade-transicao), box-shadow var(--velocidade-transicao);
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--cor-destaque);
+    box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.3);
+}
+
+/* --- RESULTADOS (LISTA FILTRADA) --- */
+.results-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.result-item-button {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--background-color-light);
+    color: var(--cor-texto);
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio-borda);
+    text-align: left;
     font-size: 1rem;
     font-family: 'Roboto', sans-serif;
-}
-
-input:focus {
-    outline: none;
-    border-color: var(--cor-secundaria);
-    box-shadow: 0 0 0 3px rgba(0, 90, 156, 0.25);
-}
-
-button {
-    width: 100%;
-    background: var(--cor-secundaria);
-    color: var(--cor-superficie);
-    border: none;
-    padding: 0.8em 1.5em;
-    border-radius: 5px;
     cursor: pointer;
-    font-weight: bold;
-    font-size: 1.1rem;
-    transition: background-color 0.2s, color 0.2s;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.result-item-button:hover {
+    background-color: var(--cor-secundaria);
+    border-color: var(--cor-secundaria);
+    color: var(--cor-texto-claro);
+}
+
+/* --- TABELAS --- */
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
     margin-top: 1rem;
 }
-
-button:hover {
-    background: var(--cor-destaque);
-    color: var(--cor-primaria);
+th, td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--cor-borda);
+}
+thead {
+    background-color: var(--cor-fundo);
 }
 
-#resultado {
-    margin-top: 2em;
-    padding: 1em;
-    font-size: 1.1em;
-    text-align: center;
+/* --- THEME SWITCHER --- */
+.theme-switcher {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--cor-texto-claro);
 }
 
-/* --- Layout para Celular --- */
-@media (max-width: 600px) {
-    body {
-        padding: 0;
-    }
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+}
 
-    header h1 {
-        font-size: 1.8rem;
-    }
+.switch input { opacity: 0; width: 0; height: 0; }
 
-    .container {
-        padding: 1.5rem 1rem;
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 26px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--cor-destaque);
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+/* --- RESPONSIVIDADE --- */
+@media (max-width: 1024px) {
+    .app-main {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .app-main {
+        padding: 1rem;
+    }
+    .card {
+        padding: 1rem;
     }
 }
