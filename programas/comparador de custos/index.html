@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comparador de Custos de Manutenção</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Comparador de Custos: Corretiva vs. Preventiva</h1>
+  <form id="form-custos">
+    <label>Custo de Parada (R$): <input type="number" id="custo-parada" required></label><br>
+    <label>Custo de Peças (R$): <input type="number" id="custo-pecas" required></label><br>
+    <label>Custo de Mão de Obra (R$): <input type="number" id="custo-mao-obra" required></label><br>
+    <label>Frequência de Falhas por Ano: <input type="number" id="falhas-ano" required></label><br>
+    <label>Intervalo de Manutenção Preventiva (meses): <input type="number" id="intervalo-prev" required></label><br>
+    <label>Custo da Preventiva (R$): <input type="number" id="custo-prev" required></label><br>
+    <button type="submit">Comparar</button>
+  </form>
+  <div id="resultado"></div>
+  <canvas id="graficoCustos" width="380" height="220" style="display:block;margin:30px auto 0 auto;"></canvas>
+  <button id="exportar-pdf" style="display:block;margin:20px auto 0 auto;">Exportar Resultado em PDF</button>
+  <script src="chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
