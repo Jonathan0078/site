@@ -4,26 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AEMI - Assistente Industrial</title>
+    
     <link rel="stylesheet" href="style.css">
+    
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
 
-    <button id="open-menu-btn" title="Abrir menu">
-        <span class="material-icons">menu</span>
-    </button>
-    
     <aside id="side-menu" class="sidebar">
         <div class="sidebar-header">Minhas Conversas</div>
         <div class="sidebar-convs">
             <ul id="convs-list">
-                <li>Conversa de Exemplo 1</li>
-                <li>Conversa de Exemplo 2</li>
+                <li>Conversa sobre CLP Siemens</li>
+                <li>Análise de Vibração Motor X</li>
             </ul>
         </div>
         <div class="sidebar-footer">
-            <button id="new-conv-btn" style="width:100%;padding:8px 0;background:var(--cor-destaque);color:#222;border:none;border-radius:8px;font-weight:600;cursor:pointer;transition:background 0.2s;">+ Nova Conversa</button>
+            <button id="new-conv-btn" style="width:100%;padding:12px 0;background:var(--cor-destaque);color:#222;border:none;border-radius:8px;font-weight:600;cursor:pointer;transition:background 0.2s;">+ Nova Conversa</button>
         </div>
     </aside>
 
@@ -33,20 +31,28 @@
         <div class="chatbot">
             <header>
                 <h2>AEMI - Assistente Industrial</h2>
-                <div style="display:flex;align-items:center;gap:12px;">
-                    <button id="theme-toggle-btn" title="Alternar tema" style="background:var(--cor-destaque);border:none;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:background 0.2s;"><span class="material-icons" id="theme-icon">dark_mode</span></button>
-                    <span id="clear-btn" class="material-icons">delete_sweep</span>
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <button id="open-menu-btn" title="Abrir menu" class="header-btn">
+                        <span class="material-icons">menu</span>
+                    </button>
+                    <button id="theme-toggle-btn" title="Alternar tema" class="header-btn">
+                        <span class="material-icons" id="theme-icon">dark_mode</span>
+                    </button>
+                    <span id="clear-btn" class="material-icons header-btn" title="Limpar conversa">delete_sweep</span>
                 </div>
             </header>
             <ul class="chatbox">
                 <li class="chat incoming">
                     <span class="material-symbols-outlined">smart_toy</span>
-                    <p>Olá. Sou AEMI, uma IA da Manutenção Industrial. Envie uma mensagem para começarmos.</p>
+                    <p>Olá! Sou AEMI, sua assistente de manutenção industrial. Use o menu no canto superior para ver suas conversas.</p>
+                </li>
+                 <li class="chat outgoing">
+                    <p>Olá, AEMI!</p>
                 </li>
             </ul>
             <div class="chat-input">
                 <textarea placeholder="Digite uma mensagem..." spellcheck="false" required></textarea>
-                <span id="send-btn" class="material-icons">send</span>
+                <span id="send-btn" class="material-icons header-btn">send</span>
             </div>
         </div>
     </div>
