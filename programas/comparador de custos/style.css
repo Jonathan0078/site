@@ -22,10 +22,8 @@ body {
     line-height: 1.6;
     background-color: var(--cor-fundo);
     color: var(--cor-texto);
-    padding: 2rem 1rem;
 }
 
-/* Cabeçalho padrão do site */
 header {
     background: linear-gradient(90deg, var(--cor-primaria), var(--cor-secundaria));
     color: #ffffff;
@@ -37,73 +35,120 @@ header {
 header h1 {
     font-family: 'Oswald', sans-serif;
     font-size: 2.2rem;
+    margin-bottom: 0.5rem;
 }
 
 header p {
     font-family: 'Roboto Mono', monospace;
-    font-size: 1.1rem;
+    font-size: 1.1em;
     opacity: 0.9;
 }
 
-/* Container do formulário */
 .main-container {
-    max-width: 500px;
+    max-width: 600px;
     margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.calculator-container, .resultado-container {
     background: #ffffff;
     padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
 }
 
-/* Título dentro do formulário */
-.main-container h2 {
+h2, h3 {
     font-family: 'Oswald', sans-serif;
     color: var(--cor-primaria);
+    margin-bottom: 1.5rem;
     text-align: center;
+}
+
+.input-group {
     margin-bottom: 1.5rem;
 }
 
-/* Labels e inputs */
-label {
+.input-group label {
     font-weight: bold;
+    color: var(--cor-texto);
     display: block;
     margin-bottom: 0.5rem;
-    color: var(--cor-texto);
 }
 
-input {
+.input-group input[type="number"] {
     width: 100%;
-    padding: 0.75rem;
-    border-radius: 5px;
+    padding: 0.8rem;
     border: 1px solid #ccc;
-    margin-bottom: 1.5rem;
-    font-size: 1rem;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    background-color: #fff;
 }
 
-/* Botão de envio */
-button {
+#calcular-btn, #exportar-pdf {
     width: 100%;
     padding: 1rem;
-    background-color: var(--cor-secundaria);
-    color: white;
-    font-weight: bold;
-    border: none;
+    font-size: 1.1rem;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 1.1rem;
-    transition: background 0.3s ease, color 0.3s ease;
+    border: none;
+    color: white;
+    font-weight: bold;
+    background-color: var(--cor-secundaria); /* Alterado para combinar mais com o tema */
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    margin-top: 1rem;
 }
 
-button:hover {
-    background: var(--cor-destaque);
+#calcular-btn:hover, #exportar-pdf:hover {
+    transform: scale(1.02);
+    background-color: var(--cor-destaque); /* Hover para o destaque */
     color: var(--cor-primaria);
 }
 
-/* Resultado */
+#exportar-pdf {
+    margin-top: 2rem; /* Espaçamento maior para o botão de exportar */
+    background-color: var(--cor-primaria); /* Cor mais forte para o exportar */
+}
+
+.resultado-container {
+    border-top: 5px solid var(--cor-sucesso);
+    text-align: left; /* Alinhamento do texto à esquerda para melhor leitura */
+}
+
 #resultado {
-    margin-top: 2rem;
-    font-size: 1.2rem;
-    text-align: center;
-    font-family: 'Roboto Mono', monospace;
+    font-size: 1.1em;
+    margin-bottom: 1.5rem;
+}
+
+#resultado strong {
     color: var(--cor-primaria);
+}
+
+#resultado .error-message { /* Classe para mensagens de erro */
+    color: var(--cor-erro);
+    font-weight: bold;
+}
+
+#resultado .success-message { /* Classe para mensagens de sucesso */
+    color: var(--cor-sucesso);
+    font-weight: bold;
+}
+
+#resultado small {
+    display: block;
+    margin-top: 1rem;
+    color: #6c757d;
+    font-size: 0.9em;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Estilos específicos para o gráfico */
+#graficoCustos {
+    margin-top: 2rem;
+    background-color: #f0f6fc; /* Fundo leve para o canvas do gráfico */
+    padding: 1rem;
+    border-radius: 8px;
 }
