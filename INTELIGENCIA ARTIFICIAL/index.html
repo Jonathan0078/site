@@ -5,24 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AEMI - Assistente Industrial</title>
     <link rel="stylesheet" href="style.css">
-    <!-- O link para o Material Icons já está presente, o que é ótimo. -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
 
-    <button id="sidebar-toggle-btn" title="Abrir menu" style="display:none;"><span class="material-icons">menu</span></button>
-    <div class="sidebar">
+    <button id="open-menu-btn" title="Abrir menu">
+        <span class="material-icons">menu</span>
+    </button>
+    
+    <aside id="side-menu" class="sidebar">
         <div class="sidebar-header">Minhas Conversas</div>
         <div class="sidebar-convs">
             <ul id="convs-list">
-                <!-- Conversas salvas aparecem aqui -->
+                <li>Conversa de Exemplo 1</li>
+                <li>Conversa de Exemplo 2</li>
             </ul>
         </div>
         <div class="sidebar-footer">
             <button id="new-conv-btn" style="width:100%;padding:8px 0;background:var(--cor-destaque);color:#222;border:none;border-radius:8px;font-weight:600;cursor:pointer;transition:background 0.2s;">+ Nova Conversa</button>
         </div>
-    </div>
+    </aside>
+
+    <div id="menu-overlay"></div>
+
     <div class="chatbot-container">
         <div class="chatbot">
             <header>
@@ -38,7 +44,6 @@
                     <p>Olá. Sou AEMI, uma IA da Manutenção Industrial. Envie uma mensagem para começarmos.</p>
                 </li>
             </ul>
-            <!-- Sugestões rápidas removidas -->
             <div class="chat-input">
                 <textarea placeholder="Digite uma mensagem..." spellcheck="false" required></textarea>
                 <span id="send-btn" class="material-icons">send</span>
