@@ -1,23 +1,37 @@
 /* =================================================================== */
-/* ARQUIVO CSS COMPLETO PARA AEMI ASSISTENTE               */
+/* ARQUIVO CSS COMPLETO PARA AEMI ASSISTENTE (COM NOVA IDENTIDADE VISUAL) */
 /* =================================================================== */
+
+/* --- Importação de Fontes --- */
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto+Mono&family=Roboto:wght@400;700&display=swap');
 
 /* --- Variáveis de Cor e Fontes --- */
 :root {
-    --cor-destaque: #f1c40f; /* Amarelo/Dourado */
-    --cor-fundo: #f7f7f8;
-    --cor-superficie: #ffffff; /* Cor de fundo do chat, menu, etc. */
-    --cor-texto-principal: #333333;
+    /* Novas cores baseadas na identidade do site */
+    --cor-primaria: #003366;
+    --cor-secundaria: #005a9c;
+    --cor-destaque: #ffc107; /* Amarelo/Dourado */
+    --cor-fundo: #f8f9fa;
+    --cor-superficie: #ffffff;
+    --cor-texto: #212529;
     --cor-texto-secundario: #555555;
-    --cor-borda: #eeeeee;
+    --cor-borda: #dee2e6; /* Borda mais suave */
     --cor-sombra: rgba(0, 0, 0, 0.08);
 }
 
-body { 
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+/* --- Estilos Globais --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif; /* Fonte padrão do site */
     margin: 0;
     background-color: var(--cor-fundo);
-    color: var(--cor-texto-principal);
+    color: var(--cor-texto);
+    line-height: 1.6;
 }
 
 ul {
@@ -28,7 +42,7 @@ ul {
 
 /* --- Estrutura Principal e Layout --- */
 .chatbot-container {
-    padding: 20px 15px; /* Espaçamento geral */
+    padding: 20px 15px; /* Espaçamento geral para telas grandes */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -40,7 +54,7 @@ ul {
     width: 100%;
     max-width: 800px;
     height: 90vh;
-    max-height: 800px; /* Aumentado para telas maiores */
+    max-height: 800px;
     background: var(--cor-superficie);
     border-radius: 15px;
     box-shadow: 0 4px 20px var(--cor-sombra);
@@ -49,25 +63,27 @@ ul {
     overflow: hidden;
 }
 
-/* --- Cabeçalho e Botões --- */
+/* --- Cabeçalho com a Nova Identidade Visual --- */
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 15px;
-    border-bottom: 1px solid var(--cor-borda);
+    padding: 1rem 1.5rem; /* Padding ajustado */
+    background: linear-gradient(90deg, var(--cor-primaria), var(--cor-secundaria));
+    color: #ffffff;
+    border-bottom: 5px solid var(--cor-destaque);
     flex-shrink: 0;
 }
 
 header h2 {
+    font-family: 'Oswald', sans-serif; /* Fonte do título do site */
+    font-size: 1.5rem; /* Tamanho ajustado */
     margin: 0;
-    font-size: 1.2rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-/* Estilo unificado para todos os botões/ícones do cabeçalho */
 .header-btn {
     background: transparent;
     border: none;
@@ -80,11 +96,11 @@ header h2 {
     cursor: pointer;
     padding: 0;
     transition: background-color 0.2s;
-    color: var(--cor-texto-secundario);
+    color: #ffffff; /* Cor ajustada para o fundo escuro */
 }
 
 .header-btn:hover {
-    background-color: rgba(0, 0, 0, 0.08);
+    background-color: rgba(255, 255, 255, 0.15); /* Efeito de hover mais visível */
 }
 
 /* --- Menu Lateral (Sidebar) e Overlay --- */
@@ -112,7 +128,7 @@ header h2 {
     font-size: 1.2rem;
     font-weight: 600;
     border-bottom: 1px solid var(--cor-borda);
-    color: var(--cor-texto-principal);
+    color: var(--cor-texto);
     flex-shrink: 0;
 }
 
@@ -139,8 +155,8 @@ header h2 {
 .sidebar-convs li.ativo {
     background: #f0f0f0;
     font-weight: 600;
-    color: var(--cor-texto-principal);
-    border-left-color: var(--cor-destaque);
+    color: var(--cor-primaria);
+    border-left-color: var(--cor-destaque); /* Usa a cor de destaque do site */
 }
 
 .sidebar-footer {
@@ -193,19 +209,20 @@ header h2 {
 }
 
 .chat.incoming p {
-    background: #f1f0f0;
-    color: var(--cor-texto-principal);
+    background: #e9ecef; /* Fundo mais sutil, alinhado ao tema */
+    color: var(--cor-texto);
     border-bottom-left-radius: 4px;
 }
 
 .chat.outgoing {
     justify-content: flex-end;
-    margin-left: auto; /* Alinha o container do chat à direita */
+    margin-left: auto;
 }
 
 .chat.outgoing p {
-    background: var(--cor-destaque);
-    color: #222;
+    background: var(--cor-destaque); /* Usa a cor de destaque do site */
+    color: var(--cor-texto); /* Cor de texto com melhor contraste */
+    font-weight: 500;
     border-bottom-right-radius: 4px;
 }
 
@@ -228,17 +245,47 @@ header h2 {
 .chat-input textarea {
     flex-grow: 1;
     resize: none;
-    border: 1px solid #ddd;
+    border: 1px solid var(--cor-borda);
     border-radius: 8px;
     outline: none;
     font-size: 1rem;
     padding: 12px 15px;
     font-family: inherit;
     line-height: 1.5;
-    max-height: 100px; /* Evita que o textarea cresça demais */
+    max-height: 100px;
 }
 
 .chat-input textarea:focus {
     border-color: var(--cor-destaque);
-    box-shadow: 0 0 0 3px rgba(241, 196, 15, 0.2);
+    box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.25); /* Sombra de foco com a cor de destaque */
+}
+
+/* --- Layout Responsivo para Celular (Tela Cheia) --- */
+@media (max-width: 768px) {
+    .chatbot-container {
+        padding: 0; /* Remove o padding para ocupar a tela toda */
+    }
+
+    .chatbot {
+        height: 100vh; /* Altura total da tela */
+        max-height: 100vh; /* Garante a altura total */
+        border-radius: 0; /* Remove bordas arredondadas para um visual de tela cheia */
+        box-shadow: none; /* Remove sombra em telas pequenas */
+    }
+
+    header {
+        padding: 0.75rem 1rem; /* Padding do cabeçalho um pouco menor */
+    }
+
+    header h2 {
+        font-size: 1.3rem; /* Fonte do título menor em telas pequenas */
+    }
+
+    .chatbox {
+        padding: 15px; /* Ajusta o padding interno do chat */
+    }
+
+    .chat-input {
+        padding: 10px 15px; /* Ajusta o padding do input */
+    }
 }
