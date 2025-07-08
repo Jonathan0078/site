@@ -1,0 +1,8 @@
+body { font-family: Arial, sans-serif; background: #f8f9fa; color: #212529; margin: 0; padding: 2em; }
+h1 { color: #003366; }
+form { background: #fff; padding: 1.5em; border-radius: 10px; box-shadow: 0 2px 8px #00336622; max-width: 400px; }
+label { display: block; margin-bottom: 1em; }
+input, select { width: 100%; padding: 0.5em; margin-top: 0.2em; border-radius: 5px; border: 1px solid #ccc; }
+button { background: #005a9c; color: #fff; border: none; padding: 0.7em 1.5em; border-radius: 5px; cursor: pointer; font-weight: bold; }
+button:hover { background: #ffc107; color: #003366; }
+#resultado { margin-top: 2em; font-size: 1.1em; }
