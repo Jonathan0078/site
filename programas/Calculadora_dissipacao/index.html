@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Dissipação Térmica em Mancais</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Calculadora de Dissipação Térmica em Mancais</h1>
+  <form id="form-mancal">
+    <label>Tipo de Mancal:
+      <select id="tipo-mancal">
+        <option>Rolamento</option>
+        <option>Bucha</option>
+      </select>
+    </label><br>
+    <label>Carga (N): <input type="number" id="carga" required></label><br>
+    <label>Velocidade (rpm): <input type="number" id="velocidade" required></label><br>
+    <label>Temperatura Operação (°C): <input type="number" id="temp-oper" required></label><br>
+    <label>Temperatura Ambiente (°C): <input type="number" id="temp-amb" required></label><br>
+    <label>Tipo de Lubrificação:
+      <select id="tipo-lubrificacao">
+        <option>Óleo</option>
+        <option>Graxa</option>
+      </select>
+    </label><br>
+    <button type="submit">Calcular</button>
+  </form>
+  <div id="resultado"></div>
+  <script src="script.js"></script>
+</body>
+</html>
