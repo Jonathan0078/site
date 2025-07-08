@@ -9,6 +9,7 @@
     --cor-texto: #212529;
     --cor-sucesso: #28a745;
     --cor-erro: #dc3545;
+    --cor-atencao: #ffc107; /* Adicionado para dissipação moderada */
 }
 
 * {
@@ -35,7 +36,6 @@ header {
 header h1 {
     font-family: 'Oswald', sans-serif;
     font-size: 2.2rem;
-    margin-bottom: 0.5rem;
 }
 
 header p {
@@ -53,17 +53,16 @@ header p {
 .calculator-container, .resultado-container {
     background: #ffffff;
     padding: 2rem;
-    border-radius: 12px;
+    border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     margin-bottom: 2rem;
 }
 
-h2, h3 {
+h2 { /* Ajustado de h2, h3 para h2, já que h3 não é usado no HTML atual */
     font-family: 'Oswald', sans-serif;
     color: var(--cor-primaria);
     margin-bottom: 1.5rem;
     text-align: center;
-    font-size: 1.5rem;
 }
 
 .input-group {
@@ -75,80 +74,83 @@ h2, h3 {
     color: var(--cor-texto);
     display: block;
     margin-bottom: 0.5rem;
-    font-size: 1rem;
 }
 
+.input-group input[type="number"],
 .input-group select {
     width: 100%;
-    padding: 0.9rem;
+    padding: 0.8rem;
     border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1.05rem;
+    border-radius: 5px;
+    font-size: 1.1rem;
     background-color: #fff;
-    transition: border 0.3s;
 }
 
-.input-group select:focus {
-    border-color: var(--cor-secundaria);
-    outline: none;
-}
-
-.radio-group {
-    display: flex;
-    gap: 1.5rem;
-    background-color: #f0f6fc;
-    padding: 0.8rem 1rem;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: bold;
-    color: var(--cor-texto);
-}
-
-.radio-group label {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-}
-
-.radio-group input[type="radio"] {
-    margin-right: 0.5rem;
-}
+/* Removido .radio-group pois não é usado na estrutura atual */
 
 #calcular-btn {
     width: 100%;
     padding: 1rem;
     font-size: 1.1rem;
-    border-radius: 6px;
+    border-radius: 5px;
     cursor: pointer;
     border: none;
     color: white;
     font-weight: bold;
-    background-color: var(--cor-sucesso);
-    transition: transform 0.2s ease, opacity 0.2s ease;
+    background-color: var(--cor-secundaria); /* Alterado para combinar com o tema */
+    transition: transform 0.2s ease, background-color 0.2s ease;
     margin-top: 1rem;
 }
 
 #calcular-btn:hover {
     transform: scale(1.02);
-    opacity: 0.9;
+    background-color: var(--cor-destaque); /* Hover para a cor de destaque */
+    color: var(--cor-primaria);
 }
 
 .resultado-container {
     text-align: center;
-    border-top: 5px solid var(--cor-sucesso);
+    border-top: 5px solid var(--cor-sucesso); /* Padrão para sucesso */
 }
 
-.resultado-display .torque-nm {
+/* Classes para diferentes estados de resultado */
+.resultado-container.dissipacao-elevada {
+    border-top-color: var(--cor-erro);
+}
+
+.resultado-container.dissipacao-moderada {
+    border-top-color: var(--cor-atencao);
+}
+
+.resultado-container.dissipacao-baixa {
+    border-top-color: var(--cor-sucesso);
+}
+
+
+.dissipacao-valor { /* Nova classe para o valor principal do resultado */
     font-size: 2.5rem;
     font-weight: bold;
     color: var(--cor-primaria);
     line-height: 1.2;
+    margin-bottom: 0.5rem;
 }
 
-.resultado-display .torque-lbf {
-    font-size: 1.2rem;
-    color: var(--cor-texto);
-    opacity: 0.8;
+.dissipacao-status { /* Nova classe para a mensagem de status */
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-top: 1rem;
+}
+
+.dissipacao-status.elevada {
+    color: var(--cor-erro);
+}
+
+.dissipacao-status.moderada {
+    color: var(--cor-atencao);
+}
+
+.dissipacao-status.baixa {
+    color: var(--cor-sucesso);
 }
 
 .aviso-dados {
