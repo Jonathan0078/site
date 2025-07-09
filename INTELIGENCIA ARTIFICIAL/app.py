@@ -10,15 +10,23 @@ from PIL import Image
 import io
 try:
     import PyPDF2
-except ImportError:
+    print("✅ PyPDF2 importado com sucesso")
+except ImportError as e:
+    print(f"❌ Erro ao importar PyPDF2: {e}")
     PyPDF2 = None
+
 try:
     import docx
-except ImportError:
+    print("✅ python-docx importado com sucesso")
+except ImportError as e:
+    print(f"❌ Erro ao importar python-docx: {e}")
     docx = None
+
 try:
     from bs4 import BeautifulSoup
-except ImportError:
+    print("✅ BeautifulSoup importado com sucesso")
+except ImportError as e:
+    print(f"❌ Erro ao importar BeautifulSoup: {e}")
     BeautifulSoup = None
 from flask import Flask, request, jsonify, send_from_directory, session
 from flask_cors import CORS
@@ -32,7 +40,15 @@ from dotenv import load_dotenv # Importe esta linha para carregar variáveis de 
 
 # --- CARREGA VARIÁVEIS DE AMBIENTE ---
 # Isso deve estar no topo do seu arquivo app.py, antes de usar os.getenv para as chaves
-load_dotenv() 
+load_dotenv()
+
+# --- VERIFICAÇÕES DO SISTEMA ---
+print("=== INICIANDO A.E.M.I ===")
+print(f"Python: {__import__('sys').version}")
+print(f"Flask: {__import__('flask').__version__}")
+print(f"Diretório atual: {os.getcwd()}")
+print(f"Arquivos no diretório: {os.listdir('.')}")
+print("=========================") 
 
 # --- INICIALIZAÇÃO DO FLASK ---
 app = Flask(__name__)
@@ -50,21 +66,19 @@ HUGGING_FACE_TOKEN = os.getenv("HF_TOKEN")
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")  # Deve ser configurado no Replit Secrets
 
-# Validação das chaves com logs melhorados
-print("=== VERIFICAÇÃO DE CONFIGURAÇÃO ===")
-print(f"HF_TOKEN: {'✅ Configurado' if HUGGING_FACE_TOKEN else '❌ Não configurado'}")
-print(f"GOOGLE_API_KEY: {'✅ Configurado' if GOOGLE_API_KEY else '❌ Não configurado'}")
-print(f"GOOGLE_CSE_ID: {'✅ Configurado' if GOOGLE_CSE_ID else '❌ Não configurado'}")
-
+# Validação das chaves
 if not HUGGING_FACE_TOKEN:
-    print("ERRO: Token da Hugging Face não encontrado!")
-    print("Verifique se HF_TOKEN está configurado nas variáveis de ambiente.")
+    print("AVISO: Token da Hugging Face não configurado. Chat com IA não funcionará.")
+    print("Configure a variável de ambiente HF_TOKEN no Replit Secrets.")
 
 if not GOOGLE_API_KEY:
     print("AVISO: GOOGLE_API_KEY não configurada. Funcionalidade de busca web não funcionará.")
+    print("Configure as variáveis GOOGLE_API_KEY e GOOGLE_CSE_ID no Replit Secrets.")
+    print("Siga: https://developers.google.com/custom-search/v1/introduction")
 
 if not GOOGLE_CSE_ID or GOOGLE_CSE_ID == "f1582494ef7894395":
-    print("AVISO: GOOGLE_CSE_ID usando valor padrão ou não configurado.")
+    print("AVISO: GOOGLE_CSE_ID usando valor padrão ou não configurado. Configure seu próprio CSE ID.")
+    print("Crie um CSE em: https://cse.google.com/")
 
 app.secret_key = FLASK_SECRET_KEY
 
@@ -679,25 +693,34 @@ RESPOSTA DIRETA:"""
 def get_text_client():
     """Cria e retorna um cliente para o modelo de linguagem."""
     if not HUGGING_FACE_TOKEN:
-        print("❌ Token Hugging Face não configurado")
+        print("❌ Token HuggingFace não configurado")
         return None
     if not InferenceClient:
         print("❌ InferenceClient não disponível")
         return None
-    
     try:
         client = InferenceClient(model="meta-llama/Meta-Llama-3-8B-Instruct", token=HUGGING_FACE_TOKEN)
-        print("✅ Cliente Hugging Face criado com sucesso")
+        print("✅ Cliente de texto criado com sucesso")
         return client
     except Exception as e:
-        print(f"❌ Erro ao criar cliente Hugging Face: {e}")
+        print(f"❌ Erro ao criar cliente de texto: {e}")
         return None
 
 def get_vision_client():
     """Cria e retorna um cliente para análise de imagens."""
-    if not HUGGING_FACE_TOKEN or not InferenceClient:
+    if not HUGGING_FACE_TOKEN:
+        print("❌ Token HuggingFace não configurado")
         return None
-    return InferenceClient(model="microsoft/kosmos-2-patch14-224", token=HUGGING_FACE_TOKEN)
+    if not InferenceClient:
+        print("❌ InferenceClient não disponível")
+        return None
+    try:
+        client = InferenceClient(model="microsoft/kosmos-2-patch14-224", token=HUGGING_FACE_TOKEN)
+        print("✅ Cliente de visão criado com sucesso")
+        return client
+    except Exception as e:
+        print(f"❌ Erro ao criar cliente de visão: {e}")
+        return None
 
 def analyze_image(image_path):
     """Analisa uma imagem com IA para uso prático no dia a dia da manutenção."""
@@ -977,39 +1000,18 @@ def generate_chat_response(chat_history):
     """Processa um histórico de chat e retorna a resposta do modelo."""
     client = get_text_client()
     if not client:
-        return "❌ Serviço de IA indisponível. Verifique as configurações do token HF_TOKEN."
+        return "Desculpe, o serviço de IA não está disponível no momento."
     
     try:
-        print("🤖 Enviando requisição para Hugging Face...")
-        
-        # Usa text_generation ao invés de chat_completion
-        # Monta o prompt a partir do histórico
-        prompt_parts = []
-        for msg in chat_history:
-            if msg["role"] == "system":
-                prompt_parts.append(f"Sistema: {msg['content']}")
-            elif msg["role"] == "user":
-                prompt_parts.append(f"Usuário: {msg['content']}")
-            elif msg["role"] == "assistant":
-                prompt_parts.append(f"Assistente: {msg['content']}")
-        
-        prompt = "\n".join(prompt_parts) + "\nAssistente:"
-        
-        response = client.text_generation(
-            prompt,
-            max_new_tokens=1500,
-            temperature=0.7,
-            return_full_text=False
+        response_generator = client.chat_completion(
+            messages=chat_history,
+            max_tokens=1500,
+            stream=False
         )
-        
-        print("✅ Resposta gerada com sucesso")
-        return response.strip()
-        
+        return response_generator.choices[0].message.content
     except Exception as e:
-        print(f"❌ Erro na geração de resposta: {e}")
-        import traceback
-        traceback.print_exc()
-        return f"❌ Erro técnico: {str(e)}\n\nVerifique se o token HF_TOKEN está válido e se há conexão com a internet."
+        print(f"Erro na geração de resposta: {e}")
+        return "Desculpe, ocorreu um erro ao gerar a resposta."
 
 # --- ROTAS PRINCIPAIS ---
 @app.route('/')
@@ -1192,6 +1194,9 @@ Instruções: Analise o conteúdo do arquivo e responda à pergunta do usuário 
             session['chat_history'] = [session['chat_history'][0]] + session['chat_history'][-MAX_HISTORY_LENGTH:]
         
         print(f"Processando com histórico de {len(session['chat_history'])} mensagens...")
+        if not HUGGING_FACE_TOKEN:
+            return jsonify({"response": "⚠️ **Serviço de IA temporariamente indisponível**\n\nPara que eu possa responder adequadamente, é necessário configurar o token da Hugging Face no Replit Secrets.\n\n**Como resolver:**\n1. Clique em 'Secrets' no painel lateral\n2. Adicione a variável `HF_TOKEN` com seu token da Hugging Face\n3. Reinicie a aplicação\n\n**Como obter o token:**\n- Acesse huggingface.co\n- Faça login\n- Vá em Settings → Access Tokens\n- Crie um novo token\n\nApós configurar, estarei pronta para te ajudar com qualquer dúvida sobre manutenção industrial! 🔧"})
+        
         bot_response = generate_chat_response(session['chat_history'])
         
         session['chat_history'].append({"role": "assistant", "content": bot_response})
@@ -1542,6 +1547,4 @@ def clear_session():
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    print(f"🚀 Iniciando servidor na porta {port}")
-    print("=== CONFIGURAÇÃO FINALIZADA ===")
-    app.run(host='0.0.0.0', port=port, debug=False)
+    app.run(host='0.0.0.0', port=port, debug=True)
