@@ -50,19 +50,21 @@ HUGGING_FACE_TOKEN = os.getenv("HF_TOKEN")
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")  # Deve ser configurado no Replit Secrets
 
-# Validação das chaves
+# Validação das chaves com logs melhorados
+print("=== VERIFICAÇÃO DE CONFIGURAÇÃO ===")
+print(f"HF_TOKEN: {'✅ Configurado' if HUGGING_FACE_TOKEN else '❌ Não configurado'}")
+print(f"GOOGLE_API_KEY: {'✅ Configurado' if GOOGLE_API_KEY else '❌ Não configurado'}")
+print(f"GOOGLE_CSE_ID: {'✅ Configurado' if GOOGLE_CSE_ID else '❌ Não configurado'}")
+
 if not HUGGING_FACE_TOKEN:
-    print("AVISO: Token da Hugging Face não configurado. Chat com IA não funcionará.")
-    print("Configure a variável de ambiente HF_TOKEN no Replit Secrets.")
+    print("ERRO: Token da Hugging Face não encontrado!")
+    print("Verifique se HF_TOKEN está configurado nas variáveis de ambiente.")
 
 if not GOOGLE_API_KEY:
     print("AVISO: GOOGLE_API_KEY não configurada. Funcionalidade de busca web não funcionará.")
-    print("Configure as variáveis GOOGLE_API_KEY e GOOGLE_CSE_ID no Replit Secrets.")
-    print("Siga: https://developers.google.com/custom-search/v1/introduction")
 
 if not GOOGLE_CSE_ID or GOOGLE_CSE_ID == "f1582494ef7894395":
-    print("AVISO: GOOGLE_CSE_ID usando valor padrão ou não configurado. Configure seu próprio CSE ID.")
-    print("Crie um CSE em: https://cse.google.com/")
+    print("AVISO: GOOGLE_CSE_ID usando valor padrão ou não configurado.")
 
 app.secret_key = FLASK_SECRET_KEY
 
@@ -676,9 +678,20 @@ RESPOSTA DIRETA:"""
 # --- FUNÇÕES DE PROCESSAMENTO ---
 def get_text_client():
     """Cria e retorna um cliente para o modelo de linguagem."""
-    if not HUGGING_FACE_TOKEN or not InferenceClient:
+    if not HUGGING_FACE_TOKEN:
+        print("❌ Token Hugging Face não configurado")
         return None
-    return InferenceClient(model="meta-llama/Meta-Llama-3-8B-Instruct", token=HUGGING_FACE_TOKEN)
+    if not InferenceClient:
+        print("❌ InferenceClient não disponível")
+        return None
+    
+    try:
+        client = InferenceClient(model="meta-llama/Meta-Llama-3-8B-Instruct", token=HUGGING_FACE_TOKEN)
+        print("✅ Cliente Hugging Face criado com sucesso")
+        return client
+    except Exception as e:
+        print(f"❌ Erro ao criar cliente Hugging Face: {e}")
+        return None
 
 def get_vision_client():
     """Cria e retorna um cliente para análise de imagens."""
@@ -964,18 +977,39 @@ def generate_chat_response(chat_history):
     """Processa um histórico de chat e retorna a resposta do modelo."""
     client = get_text_client()
     if not client:
-        return "Desculpe, o serviço de IA não está disponível no momento."
+        return "❌ Serviço de IA indisponível. Verifique as configurações do token HF_TOKEN."
     
     try:
-        response_generator = client.chat_completion(
-            messages=chat_history,
-            max_tokens=1500,
-            stream=False
+        print("🤖 Enviando requisição para Hugging Face...")
+        
+        # Usa text_generation ao invés de chat_completion
+        # Monta o prompt a partir do histórico
+        prompt_parts = []
+        for msg in chat_history:
+            if msg["role"] == "system":
+                prompt_parts.append(f"Sistema: {msg['content']}")
+            elif msg["role"] == "user":
+                prompt_parts.append(f"Usuário: {msg['content']}")
+            elif msg["role"] == "assistant":
+                prompt_parts.append(f"Assistente: {msg['content']}")
+        
+        prompt = "\n".join(prompt_parts) + "\nAssistente:"
+        
+        response = client.text_generation(
+            prompt,
+            max_new_tokens=1500,
+            temperature=0.7,
+            return_full_text=False
         )
-        return response_generator.choices[0].message.content
+        
+        print("✅ Resposta gerada com sucesso")
+        return response.strip()
+        
     except Exception as e:
-        print(f"Erro na geração de resposta: {e}")
-        return "Desculpe, ocorreu um erro ao gerar a resposta."
+        print(f"❌ Erro na geração de resposta: {e}")
+        import traceback
+        traceback.print_exc()
+        return f"❌ Erro técnico: {str(e)}\n\nVerifique se o token HF_TOKEN está válido e se há conexão com a internet."
 
 # --- ROTAS PRINCIPAIS ---
 @app.route('/')
@@ -1508,4 +1542,6 @@ def clear_session():
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    print(f"🚀 Iniciando servidor na porta {port}")
+    print("=== CONFIGURAÇÃO FINALIZADA ===")
+    app.run(host='0.0.0.0', port=port, debug=False)
