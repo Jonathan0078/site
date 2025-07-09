@@ -498,12 +498,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const fileExt = file.name.split('.').pop().toLowerCase();
         const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileExt);
         const isDocument = ['pdf', 'doc', 'docx', 'txt', 'md', 'csv'].includes(fileExt);
-        
+
         // Adiciona mensagem do usuário com ícone apropriado
         let fileIcon = '📎';
         if (isImage) fileIcon = '📸';
         else if (isDocument) fileIcon = '📄';
-        
+
         const userMessage = `${fileIcon} Arquivo enviado: ${file.name}`;
         if(chatbox) {
             chatbox.appendChild(createChatLi(userMessage, "outgoing"));
@@ -513,12 +513,12 @@ document.addEventListener("DOMContentLoaded", () => {
         // Cria mensagem de "analisando arquivo" com texto personalizado
         const incomingChatLi = createChatLi("typing", "incoming");
         const pElement = incomingChatLi.querySelector("p");
-        
+
         let analysisText = "Analisando arquivo...";
         if (isImage) analysisText = "Analisando imagem...";
         else if (fileExt === 'pdf') analysisText = "Processando PDF...";
         else if (fileExt === 'docx') analysisText = "Processando documento...";
-        
+
         if(pElement) {
             pElement.textContent = analysisText;
             pElement.classList.add("typing-animation");
@@ -544,7 +544,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if(pElement) {
                 pElement.classList.remove("typing-animation");
                 pElement.textContent = "";
-                
+
                 if (data.response) {
                     typeText(pElement, data.response);
                 } else if (data.error) {
@@ -780,18 +780,10 @@ document.addEventListener("DOMContentLoaded", () => {
             saveCurrentConv();
         }
     };
+    // Botão de pesquisa removido - pesquisa é automática nas mensagens
     const searchBtn = document.getElementById('search-btn');
+    if (searchBtn){
+        searchBtn.remove();
+    }
 
-    searchBtn.addEventListener('click', () => {
-        const query = chatInput.value.trim();
-        if (query) {
-            performInternetSearch(query);
-        } else {
-            const searchQuery = prompt('Digite sua pesquisa:');
-            if (searchQuery && searchQuery.trim()) {
-                chatInput.value = `Pesquisar: ${searchQuery.trim()}`;
-                performInternetSearch(searchQuery.trim());
-            }
-        }
-    });
 });
