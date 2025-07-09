@@ -5,3 +5,4 @@ huggingface_hub
 python-dotenv
 PyPDF2
 python-docx
+Pillow
