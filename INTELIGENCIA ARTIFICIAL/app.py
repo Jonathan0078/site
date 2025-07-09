@@ -687,10 +687,12 @@ def get_vision_client():
     return InferenceClient(model="microsoft/kosmos-2-patch14-224", token=HUGGING_FACE_TOKEN)
 
 def analyze_image(image_path):
-    """Analisa uma imagem e retorna uma descrição detalhada do conteúdo visual."""
+    """Analisa uma imagem com IA para uso prático no dia a dia da manutenção."""
     try:
-        # 1. ANÁLISE VISUAL COM IA
+        # 1. ANÁLISE VISUAL COM IA APRIMORADA
         vision_analysis = ""
+        practical_analysis = ""
+        
         try:
             client = get_vision_client()
             if client and HUGGING_FACE_TOKEN:
@@ -718,6 +720,55 @@ def analyze_image(image_path):
                 try:
                     result = client.image_to_text(temp_buffer.getvalue())
                     vision_analysis = result.get('generated_text', '') if isinstance(result, dict) else str(result)
+                    
+                    # ANÁLISE PRÁTICA COM IA DE TEXTO
+                    if vision_analysis and vision_analysis.strip():
+                        text_client = get_text_client()
+                        if text_client:
+                            practical_prompt = f"""Como A.E.M.I, especialista em manutenção industrial, analise esta descrição visual e forneça orientações PRÁTICAS para o dia a dia:
+
+DESCRIÇÃO VISUAL: {vision_analysis}
+
+FORNEÇA UMA ANÁLISE ESTRUTURADA COM:
+
+🔧 **IDENTIFICAÇÃO DO EQUIPAMENTO/COMPONENTE:**
+- Que tipo de equipamento/peça identifica?
+- Qual a função provável?
+
+⚠️ **CONDIÇÕES OBSERVADAS:**
+- Estado atual (bom, desgaste, falha, etc.)
+- Sinais de problemas visíveis
+- Pontos de atenção
+
+🛠️ **AÇÕES RECOMENDADAS:**
+- O que fazer imediatamente
+- Procedimentos de segurança
+- Quando chamar especialista
+
+💡 **ORIENTAÇÕES PRÁTICAS:**
+- Frequência de inspeção
+- Sinais para monitorar
+- Prevenção de problemas
+
+📋 **PRÓXIMOS PASSOS:**
+- Documentação necessária
+- Peças/ferramentas necessárias
+- Cronograma sugerido
+
+Seja ESPECÍFICA e PRÁTICA para ajudar no dia a dia da manutenção."""
+
+                            try:
+                                practical_response = text_client.text_generation(
+                                    practical_prompt,
+                                    max_new_tokens=1000,
+                                    temperature=0.4,
+                                    return_full_text=False
+                                )
+                                if practical_response and practical_response.strip():
+                                    practical_analysis = practical_response.strip()
+                            except Exception as e:
+                                print(f"Erro na análise prática: {e}")
+                                
                 except Exception as e:
                     print(f"Erro na análise visual: {e}")
                     vision_analysis = ""
@@ -740,15 +791,28 @@ def analyze_image(image_path):
         filename = os.path.basename(image_path).lower()
         context_hints = analyze_filename_context(filename)
         
-        # 5. MONTA A RESPOSTA COMPLETA
-        if vision_analysis:
-            # Se temos análise de IA, usamos ela como base
+        # 5. MONTA A RESPOSTA COMPLETA PARA USO PRÁTICO
+        if practical_analysis:
+            # Resposta com análise prática completa
+            description = f"""📸 **ANÁLISE COMPLETA DA IMAGEM:**
+
+{practical_analysis}
+
+📊 **Detalhes técnicos:**
+- Formato: {format_img} | Dimensões: {width}x{height}px
+{visual_characteristics}
+{context_hints}
+
+💬 **Dúvidas?** Pode me perguntar qualquer coisa sobre esta imagem - procedimentos, peças, normas, etc."""
+            
+        elif vision_analysis:
+            # Se temos análise de IA básica, usamos ela
             description = f"""🔍 **Análise Visual da Imagem:**
 
-🤖 **O que vejo na imagem:**
+🤖 **O que identifiquei:**
 {vision_analysis}
 
-🔧 **Análise AEMI (Manutenção Industrial):**
+🔧 **Análise AEMI para seu dia a dia:**
 {interpret_for_maintenance(vision_analysis)}
 
 📊 **Características técnicas:**
@@ -756,7 +820,7 @@ def analyze_image(image_path):
 {visual_characteristics}
 {context_hints}
 
-💡 **Como posso ajudar:**
+💡 **Como posso te ajudar:**
 Baseado no que vejo, posso te orientar sobre:
 • Identificação de componentes
 • Análise de falhas ou desgastes
@@ -1041,18 +1105,42 @@ def chat():
 - Se identificar problemas, sugira soluções"""
             
             elif file_data.get('analysis_type') == 'text':
-                enhanced_message = f"""Como A.E.M.I, especialista em manutenção industrial, analise este documento e responda: {user_message}
+                enhanced_message = f"""Como A.E.M.I, especialista em manutenção industrial, analise este documento e forneça orientações PRÁTICAS para o dia a dia. 
+
+PERGUNTA: {user_message}
 
 📄 **Documento:** {file_data['filename']} (tipo: {file_data['type']})
 
 **Conteúdo do Documento:**
 {file_data['content']}
 
-**Instruções:**
-- Analise o conteúdo do documento em detalhes
-- Responda à pergunta com base nas informações do arquivo
-- Seja específica e técnica
-- Cite trechos relevantes do documento quando apropriado"""
+**FORNEÇA UMA ANÁLISE ESTRUTURADA COM:**
+
+🔧 **RESUMO EXECUTIVO:**
+- Principais pontos do documento
+- Informações mais importantes para manutenção
+
+⚠️ **PONTOS CRÍTICOS:**
+- Procedimentos de segurança
+- Especificações técnicas importantes
+- Alertas e cuidados
+
+🛠️ **APLICAÇÃO PRÁTICA:**
+- Como usar essas informações no dia a dia
+- Procedimentos passo a passo
+- Ferramentas necessárias
+
+💡 **DICAS PRÁTICAS:**
+- Boas práticas mencionadas
+- Frequências recomendadas
+- Sinais de alerta
+
+📋 **AÇÕES IMEDIATAS:**
+- O que fazer agora
+- Próximos passos
+- Documentação necessária
+
+Seja ESPECÍFICA e PRÁTICA para ajudar no dia a dia da manutenção."""
             
             else:
                 enhanced_message = f"""Pergunta sobre o arquivo enviado: {user_message}
@@ -1108,7 +1196,7 @@ def upload_file():
         
         # Verifica se é imagem
         if ext in ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']:
-            response_text = "📸 **ARQUIVO RECEBIDO, NO QUE POSSO AJUDAR?**"
+            response_text = "📸 **IMAGEM ANALISADA COM IA - PRONTA PARA TE AJUDAR!**"
             
             # Análise visual da imagem
             try:
@@ -1122,12 +1210,19 @@ def upload_file():
                         'analysis_type': 'visual'
                     }
                     session.modified = True
+                    
+                    # Retorna a análise completa automaticamente
+                    return jsonify({
+                        'response': visual_analysis,
+                        'filename': file.filename,
+                        'file_type': ext
+                    })
             except Exception as e:
                 print(f"Erro na análise visual: {e}")
         
         # Verifica se é PDF
         elif ext == '.pdf' and PyPDF2:
-            response_text = "📄 **ARQUIVO RECEBIDO, NO QUE POSSO AJUDAR?**"
+            response_text = "📄 **DOCUMENTO ANALISADO COM IA - PRONTO PARA TE AJUDAR!**"
             
             try:
                 with open(temp_path, 'rb') as f:
@@ -1151,6 +1246,53 @@ def upload_file():
                         'analysis_type': 'text'
                     }
                     session.modified = True
+                    
+                    # Gera análise automática do documento
+                    try:
+                        client = get_text_client()
+                        if client:
+                            doc_analysis_prompt = f"""Como A.E.M.I, especialista em manutenção industrial, analise este documento PDF e forneça um resumo PRÁTICO para uso no dia a dia:
+
+DOCUMENTO: {file.filename}
+
+CONTEÚDO:
+{text_content[:10000]}
+
+FORNEÇA:
+🔧 **TIPO DE DOCUMENTO:** (manual, procedimento, catálogo, etc.)
+📋 **RESUMO EXECUTIVO:** (principais pontos em 3-4 linhas)
+⚠️ **PONTOS CRÍTICOS:** (segurança, especificações importantes)
+🛠️ **APLICAÇÃO PRÁTICA:** (como usar no dia a dia)
+💡 **DICAS IMPORTANTES:** (procedimentos, cuidados, frequências)
+
+Seja DIRETA e PRÁTICA."""
+
+                            doc_analysis = client.text_generation(
+                                doc_analysis_prompt,
+                                max_new_tokens=800,
+                                temperature=0.4,
+                                return_full_text=False
+                            )
+                            
+                            if doc_analysis and doc_analysis.strip():
+                                full_analysis = f"""📄 **ANÁLISE COMPLETA DO DOCUMENTO:**
+
+{doc_analysis.strip()}
+
+💬 **Como usar:** Agora você pode fazer perguntas específicas sobre qualquer parte do documento. Por exemplo:
+• "Como fazer a manutenção preventiva?"
+• "Quais são as especificações técnicas?"
+• "Que procedimentos de segurança devo seguir?"
+
+❓ **O que você gostaria de saber sobre este documento?**"""
+                                
+                                return jsonify({
+                                    'response': full_analysis,
+                                    'filename': file.filename,
+                                    'file_type': ext
+                                })
+                    except Exception as e:
+                        print(f"Erro na análise do documento: {e}")
             except Exception as e:
                 print(f"Erro ao processar PDF: {e}")
         
@@ -1177,6 +1319,53 @@ def upload_file():
                     'analysis_type': 'text'
                 }
                 session.modified = True
+                
+                # Gera análise automática do documento Word
+                try:
+                    client = get_text_client()
+                    if client:
+                        doc_analysis_prompt = f"""Como A.E.M.I, especialista em manutenção industrial, analise este documento Word e forneça um resumo PRÁTICO para uso no dia a dia:
+
+DOCUMENTO: {file.filename}
+
+CONTEÚDO:
+{text_content[:10000]}
+
+FORNEÇA:
+🔧 **TIPO DE DOCUMENTO:** (manual, procedimento, catálogo, etc.)
+📋 **RESUMO EXECUTIVO:** (principais pontos em 3-4 linhas)
+⚠️ **PONTOS CRÍTICOS:** (segurança, especificações importantes)
+🛠️ **APLICAÇÃO PRÁTICA:** (como usar no dia a dia)
+💡 **DICAS IMPORTANTES:** (procedimentos, cuidados, frequências)
+
+Seja DIRETA e PRÁTICA."""
+
+                        doc_analysis = client.text_generation(
+                            doc_analysis_prompt,
+                            max_new_tokens=800,
+                            temperature=0.4,
+                            return_full_text=False
+                        )
+                        
+                        if doc_analysis and doc_analysis.strip():
+                            full_analysis = f"""📄 **ANÁLISE COMPLETA DO DOCUMENTO:**
+
+{doc_analysis.strip()}
+
+💬 **Como usar:** Agora você pode fazer perguntas específicas sobre qualquer parte do documento. Por exemplo:
+• "Como fazer a manutenção preventiva?"
+• "Quais são as especificações técnicas?"
+• "Que procedimentos de segurança devo seguir?"
+
+❓ **O que você gostaria de saber sobre este documento?**"""
+                            
+                            return jsonify({
+                                'response': full_analysis,
+                                'filename': file.filename,
+                                'file_type': ext
+                            })
+                except Exception as e:
+                    print(f"Erro na análise do documento: {e}")
             except Exception as e:
                 print(f"Erro ao processar documento: {e}")
         
@@ -1196,6 +1385,53 @@ def upload_file():
                         'analysis_type': 'text'
                     }
                     session.modified = True
+                    
+                    # Gera análise automática do arquivo de texto
+                    try:
+                        client = get_text_client()
+                        if client:
+                            text_analysis_prompt = f"""Como A.E.M.I, especialista em manutenção industrial, analise este arquivo de texto e forneça um resumo PRÁTICO para uso no dia a dia:
+
+ARQUIVO: {file.filename} (tipo: {ext})
+
+CONTEÚDO:
+{content[:10000]}
+
+FORNEÇA:
+🔧 **TIPO DE ARQUIVO:** (dados, lista, procedimento, etc.)
+📋 **RESUMO EXECUTIVO:** (principais pontos em 3-4 linhas)
+⚠️ **PONTOS CRÍTICOS:** (informações importantes)
+🛠️ **APLICAÇÃO PRÁTICA:** (como usar no dia a dia)
+💡 **DICAS IMPORTANTES:** (procedimentos, cuidados, observações)
+
+Seja DIRETA e PRÁTICA."""
+
+                            text_analysis = client.text_generation(
+                                text_analysis_prompt,
+                                max_new_tokens=800,
+                                temperature=0.4,
+                                return_full_text=False
+                            )
+                            
+                            if text_analysis and text_analysis.strip():
+                                full_analysis = f"""📝 **ANÁLISE COMPLETA DO ARQUIVO:**
+
+{text_analysis.strip()}
+
+💬 **Como usar:** Agora você pode fazer perguntas específicas sobre qualquer parte do arquivo. Por exemplo:
+• "Como interpretar esses dados?"
+• "Que procedimentos seguir?"
+• "Quais são os pontos mais importantes?"
+
+❓ **O que você gostaria de saber sobre este arquivo?**"""
+                                
+                                return jsonify({
+                                    'response': full_analysis,
+                                    'filename': file.filename,
+                                    'file_type': ext
+                                })
+                    except Exception as e:
+                        print(f"Erro na análise do arquivo: {e}")
             except Exception as e:
                 print(f"Erro ao processar arquivo: {e}")
         
