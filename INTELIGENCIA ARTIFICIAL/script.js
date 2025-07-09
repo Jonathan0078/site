@@ -1,3 +1,4 @@
+
 // --- Botão de voltar para o chat na base de conhecimento ---
 document.addEventListener('DOMContentLoaded', function() {
     const kbBackBtn = document.getElementById('kb-back-btn');
@@ -22,7 +23,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-
 
 // --- Botão de alternância de modo (Assistente/KB) na área de input ---
 document.addEventListener('DOMContentLoaded', function() {
@@ -72,9 +72,15 @@ const kbList = document.getElementById('kb-list');
 const kbSearch = document.getElementById('kb-search');
 
 async function fetchKbList(query = '') {
-    const res = await fetch('/kb/list?q=' + encodeURIComponent(query));
-    const data = await res.json();
-    renderKbList(data);
+    try {
+        const res = await fetch('/kb/list?q=' + encodeURIComponent(query));
+        if (!res.ok) throw new Error('Erro na resposta do servidor');
+        const data = await res.json();
+        renderKbList(data);
+    } catch (error) {
+        console.error('Erro ao buscar base de conhecimento:', error);
+        renderKbList([]);
+    }
 }
 
 function renderKbList(items) {
@@ -152,16 +158,24 @@ if (kbSearch) {
 
 // Carregar lista ao abrir a aba KB e dar feedback visual
 document.addEventListener('DOMContentLoaded', function() {
-    const kbTabBtn = document.querySelector('.tab-btn[data-tab="kb-tab"]');
-    if (kbTabBtn) {
-        kbTabBtn.addEventListener('click', () => fetchKbList(kbSearch.value));
+    // Carrega a lista KB automaticamente
+    fetchKbList('');
+    
+    // Adiciona evento para alternar para KB
+    const kbToggleBtn = document.querySelector('.tab-toggle-option[data-tab="kb-tab"]');
+    if (kbToggleBtn) {
+        kbToggleBtn.addEventListener('click', () => {
+            setTimeout(() => fetchKbList(kbSearch?.value || ''), 100);
+        });
     }
+    
     // Dica visual para FAQ
     const faqLabel = document.querySelector('label[for="kb-faq"]');
-    if (faqLabel) {
+    if (faqLabel && !faqLabel.querySelector('span')) {
         faqLabel.innerHTML += ' <span style="color:var(--cor-destaque);font-size:0.95em;">(clique em Adicionar para salvar)</span>';
     }
 });
+
 // --- Tema claro/escuro ---
 const themeToggleBtn = document.getElementById('theme-toggle-btn');
 const themeIcon = document.getElementById('theme-icon');
@@ -197,13 +211,11 @@ document.querySelectorAll('.suggestion-btn').forEach(btn => {
     });
 });
 
-
 // =================================================================================
 // Início do Bloco Principal do Script
 // =================================================================================
 
 document.addEventListener("DOMContentLoaded", () => {
-
 
     // ==================================================
     // INÍCIO: MENU LATERAL (SIDEBAR) - BOTÃO SEMPRE AO LADO DO MODO NOTURNO
@@ -270,7 +282,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // ==================================================
     // FIM: MENU LATERAL (SIDEBAR)
     // ==================================================
-
 
     // --- Seletores do DOM (Restante do código) ---
     const chatInput = document.querySelector(".chat-input textarea");
@@ -604,8 +615,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- Inicia a aplicação ---
     init();
-
-    /* O CÓDIGO ANTIGO DO SIDEBAR QUE ESTAVA AQUI FOI REMOVIDO 
-    PARA EVITAR CONFLITO COM A NOVA IMPLEMENTAÇÃO NO INÍCIO DO ARQUIVO.
-    */
 });
