@@ -51,9 +51,14 @@ GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID", "f1582494ef7894395") # CX ID que voc�
 # Validação das chaves
 if not HUGGING_FACE_TOKEN:
     print("AVISO: Token da Hugging Face não configurado. Chat com IA não funcionará.")
+    print("Configure a variável de ambiente HF_TOKEN no Replit.")
+
 if not GOOGLE_API_KEY:
     print("AVISO: GOOGLE_API_KEY não configurada. Funcionalidade de busca web pode não funcionar.")
-# O GOOGLE_CSE_ID já está com um valor padrão, mas é bom ter o aviso se não houver GOOGLE_API_KEY
+    print("Configure as variáveis GOOGLE_API_KEY e GOOGLE_CSE_ID no Replit Secrets.")
+
+if not GOOGLE_CSE_ID or GOOGLE_CSE_ID == "f1582494ef7894395":
+    print("AVISO: GOOGLE_CSE_ID usando valor padrão. Configure seu próprio CSE ID.")
 
 app.secret_key = FLASK_SECRET_KEY
 
@@ -80,51 +85,54 @@ def save_kb(data):
         print(f"Erro ao salvar KB: {e}")
 
 # --- FUNÇÃO DE BUSCA NA INTERNET ---
-def Google Search(query, num_results=3):
+def google_search_api(query, num_results=3):
     """
     Faz uma busca na web usando a Google Custom Search JSON API.
     """
     if not GOOGLE_API_KEY or not GOOGLE_CSE_ID:
         print("Erro: Chave de API do Google ou CSE ID não configurados. Retornando resultados vazios.")
-        return []
+        return {"error": "API do Google não configurada"}
 
     url = "https://www.googleapis.com/customsearch/v1"
     params = {
         "key": GOOGLE_API_KEY,
         "cx": GOOGLE_CSE_ID,
         "q": query,
-        "num": num_results # Número de resultados a retornar
+        "num": min(num_results, 10),  # Google limita a 10 resultados por requisição
+        "safe": "active"  # Filtro de conteúdo seguro
     }
 
     try:
-        response = requests.get(url, params=params)
-        response.raise_for_status() # Lança um erro para códigos de status ruins (4xx ou 5xx)
+        response = requests.get(url, params=params, timeout=10)
+        response.raise_for_status()
         search_results = response.json()
 
         results_list = []
         if "items" in search_results:
             for item in search_results["items"]:
                 results_list.append({
-                    "title": item.get("title"),
-                    "link": item.get("link"),
-                    "snippet": item.get("snippet")
+                    "title": item.get("title", "Sem título"),
+                    "link": item.get("link", ""),
+                    "snippet": item.get("snippet", "Sem descrição")
                 })
-        return results_list
+        
+        return {"results": results_list, "query": query}
     except requests.exceptions.RequestException as e:
         print(f"Erro na requisição à API de busca do Google: {e}")
-        return []
+        return {"error": f"Erro na requisição: {str(e)}"}
     except Exception as e:
         print(f"Erro inesperado ao processar busca do Google: {e}")
-        return []
+        return {"error": f"Erro inesperado: {str(e)}"}
 
-# --- NOVA ROTA PARA TESTAR A BUSCA (OPCIONAL, PODE SER REMOVIDA APÓS TESTES) ---
+# --- ROTA PARA TESTAR A BUSCA DO GOOGLE ---
 @app.route('/api/search', methods=['GET'])
 def perform_search():
     query = request.args.get('q', '')
     if not query:
         return jsonify({"error": "Parâmetro 'q' (query) é obrigatório."}), 400
     
-    results = Google Search(query)
+    num_results = int(request.args.get('num', 5))
+    results = google_search_api(query, num_results)
     return jsonify(results)
 
 # --- ROTAS DA BASE DE CONHECIMENTO (RESTO DO SEU CÓDIGO) ---
@@ -140,7 +148,7 @@ def kb_upload():
         # Quando o usuário faz uma pergunta que a IA não sabe responder diretamente,
         # ou que exige informação atualizada, você chamaria:
         # search_query = "informação sobre " + pergunta_do_usuario
-        # search_results = Google Search_query)
+        # search_results = google_search_api(search_query)
         # return jsonify({"response": "Encontrei isto: " + str(search_results)}) # Adaptar a resposta
 
         
@@ -731,7 +739,24 @@ def generate_chat_response(chat_history):
 # --- ROTAS PRINCIPAIS ---
 @app.route('/')
 def index():
-    return "Servidor da AEMI (versão com Llama 3 8B e memória) está no ar."
+    status = {
+        "status": "online",
+        "message": "Servidor da AEMI (versão com Llama 3 8B e memória) está no ar.",
+        "services": {
+            "huggingface": "✅ Configurado" if HUGGING_FACE_TOKEN else "❌ Não configurado",
+            "google_search": "✅ Configurado" if (GOOGLE_API_KEY and GOOGLE_CSE_ID) else "❌ Não configurado"
+        }
+    }
+    return jsonify(status)
+
+@app.route('/health')
+def health():
+    return jsonify({
+        "status": "healthy",
+        "timestamp": str(__import__('datetime').datetime.now()),
+        "google_api": bool(GOOGLE_API_KEY and GOOGLE_CSE_ID),
+        "hf_token": bool(HUGGING_FACE_TOKEN)
+    })
 
 @app.route('/chat', methods=['POST'])
 def chat():
