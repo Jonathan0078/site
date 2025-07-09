@@ -191,107 +191,217 @@ def get_vision_client():
     """Cria e retorna um cliente para análise de imagens."""
     if not HUGGING_FACE_TOKEN or not InferenceClient:
         return None
-    return InferenceClient(model="microsoft/DiT-large-patch16-224", token=HUGGING_FACE_TOKEN)
+    return InferenceClient(model="microsoft/kosmos-2-patch14-224", token=HUGGING_FACE_TOKEN)
 
 def analyze_image(image_path):
-    """Analisa uma imagem e retorna uma descrição detalhada."""
+    """Analisa uma imagem e retorna uma descrição detalhada do conteúdo visual."""
     try:
-        # Abre e processa a imagem
+        # 1. ANÁLISE VISUAL COM IA
+        vision_analysis = ""
+        try:
+            client = get_vision_client()
+            if client and HUGGING_FACE_TOKEN:
+                # Converte imagem para base64
+                with open(image_path, 'rb') as f:
+                    image_data = f.read()
+                
+                # Prepara a imagem para análise
+                img = Image.open(io.BytesIO(image_data))
+                
+                # Redimensiona se muito grande
+                if img.width > 1024 or img.height > 1024:
+                    img.thumbnail((1024, 1024), Image.Resampling.LANCZOS)
+                
+                # Converte para RGB se necessário
+                if img.mode != 'RGB':
+                    img = img.convert('RGB')
+                
+                # Salva temporariamente
+                temp_buffer = io.BytesIO()
+                img.save(temp_buffer, format='JPEG', quality=85)
+                temp_buffer.seek(0)
+                
+                # Faz a análise visual com IA
+                try:
+                    result = client.image_to_text(temp_buffer.getvalue())
+                    vision_analysis = result.get('generated_text', '') if isinstance(result, dict) else str(result)
+                except Exception as e:
+                    print(f"Erro na análise visual: {e}")
+                    vision_analysis = ""
+        except Exception as e:
+            print(f"Erro no cliente de visão: {e}")
+            vision_analysis = ""
+        
+        # 2. ANÁLISE TÉCNICA DA IMAGEM
         with open(image_path, 'rb') as f:
             image_data = f.read()
         
-        # Análise detalhada da imagem
         img = Image.open(io.BytesIO(image_data))
         width, height = img.size
         format_img = img.format or "Desconhecido"
-        mode = img.mode
         
-        # Calcula tamanho do arquivo
-        file_size = len(image_data)
-        size_mb = file_size / (1024 * 1024)
+        # 3. ANÁLISE BASEADA EM CARACTERÍSTICAS VISUAIS
+        visual_characteristics = analyze_visual_characteristics(img)
         
-        # Análise de cores dominantes
-        colors_info = ""
-        try:
-            img_small = img.resize((50, 50))
-            img_small = img_small.convert('RGB')
-            pixels = list(img_small.getdata())
-            
-            # Conta cores predominantes
-            from collections import Counter
-            color_counts = Counter(pixels)
-            most_common = color_counts.most_common(3)
-            
-            colors_info = f"\n🎨 Cores predominantes: "
-            for i, (color, count) in enumerate(most_common):
-                r, g, b = color
-                colors_info += f"RGB({r},{g},{b})"
-                if i < len(most_common) - 1:
-                    colors_info += ", "
-        except:
-            colors_info = ""
-        
-        # Análise do nome do arquivo
+        # 4. ANÁLISE DO NOME DO ARQUIVO
         filename = os.path.basename(image_path).lower()
-        context_analysis = ""
+        context_hints = analyze_filename_context(filename)
         
-        # Palavras-chave relacionadas à manutenção industrial
-        maintenance_keywords = {
-            'motor': 'Motor elétrico/mecânico',
-            'rolamento': 'Rolamento/bearing',
-            'engrenagem': 'Sistema de engrenagens',
-            'bomba': 'Bomba hidráulica/pneumática',
-            'valvula': 'Válvula de controle',
-            'manutencao': 'Manutenção industrial',
-            'equipamento': 'Equipamento industrial',
-            'falha': 'Análise de falha',
-            'desgaste': 'Desgaste de componente',
-            'vibração': 'Análise de vibração',
-            'temperatura': 'Análise térmica',
-            'pressao': 'Sistema de pressão',
-            'hidraulica': 'Sistema hidráulico',
-            'pneumatica': 'Sistema pneumático',
-            'correia': 'Correias e transmissão',
-            'polia': 'Polias e transmissão',
-            'mancal': 'Mancais e suportes',
-            'lubrificacao': 'Lubrificação',
-            'oleo': 'Óleo lubrificante',
-            'graxa': 'Graxa lubrificante'
-        }
-        
-        found_keywords = []
-        for keyword, description in maintenance_keywords.items():
-            if keyword in filename:
-                found_keywords.append(description)
-        
-        if found_keywords:
-            context_analysis = f"\n🔧 Contexto identificado: {', '.join(found_keywords)}"
-        
-        # Monta a descrição completa
-        description = f"""📸 **Análise de Imagem Completa:**
+        # 5. MONTA A RESPOSTA COMPLETA
+        if vision_analysis:
+            # Se temos análise de IA, usamos ela como base
+            description = f"""🔍 **Análise Visual da Imagem:**
 
-📊 **Informações Técnicas:**
+🤖 **O que vejo na imagem:**
+{vision_analysis}
+
+🔧 **Análise AEMI (Manutenção Industrial):**
+{interpret_for_maintenance(vision_analysis)}
+
+📊 **Características técnicas:**
+- Formato: {format_img} | Dimensões: {width}x{height}px
+{visual_characteristics}
+{context_hints}
+
+💡 **Como posso ajudar:**
+Baseado no que vejo, posso te orientar sobre:
+• Identificação de componentes
+• Análise de falhas ou desgastes
+• Procedimentos de manutenção
+• Normas de segurança
+• Ferramentas recomendadas
+
+❓ **Próximo passo:** Me conte qual é sua dúvida específica sobre esta imagem."""
+        else:
+            # Fallback para análise baseada em características
+            description = f"""📸 **Análise da Imagem:**
+
+⚠️ **Análise Visual Limitada:**
+Não foi possível fazer análise visual completa com IA no momento.
+
+🔧 **Análise AEMI baseada em características:**
+{visual_characteristics}
+{context_hints}
+
+📊 **Informações técnicas:**
 - Formato: {format_img}
-- Modo de cor: {mode}
 - Dimensões: {width}x{height} pixels
-- Tamanho: {size_mb:.2f} MB{colors_info}{context_analysis}
 
-🤖 **Análise AEMI:**
-Imagem recebida e processada com sucesso. Como especialista em manutenção industrial, posso te ajudar a:
+💡 **Como posso ajudar:**
+Mesmo sem análise visual completa, posso te orientar sobre manutenção industrial se você me descrever:
+• Que equipamento/componente está na imagem
+• Qual problema você está enfrentando
+• Que tipo de análise precisa
 
-• Identificar componentes e equipamentos
-• Analisar possíveis falhas ou desgastes
-• Sugerir procedimentos de manutenção
-• Orientar sobre normas de segurança
-• Recomendar ferramentas adequadas
-
-💡 **Próximos passos:**
-Descreva o que você gostaria de saber sobre esta imagem ou conte-me sobre o problema que está enfrentando."""
+❓ **Me conte:** O que você vê na imagem e como posso te ajudar?"""
         
         return description
         
     except Exception as e:
-        return f"❌ Erro ao analisar imagem: {str(e)}\n\nTente enviar a imagem novamente ou verifique se o formato é suportado (JPG, PNG, GIF, BMP, WEBP)."
+        return f"❌ Erro ao analisar imagem: {str(e)}\n\nTente enviar novamente ou descreva o que você vê na imagem para que eu possa te ajudar."
+
+def analyze_visual_characteristics(img):
+    """Analisa características visuais básicas da imagem."""
+    try:
+        # Análise de cores
+        colors = img.getcolors(maxcolors=256*256*256)
+        if colors:
+            dominant_colors = sorted(colors, key=lambda x: x[0], reverse=True)[:3]
+            
+            # Interpretação das cores para contexto industrial
+            color_hints = []
+            for count, color in dominant_colors:
+                if isinstance(color, tuple) and len(color) >= 3:
+                    r, g, b = color[:3]
+                    if r > 200 and g < 100 and b < 100:  # Vermelho
+                        color_hints.append("Possível indicação de perigo/parada")
+                    elif r > 200 and g > 200 and b < 100:  # Amarelo
+                        color_hints.append("Possível sinalização de atenção")
+                    elif r < 100 and g > 150 and b < 100:  # Verde
+                        color_hints.append("Possível indicação de funcionamento normal")
+                    elif r < 100 and g < 100 and b > 150:  # Azul
+                        color_hints.append("Possível componente hidráulico")
+            
+            if color_hints:
+                return f"\n🎨 **Indicações visuais:** {', '.join(color_hints)}"
+        
+        return "\n🎨 **Análise de cores:** Variadas (equipamento/ambiente industrial)"
+    except:
+        return ""
+
+def analyze_filename_context(filename):
+    """Analisa o nome do arquivo para contexto."""
+    maintenance_keywords = {
+        'motor': 'Motor elétrico/mecânico',
+        'rolamento': 'Rolamento/bearing',
+        'bearing': 'Rolamento',
+        'engrenagem': 'Sistema de engrenagens',
+        'gear': 'Engrenagem',
+        'bomba': 'Bomba hidráulica/pneumática',
+        'pump': 'Bomba',
+        'valvula': 'Válvula',
+        'valve': 'Válvula',
+        'correia': 'Correia/belt',
+        'belt': 'Correia',
+        'polia': 'Polia',
+        'pulley': 'Polia',
+        'falha': 'Análise de falha',
+        'failure': 'Falha',
+        'desgaste': 'Desgaste',
+        'wear': 'Desgaste',
+        'manutencao': 'Manutenção',
+        'maintenance': 'Manutenção',
+        'hidraulica': 'Sistema hidráulico',
+        'hydraulic': 'Hidráulico',
+        'pneumatic': 'Pneumático',
+        'pneumatica': 'Pneumático'
+    }
+    
+    found = []
+    for keyword, description in maintenance_keywords.items():
+        if keyword in filename:
+            found.append(description)
+    
+    if found:
+        return f"\n🏷️ **Contexto do arquivo:** {', '.join(found)}"
+    return ""
+
+def interpret_for_maintenance(vision_text):
+    """Interpreta a análise visual no contexto de manutenção industrial."""
+    vision_lower = vision_text.lower()
+    
+    interpretations = []
+    
+    # Identifica equipamentos
+    if any(word in vision_lower for word in ['motor', 'engine', 'máquina', 'machine']):
+        interpretations.append("🔧 **Motor/Máquina identificado** - Posso ajudar com análise de vibração, alinhamento, lubrificação")
+    
+    if any(word in vision_lower for word in ['rolamento', 'bearing', 'roda', 'wheel']):
+        interpretations.append("⚙️ **Rolamento detectado** - Posso orientar sobre montagem, desmontagem e análise de falhas")
+    
+    if any(word in vision_lower for word in ['tubo', 'pipe', 'mangueira', 'hose']):
+        interpretations.append("🔧 **Sistema hidráulico/pneumático** - Posso ajudar com pressões, vedações e conexões")
+    
+    if any(word in vision_lower for word in ['parafuso', 'bolt', 'rosca', 'thread']):
+        interpretations.append("🔩 **Fixação detectada** - Posso orientar sobre torques e procedimentos de aperto")
+    
+    if any(word in vision_lower for word in ['óleo', 'oil', 'graxa', 'grease', 'lubrificante']):
+        interpretations.append("🛢️ **Lubrificação identificada** - Posso ajudar com intervalos e tipos de lubrificantes")
+    
+    # Identifica problemas
+    if any(word in vision_lower for word in ['rachadura', 'crack', 'quebrado', 'broken']):
+        interpretations.append("⚠️ **Possível falha estrutural** - Recomendo inspeção detalhada e avaliação de segurança")
+    
+    if any(word in vision_lower for word in ['oxidação', 'rust', 'corrosão', 'corrosion']):
+        interpretations.append("🔴 **Corrosão detectada** - Posso orientar sobre tratamento e prevenção")
+    
+    if any(word in vision_lower for word in ['desgaste', 'wear', 'gasto', 'worn']):
+        interpretations.append("📉 **Desgaste identificado** - Posso ajudar a avaliar vida útil restante")
+    
+    if interpretations:
+        return '\n'.join(interpretations)
+    else:
+        return "📋 **Análise geral:** Identifiquei elementos industriais. Me descreva sua dúvida específica para orientação detalhada."
 
 def generate_chat_response(chat_history):
     """Processa um histórico de chat e retorna a resposta do modelo."""
