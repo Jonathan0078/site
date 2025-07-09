@@ -1,4 +1,3 @@
-
 // --- Botão de voltar para o chat na base de conhecimento ---
 document.addEventListener('DOMContentLoaded', function() {
     const kbBackBtn = document.getElementById('kb-back-btn');
@@ -160,7 +159,7 @@ if (kbSearch) {
 document.addEventListener('DOMContentLoaded', function() {
     // Carrega a lista KB automaticamente
     fetchKbList('');
-    
+
     // Adiciona evento para alternar para KB
     const kbToggleBtn = document.querySelector('.tab-toggle-option[data-tab="kb-tab"]');
     if (kbToggleBtn) {
@@ -168,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => fetchKbList(kbSearch?.value || ''), 100);
         });
     }
-    
+
     // Dica visual para FAQ
     const faqLabel = document.querySelector('label[for="kb-faq"]');
     if (faqLabel && !faqLabel.querySelector('span')) {
@@ -494,14 +493,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const handleFileUpload = (file) => {
         const formData = new FormData();
         formData.append('file', file);
-        
+
         // Adiciona mensagem do usuário
         const userMessage = `📎 Arquivo enviado: ${file.name}`;
         if(chatbox) {
             chatbox.appendChild(createChatLi(userMessage, "outgoing"));
             chatbox.scrollTo(0, chatbox.scrollHeight);
         }
-        
+
         // Cria mensagem de "analisando arquivo"
         const incomingChatLi = createChatLi("typing", "incoming");
         const pElement = incomingChatLi.querySelector("p");
@@ -509,12 +508,12 @@ document.addEventListener("DOMContentLoaded", () => {
             pElement.textContent = "Analisando arquivo...";
             pElement.classList.add("typing-animation");
         }
-        
+
         if(chatbox) {
             chatbox.appendChild(incomingChatLi);
             chatbox.scrollTo(0, chatbox.scrollHeight);
         }
-        
+
         // Envia arquivo para análise
         fetch(API_URL_UPLOAD, {
             method: 'POST',
@@ -527,7 +526,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 pElement.textContent = "";
                 typeText(pElement, data.response || data.error);
             }
-            
+
             if (isVoiceOutputEnabled && data.response) {
                 speakText(data.response);
             }
@@ -589,7 +588,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const lowerCaseMessage = userMessage.toLowerCase(); // Converte para minúsculas para comparação
 
         if (!lowerCaseMessage) return;
-        
+
         chatInput.value = "";
         // chatInput.disabled = true; // Removido para permitir digitação enquanto a IA responde
         // sendChatBtn.disabled = true; // Removido para permitir digitação enquanto a IA responde
@@ -659,13 +658,13 @@ document.addEventListener("DOMContentLoaded", () => {
             handleChat();
         }
     });
-    
+
     // Eventos para upload de arquivo
     if(fileBtn && fileInput) {
         fileBtn.addEventListener("click", () => {
             fileInput.click();
         });
-        
+
         fileInput.addEventListener("change", (e) => {
             const file = e.target.files[0];
             if(file) {
@@ -684,10 +683,88 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
     if(newConvBtn) newConvBtn.addEventListener("click", startNewConv);
-    
+
     // --- Salvar Conversa ao Sair ---
     window.addEventListener("beforeunload", saveCurrentConv);
 
     // --- Inicia a aplicação ---
     init();
+
+    // --- Pesquisa na Internet ---
+    const performInternetSearch = async (query) => {
+        const chatContainer = document.querySelector(".chatbox"); // Make sure this selector is correct
+        const outgoingChatLi = createChatLi(`🔍 Pesquisando: "${query}"`, "outgoing");
+        chatContainer.appendChild(outgoingChatLi);
+        chatContainer.scrollTo(0, chatContainer.scrollHeight);
+
+        const incomingChatLi = createChatLi("typing", "incoming");
+        chatContainer.appendChild(incomingChatLi);
+        chatContainer.scrollTo(0, chatContainer.scrollHeight);
+
+        const pElement = incomingChatLi.querySelector("p");
+        pElement.textContent = "Pesquisando na internet..."; // Updated message
+
+        const formData = new FormData();
+        formData.append('query', query);
+        formData.append('max_results', '5');
+
+        try {
+            const response = await fetch(`${BACKEND_URL}/search-internet`, { // Updated API URL
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                pElement.classList.remove("typing-animation");
+                pElement.textContent = `❌ Erro na pesquisa: ${data.error}`;
+            } else if (data.results && data.results.length > 0) {
+                let resultText = `🔍 **Resultados da pesquisa para "${query}"**\n\n`;
+                resultText += `📊 Encontrei ${data.results.length} resultado(s):\n\n`;
+
+                data.results.forEach((result, index) => {
+                    resultText += `**${index + 1}. ${result.title}**\n`;
+                    resultText += `🔗 ${result.url}\n`;
+                    if (result.snippet) {
+                        resultText += `📝 ${result.snippet}\n`;
+                    }
+                    resultText += `\n`;
+                });
+
+                resultText += `💡 **Como usar:** Clique nos links para mais detalhes ou me pergunte algo específico!`;
+
+                pElement.classList.remove("typing-animation");
+                typeText(pElement, resultText);
+
+                if (isVoiceOutputEnabled) {
+                    speakText(`Encontrei ${data.results.length} resultados para sua pesquisa sobre ${query}`);
+                }
+            } else {
+                pElement.classList.remove("typing-animation");
+                pElement.textContent = `🚫 Nenhum resultado encontrado para "${query}". Tente reformular sua pesquisa.`;
+            }
+        } catch (error) {
+            console.error('Erro na pesquisa:', error);
+            pElement.classList.remove("typing-animation");
+            pElement.textContent = '❌ Erro ao realizar pesquisa na internet.';
+        } finally {
+            chatContainer.scrollTo(0, chatContainer.scrollHeight);
+            saveCurrentConv();
+        }
+    };
+    const searchBtn = document.getElementById('search-btn');
+
+    searchBtn.addEventListener('click', () => {
+        const query = chatInput.value.trim();
+        if (query) {
+            performInternetSearch(query);
+        } else {
+            const searchQuery = prompt('Digite sua pesquisa:');
+            if (searchQuery && searchQuery.trim()) {
+                chatInput.value = `Pesquisar: ${searchQuery.trim()}`;
+                performInternetSearch(searchQuery.trim());
+            }
+        }
+    });
 });
