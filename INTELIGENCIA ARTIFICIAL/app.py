@@ -4,6 +4,9 @@ import uuid
 import json
 import mimetypes
 import base64
+import requests
+import re
+from urllib.parse import quote, urljoin
 from PIL import Image
 import io
 try:
@@ -14,6 +17,10 @@ try:
     import docx
 except ImportError:
     docx = None
+try:
+    from bs4 import BeautifulSoup
+except ImportError:
+    BeautifulSoup = None
 from flask import Flask, request, jsonify, send_from_directory, session
 from flask_cors import CORS
 try:
@@ -179,6 +186,133 @@ def kb_download(item_id):
 # --- CONSTANTES E CONFIGURAÇÕES DO CHAT ---
 SYSTEM_PROMPT = "Você é a A.E.M.I, uma IA especialista em manutenção industrial e um projeto do canal 'Manutenção Industrial ARQUIVOS'. Seja direta e objetiva. Responda apenas a perguntas relacionadas a este domínio. Se a pergunta não for sobre manutenção industrial, diga que você só pode ajudar com tópicos relacionados à manutenção industrial."
 MAX_HISTORY_LENGTH = 10
+
+# --- FUNÇÕES DE PESQUISA NA INTERNET ---
+def search_internet(query, max_results=5):
+    """Pesquisa na internet usando DuckDuckGo e retorna resultados com links."""
+    try:
+        # Remove caracteres especiais da query
+        clean_query = re.sub(r'[^\w\s-]', '', query).strip()
+        
+        # URL da API do DuckDuckGo
+        search_url = f"https://html.duckduckgo.com/html/?q={quote(clean_query)}"
+        
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
+        
+        response = requests.get(search_url, headers=headers, timeout=10)
+        
+        if response.status_code != 200:
+            return {"error": "Erro ao conectar com o serviço de pesquisa"}
+        
+        # Parse do HTML se BeautifulSoup estiver disponível
+        if BeautifulSoup:
+            soup = BeautifulSoup(response.text, 'html.parser')
+            
+            results = []
+            result_divs = soup.find_all('div', class_='result__body')
+            
+            for i, div in enumerate(result_divs[:max_results]):
+                title_elem = div.find('a', class_='result__a')
+                snippet_elem = div.find('a', class_='result__snippet')
+                
+                if title_elem and snippet_elem:
+                    title = title_elem.get_text(strip=True)
+                    url = title_elem.get('href', '')
+                    snippet = snippet_elem.get_text(strip=True)
+                    
+                    # Limpa URLs malformadas
+                    if url.startswith('//'):
+                        url = 'https:' + url
+                    elif not url.startswith('http'):
+                        continue
+                    
+                    results.append({
+                        'title': title,
+                        'url': url,
+                        'snippet': snippet
+                    })
+            
+            return {"results": results, "query": clean_query}
+        else:
+            return {"error": "Biblioteca de parsing não disponível"}
+            
+    except Exception as e:
+        print(f"Erro na pesquisa: {e}")
+        return {"error": f"Erro durante a pesquisa: {str(e)}"}
+
+def extract_page_content(url, max_chars=1000):
+    """Extrai conteúdo de uma página web para análise."""
+    try:
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        }
+        
+        response = requests.get(url, headers=headers, timeout=8)
+        
+        if response.status_code == 200 and BeautifulSoup:
+            soup = BeautifulSoup(response.text, 'html.parser')
+            
+            # Remove scripts e estilos
+            for script in soup(["script", "style"]):
+                script.decompose()
+            
+            # Pega o texto principal
+            text = soup.get_text()
+            
+            # Limpa o texto
+            lines = (line.strip() for line in text.splitlines())
+            chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+            text = ' '.join(chunk for chunk in chunks if chunk)
+            
+            return text[:max_chars]
+        
+        return ""
+    except Exception as e:
+        print(f"Erro ao extrair conteúdo de {url}: {e}")
+        return ""
+
+def should_search_internet(message):
+    """Determina se a mensagem requer pesquisa na internet."""
+    search_triggers = [
+        'pesquisar', 'buscar', 'procurar', 'pesquise', 'busque', 'procure',
+        'últimas', 'recente', 'atual', 'hoje', 'agora', 'notícias',
+        'preço', 'valor', 'custo', 'onde comprar', 'fornecedor',
+        'norma', 'regulamento', 'lei', 'nbr', 'iso', 'abnt',
+        'fabricante', 'marca', 'modelo', 'especificação',
+        'curso', 'treinamento', 'certificação', 'capacitação'
+    ]
+    
+    message_lower = message.lower()
+    return any(trigger in message_lower for trigger in search_triggers)
+
+def format_search_results(search_data, original_query):
+    """Formata os resultados de pesquisa para apresentação."""
+    if "error" in search_data:
+        return f"🔍 **Pesquisa na Internet**\n\n❌ {search_data['error']}\n\nComo alternativa, posso ajudar com base no meu conhecimento sobre manutenção industrial."
+    
+    results = search_data.get("results", [])
+    if not results:
+        return f"🔍 **Pesquisa na Internet**\n\n🚫 Nenhum resultado encontrado para: \"{original_query}\"\n\nComo alternativa, posso ajudar com base no meu conhecimento sobre manutenção industrial."
+    
+    formatted = f"🔍 **Pesquisa na Internet - \"{search_data['query']}\"**\n\n"
+    formatted += f"📊 **Encontrei {len(results)} resultado(s) relevante(s):**\n\n"
+    
+    for i, result in enumerate(results, 1):
+        formatted += f"**{i}. {result['title']}**\n"
+        formatted += f"🔗 {result['url']}\n"
+        if result['snippet']:
+            formatted += f"📝 {result['snippet']}\n"
+        formatted += "\n"
+    
+    formatted += "💡 **Como usar essas informações:**\n"
+    formatted += "• Clique nos links para acessar o conteúdo completo\n"
+    formatted += "• Se precisar de análise específica, me envie o conteúdo\n"
+    formatted += "• Posso ajudar a interpretar informações técnicas\n\n"
+    formatted += "🔧 **Próximo passo:** Me conte se encontrou o que precisava ou se posso ajudar de outra forma!"
+    
+    return formatted
 
 # --- FUNÇÕES DE PROCESSAMENTO ---
 def get_text_client():
@@ -494,7 +628,20 @@ def chat():
         if best_file and best_file_ratio > 0.45:
             return jsonify({'response': f"Encontrei um documento relacionado: {best_file['name']}\nClique para baixar: /kb/download/{best_file['id']}"})
 
-        # 4. Se não encontrou na KB, usar o LLM
+        # 4. Verificar se precisa de pesquisa na internet
+        if should_search_internet(user_message):
+            print(f"Realizando pesquisa na internet para: {user_message}")
+            search_results = search_internet(user_message, max_results=5)
+            formatted_results = format_search_results(search_results, user_message)
+            
+            # Se encontrou resultados, retorna eles
+            if "results" in search_results and search_results["results"]:
+                return jsonify({"response": formatted_results})
+            
+            # Se não encontrou, continua para o LLM com uma nota sobre a pesquisa
+            user_message += " (Pesquisa na internet não retornou resultados úteis)"
+        
+        # 5. Se não encontrou na KB nem precisou pesquisar, usar o LLM
         if 'chat_history' not in session:
             session['chat_history'] = [{"role": "system", "content": SYSTEM_PROMPT}]
         
@@ -639,6 +786,40 @@ def upload_file():
     except Exception as e:
         print(f"Erro no upload de arquivo: {e}")
         return jsonify({'error': 'Erro ao processar arquivo'}), 500
+
+@app.route('/search-internet', methods=['POST'])
+def search_internet_route():
+    """Rota para pesquisa manual na internet."""
+    try:
+        query = request.form.get('query', '').strip()
+        if not query:
+            return jsonify({"error": "Query de pesquisa não fornecida"}), 400
+        
+        max_results = int(request.form.get('max_results', 5))
+        search_results = search_internet(query, max_results)
+        
+        return jsonify(search_results)
+    
+    except Exception as e:
+        print(f"Erro na pesquisa manual: {e}")
+        return jsonify({"error": "Erro ao realizar pesquisa"}), 500
+
+@app.route('/extract-content', methods=['POST'])
+def extract_content_route():
+    """Rota para extrair conteúdo de uma URL."""
+    try:
+        url = request.form.get('url', '').strip()
+        if not url:
+            return jsonify({"error": "URL não fornecida"}), 400
+        
+        max_chars = int(request.form.get('max_chars', 1000))
+        content = extract_page_content(url, max_chars)
+        
+        return jsonify({"content": content, "url": url})
+    
+    except Exception as e:
+        print(f"Erro na extração de conteúdo: {e}")
+        return jsonify({"error": "Erro ao extrair conteúdo"}), 500
 
 @app.route('/clear-session', methods=['POST'])
 def clear_session():
