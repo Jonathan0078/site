@@ -1,4 +1,3 @@
-
 import os
 import uuid
 import json
@@ -27,6 +26,11 @@ try:
     from huggingface_hub import InferenceClient
 except ImportError:
     InferenceClient = None
+from dotenv import load_dotenv # Importe esta linha para carregar variáveis de ambiente
+
+# --- CARREGA VARIÁVEIS DE AMBIENTE ---
+# Isso deve estar no topo do seu arquivo app.py, antes de usar os.getenv para as chaves
+load_dotenv() 
 
 # --- INICIALIZAÇÃO DO FLASK ---
 app = Flask(__name__)
@@ -40,10 +44,16 @@ CORS(app, supports_credentials=True, origins=[
 # Carrega as chaves da aplicação a partir de variáveis de ambiente
 FLASK_SECRET_KEY = os.getenv("FLASK_SECRET_KEY", "dev-key-change-in-production")
 HUGGING_FACE_TOKEN = os.getenv("HF_TOKEN")
+# NOVAS VARIÁVEIS PARA GOOGLE CUSTOM SEARCH
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID", "f1582494ef7894395") # CX ID que você forneceu
 
 # Validação das chaves
 if not HUGGING_FACE_TOKEN:
     print("AVISO: Token da Hugging Face não configurado. Chat com IA não funcionará.")
+if not GOOGLE_API_KEY:
+    print("AVISO: GOOGLE_API_KEY não configurada. Funcionalidade de busca web pode não funcionar.")
+# O GOOGLE_CSE_ID já está com um valor padrão, mas é bom ter o aviso se não houver GOOGLE_API_KEY
 
 app.secret_key = FLASK_SECRET_KEY
 
@@ -69,11 +79,70 @@ def save_kb(data):
     except Exception as e:
         print(f"Erro ao salvar KB: {e}")
 
-# --- ROTAS DA BASE DE CONHECIMENTO ---
+# --- FUNÇÃO DE BUSCA NA INTERNET ---
+def Google Search(query, num_results=3):
+    """
+    Faz uma busca na web usando a Google Custom Search JSON API.
+    """
+    if not GOOGLE_API_KEY or not GOOGLE_CSE_ID:
+        print("Erro: Chave de API do Google ou CSE ID não configurados. Retornando resultados vazios.")
+        return []
+
+    url = "https://www.googleapis.com/customsearch/v1"
+    params = {
+        "key": GOOGLE_API_KEY,
+        "cx": GOOGLE_CSE_ID,
+        "q": query,
+        "num": num_results # Número de resultados a retornar
+    }
+
+    try:
+        response = requests.get(url, params=params)
+        response.raise_for_status() # Lança um erro para códigos de status ruins (4xx ou 5xx)
+        search_results = response.json()
+
+        results_list = []
+        if "items" in search_results:
+            for item in search_results["items"]:
+                results_list.append({
+                    "title": item.get("title"),
+                    "link": item.get("link"),
+                    "snippet": item.get("snippet")
+                })
+        return results_list
+    except requests.exceptions.RequestException as e:
+        print(f"Erro na requisição à API de busca do Google: {e}")
+        return []
+    except Exception as e:
+        print(f"Erro inesperado ao processar busca do Google: {e}")
+        return []
+
+# --- NOVA ROTA PARA TESTAR A BUSCA (OPCIONAL, PODE SER REMOVIDA APÓS TESTES) ---
+@app.route('/api/search', methods=['GET'])
+def perform_search():
+    query = request.args.get('q', '')
+    if not query:
+        return jsonify({"error": "Parâmetro 'q' (query) é obrigatório."}), 400
+    
+    results = Google Search(query)
+    return jsonify(results)
+
+# --- ROTAS DA BASE DE CONHECIMENTO (RESTO DO SEU CÓDIGO) ---
 @app.route('/kb/upload', methods=['POST'])
 def kb_upload():
+    # ... o resto do seu código para kb_upload ...
+    # (Copie e cole a partir daqui o que você já tinha no seu app.py)
     try:
         kb = load_kb()
+        # ... seu código continua aqui ...
+
+        # Exemplo de como você usaria a busca dentro de uma função da sua IA:
+        # Quando o usuário faz uma pergunta que a IA não sabe responder diretamente,
+        # ou que exige informação atualizada, você chamaria:
+        # search_query = "informação sobre " + pergunta_do_usuario
+        # search_results = Google Search_query)
+        # return jsonify({"response": "Encontrei isto: " + str(search_results)}) # Adaptar a resposta
+
         
         # Upload de arquivo
         if 'file' in request.files and request.files['file'].filename:
