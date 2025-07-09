@@ -319,122 +319,234 @@ def search_internet(query, max_results=5):
         "query": query
     }
 
-def extract_page_content(url, max_chars=1000):
-    """Extrai conteúdo de uma página web para análise."""
+def extract_page_content(url, max_chars=2000):
+    """Extrai conteúdo de uma página web para análise inteligente."""
     try:
         headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'Accept-Language': 'pt-BR,pt;q=0.9,en;q=0.8',
-            'Accept-Encoding': 'gzip, deflate',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+            'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7',
+            'Accept-Encoding': 'gzip, deflate, br',
             'Connection': 'keep-alive',
-            'Upgrade-Insecure-Requests': '1'
+            'Upgrade-Insecure-Requests': '1',
+            'Sec-Fetch-Dest': 'document',
+            'Sec-Fetch-Mode': 'navigate',
+            'Sec-Fetch-Site': 'none'
         }
         
-        response = requests.get(url, headers=headers, timeout=10, allow_redirects=True)
+        response = requests.get(url, headers=headers, timeout=15, allow_redirects=True)
         
         if response.status_code == 200 and BeautifulSoup:
             soup = BeautifulSoup(response.text, 'html.parser')
             
-            # Remove elementos desnecessários
-            for element in soup(['script', 'style', 'nav', 'header', 'footer', 'aside', 'iframe', 'noscript']):
+            # Remove elementos que não agregam conteúdo
+            for element in soup(['script', 'style', 'nav', 'header', 'footer', 'aside', 
+                               'iframe', 'noscript', 'form', 'button', 'input', 'select',
+                               'meta', 'link', 'br', 'hr']):
                 element.decompose()
             
-            # Tenta encontrar o conteúdo principal
-            main_content = soup.find('main') or soup.find('article') or soup.find('div', {'class': ['content', 'post', 'article']})
+            # Remove divs de publicidade e navegação
+            for element in soup.find_all(['div', 'section'], {'class': re.compile(
+                r'(ad|advertisement|sidebar|menu|nav|footer|header|social|share|comment|related)', re.I)}):
+                element.decompose()
             
-            if main_content:
+            # Busca conteúdo principal em ordem de prioridade
+            content_selectors = [
+                'article',
+                '[role="main"]',
+                'main',
+                '.content',
+                '.post-content', 
+                '.entry-content',
+                '.article-content',
+                '.text-content',
+                '#content',
+                '#main-content',
+                '.main-content'
+            ]
+            
+            main_content = None
+            for selector in content_selectors:
+                main_content = soup.select_one(selector)
+                if main_content:
+                    break
+            
+            # Se não encontrou área específica, usa o body
+            if not main_content:
+                main_content = soup.find('body')
+            
+            if not main_content:
+                main_content = soup
+            
+            # Extrai texto de forma inteligente
+            text_parts = []
+            
+            # Prioriza parágrafos, títulos e listas
+            for element in main_content.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'li', 'blockquote']):
+                text = element.get_text().strip()
+                if text and len(text) > 10:  # Ignora textos muito curtos
+                    text_parts.append(text)
+            
+            # Se não encontrou elementos estruturados, pega texto geral
+            if not text_parts:
                 text = main_content.get_text()
-            else:
-                text = soup.get_text()
+                lines = (line.strip() for line in text.splitlines())
+                text_parts = [line for line in lines if line and len(line) > 10]
             
-            # Limpa o texto
-            lines = (line.strip() for line in text.splitlines())
-            chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
-            text = ' '.join(chunk for chunk in chunks if chunk)
+            # Remove duplicatas mantendo ordem
+            seen = set()
+            unique_parts = []
+            for part in text_parts:
+                if part not in seen:
+                    seen.add(part)
+                    unique_parts.append(part)
             
-            # Remove linhas muito curtas e repetitivas
-            sentences = text.split('.')
-            meaningful_sentences = []
-            for sentence in sentences:
-                sentence = sentence.strip()
-                if len(sentence) > 20 and sentence not in meaningful_sentences:
-                    meaningful_sentences.append(sentence)
+            # Junta o texto final
+            full_text = ' '.join(unique_parts)
             
-            cleaned_text = '. '.join(meaningful_sentences[:10])  # Primeiras 10 frases
+            # Limpa caracteres especiais e espaços excessivos
+            full_text = re.sub(r'\s+', ' ', full_text)  # Múltiplos espaços → 1 espaço
+            full_text = re.sub(r'[^\w\s\.\,\;\:\!\?\-\(\)\%\$\€\£\°\+\=\/\\\[\]]', '', full_text)  # Remove caracteres especiais
             
-            return cleaned_text[:max_chars]
+            # Garante que termina numa frase completa se possível
+            if len(full_text) > max_chars:
+                truncated = full_text[:max_chars]
+                last_period = truncated.rfind('.')
+                last_exclamation = truncated.rfind('!')
+                last_question = truncated.rfind('?')
+                
+                # Pega o último ponto, exclamação ou interrogação
+                last_sentence_end = max(last_period, last_exclamation, last_question)
+                
+                if last_sentence_end > max_chars * 0.7:  # Se estiver pelo menos em 70% do texto
+                    full_text = truncated[:last_sentence_end + 1]
+                else:
+                    full_text = truncated
+            
+            return full_text.strip()
         
         return ""
+        
+    except requests.exceptions.Timeout:
+        print(f"Timeout ao acessar {url}")
+        return ""
+    except requests.exceptions.RequestException as e:
+        print(f"Erro de conexão ao acessar {url}: {e}")
+        return ""
     except Exception as e:
-        print(f"Erro ao extrair conteúdo de {url}: {e}")
+        print(f"Erro inesperado ao extrair conteúdo de {url}: {e}")
         return ""
 
 def should_search_internet(message):
-    """Determina se a mensagem requer pesquisa na internet."""
+    """Determina se a mensagem requer pesquisa na internet com IA mais inteligente."""
     search_triggers = [
+        # Gatilhos diretos de pesquisa
         'pesquisar', 'buscar', 'procurar', 'pesquise', 'busque', 'procure',
-        'últimas', 'recente', 'atual', 'hoje', 'agora', 'notícias',
-        'preço', 'valor', 'custo', 'onde comprar', 'fornecedor',
-        'norma', 'regulamento', 'lei', 'nbr', 'iso', 'abnt',
-        'fabricante', 'marca', 'modelo', 'especificação',
-        'curso', 'treinamento', 'certificação', 'capacitação',
-        'empresa', 'fábrica', 'catálogo', 'manual',
-        'novidade', 'lançamento', 'tecnologia', 'inovação',
-        'mercado', 'tendência', 'estatística', 'dados',
-        'comparar', 'diferença', 'vantagem', 'desvantagem',
-        'que dia é hoje', 'data atual', 'hoje é',
-        'sites', 'website', 'endereço', 'contato'
+        'google', 'internet', 'web', 'online',
+        
+        # Informações atuais/temporais
+        'últimas', 'recente', 'atual', 'hoje', 'agora', 'notícias', 'novo', 'nova',
+        'que dia é', 'data atual', 'horário', 'ano', '2024', '2025',
+        
+        # Informações comerciais
+        'preço', 'valor', 'custo', 'onde comprar', 'fornecedor', 'venda', 'vender',
+        'loja', 'mercado', 'empresa', 'fabricante', 'marca', 'modelo',
+        
+        # Especificações técnicas atuais
+        'especificação', 'datasheet', 'manual', 'catálogo', 'norma', 'nbr', 'iso', 'abnt',
+        'regulamento', 'lei', 'certificação',
+        
+        # Localização e contato
+        'endereço', 'telefone', 'contato', 'site', 'website', 'email',
+        'onde fica', 'localização',
+        
+        # Comparações e análises
+        'comparar', 'diferença', 'melhor', 'pior', 'vantagem', 'desvantagem',
+        'review', 'avaliação', 'opinião',
+        
+        # Tendências e novidades
+        'tendência', 'inovação', 'tecnologia', 'lançamento', 'novidade',
+        'estatística', 'dados', 'relatório'
     ]
     
     message_lower = message.lower()
     
-    # Busca por gatilhos diretos
+    # 1. Gatilhos diretos sempre fazem pesquisa
     if any(trigger in message_lower for trigger in search_triggers):
-        print(f"Trigger de pesquisa encontrado: {message}")
+        print(f"✅ Gatilho de pesquisa encontrado: '{message}'")
         return True
     
-    # Busca por padrões específicos que sempre requerem pesquisa
-    search_patterns = [
-        'que dia é',
-        'qual a data',
-        'data de hoje',
-        'que horas são',
-        'horário atual'
+    # 2. Padrões que sempre requerem informação atual
+    always_search_patterns = [
+        'que dia é', 'qual a data', 'data de hoje', 'que horas',
+        'quando foi', 'em que ano', 'quantos anos',
+        'onde comprar', 'qual empresa', 'qual fabricante', 'quem fabrica',
+        'onde encontrar', 'qual o site', 'como contactar'
     ]
     
-    if any(pattern in message_lower for pattern in search_patterns):
-        print(f"Padrão de pesquisa encontrado: {message}")
+    if any(pattern in message_lower for pattern in always_search_patterns):
+        print(f"✅ Padrão de pesquisa obrigatório: '{message}'")
         return True
     
-    # Busca por padrões de perguntas que podem precisar de informações atuais
-    current_info_patterns = [
-        'qual', 'quais', 'como', 'onde', 'quando', 'por que', 'porque',
-        'existe', 'tem', 'há', 'possui', 'funciona', 'serve'
-    ]
+    # 3. Perguntas sobre informações específicas que podem precisar de dados atuais
+    question_words = ['qual', 'quais', 'como', 'onde', 'quando', 'quanto', 'quantos', 
+                      'por que', 'porque', 'existe', 'tem', 'há', 'possui']
     
-    # Se a mensagem contém padrões de pergunta E palavras técnicas específicas
-    if any(pattern in message_lower for pattern in current_info_patterns):
-        technical_words = [
-            'equipamento', 'máquina', 'motor', 'bomba', 'válvula', 'sensor',
-            'automação', 'industrial', 'manutenção', 'falha', 'diagnóstico',
-            'lubrificação', 'rolamento', 'correia', 'engrenagem', 'hidráulica',
-            'pneumática', 'elétrica', 'eletrônica', 'software', 'sistema',
-            'fabricante', 'empresa', 'fornecedor', 'catálogo'
+    if any(qw in message_lower for qw in question_words):
+        # Palavras que indicam necessidade de informação específica/atual
+        specific_info_words = [
+            # Produtos e equipamentos específicos
+            'modelo', 'versão', 'especificação', 'características',
+            
+            # Informações comerciais
+            'preço', 'custo', 'valor', 'disponível', 'estoque',
+            
+            # Localização e fornecedores
+            'empresa', 'fabricante', 'fornecedor', 'distribuidor',
+            'loja', 'vendedor', 'representante',
+            
+            # Informações técnicas atuais
+            'norma', 'regulamento', 'certificação', 'aprovação',
+            'compatível', 'recomendado', 'aprovado',
+            
+            # Comparações
+            'melhor', 'diferença', 'vantagem', 'comparação',
+            
+            # Informações temporais
+            'novo', 'recente', 'atual', 'último', 'atualizado'
         ]
         
-        if any(word in message_lower for word in technical_words):
-            # Só pesquisa se parece ser uma pergunta sobre informação específica
-            specific_patterns = ['onde comprar', 'qual empresa', 'qual fabricante', 
-                               'quem fabrica', 'onde encontrar', 'qual o site']
-            if any(sp in message_lower for sp in specific_patterns):
-                print(f"Pergunta técnica específica que requer pesquisa: {message}")
-                return True
+        if any(word in message_lower for word in specific_info_words):
+            print(f"✅ Pergunta específica que pode precisar de dados atuais: '{message}'")
+            return True
     
+    # 4. Mensagens sobre equipamentos que podem precisar de info específica
+    equipment_words = ['motor', 'bomba', 'válvula', 'sensor', 'rolamento', 'bearing',
+                      'correia', 'belt', 'engrenagem', 'gear', 'compressor', 'turbina']
+    
+    if any(eq in message_lower for eq in equipment_words):
+        # Se menciona equipamento E pede informação específica
+        specific_requests = ['especificação', 'manual', 'datasheet', 'fabricante',
+                           'onde comprar', 'preço', 'modelo', 'versão']
+        
+        if any(req in message_lower for req in specific_requests):
+            print(f"✅ Pergunta sobre equipamento específico: '{message}'")
+            return True
+    
+    # 5. Se a mensagem é muito longa e parece ser uma pergunta complexa
+    if len(message) > 50 and '?' in message:
+        complex_indicators = ['detalhes', 'informações', 'dados', 'explicação',
+                            'procedimento', 'processo', 'método', 'técnica']
+        
+        if any(ind in message_lower for ind in complex_indicators):
+            print(f"✅ Pergunta complexa que pode se beneficiar de pesquisa: '{message}'")
+            return True
+    
+    print(f"❌ Não requer pesquisa: '{message}'")
     return False
 
 def analyze_search_content(search_data, original_query):
-    """Analisa o conteúdo dos resultados de pesquisa e gera uma resposta elaborada."""
+    """Analisa o conteúdo dos resultados de pesquisa e gera uma resposta elaborada como ChatGPT/Gemini."""
     if "error" in search_data:
         return f"🔍 **Pesquisa na Internet**\n\n❌ {search_data['error']}\n\nComo alternativa, posso ajudar com base no meu conhecimento sobre manutenção industrial."
     
@@ -442,76 +554,122 @@ def analyze_search_content(search_data, original_query):
     if not results:
         return f"🔍 **Pesquisa na Internet**\n\n🚫 Nenhum resultado encontrado para: \"{original_query}\"\n\nComo alternativa, posso ajudar com base no meu conhecimento sobre manutenção industrial."
     
-    # Para Google API, usamos os snippets diretamente primeiro
-    response = f"🔍 **Pesquisa na Internet - \"{original_query}\"**\n\n"
-    response += f"📊 **Encontrei {len(results)} resultado(s):**\n\n"
+    print(f"🔍 Analisando {len(results)} resultados para: {original_query}")
     
-    # Tenta extrair conteúdo mais detalhado dos primeiros resultados
+    # EXTRAI CONTEÚDO REAL DAS PÁGINAS
     content_sources = []
-    for i, result in enumerate(results[:3], 1):
-        # Primeiro usa o snippet do Google
-        snippet = result.get('snippet', '')
-        title = result.get('title', f'Resultado {i}')
+    for i, result in enumerate(results[:4], 1):  # Analisa até 4 páginas
         url = result.get('link', result.get('url', ''))
+        title = result.get('title', f'Resultado {i}')
+        snippet = result.get('snippet', '')
         
-        response += f"**{i}. {title}**\n"
-        if snippet:
-            response += f"📋 {snippet}\n"
-        response += f"🔗 {url}\n\n"
-        
-        # Tenta extrair conteúdo adicional da página
         if url:
+            print(f"📄 Extraindo conteúdo de: {title}")
             try:
-                page_content = extract_page_content(url, max_chars=500)
-                if page_content.strip() and len(page_content) > len(snippet):
+                # Extrai MUITO mais conteúdo da página
+                page_content = extract_page_content(url, max_chars=2000)
+                if page_content.strip():
                     content_sources.append({
                         'title': title,
                         'url': url,
                         'content': page_content,
                         'snippet': snippet
                     })
+                    print(f"✅ Conteúdo extraído ({len(page_content)} chars)")
+                else:
+                    print(f"❌ Não foi possível extrair conteúdo de {url}")
             except Exception as e:
-                print(f"Erro ao extrair conteúdo de {url}: {e}")
+                print(f"❌ Erro ao extrair de {url}: {e}")
     
-    # Se conseguiu extrair conteúdo adicional, tenta usar o LLM
+    # SE CONSEGUIU EXTRAIR CONTEÚDO, USA IA PARA ANÁLISE INTELIGENTE
     if content_sources:
         try:
             client = get_text_client()
             if client:
-                context = f"Pergunta: {original_query}\n\nInformações encontradas:\n\n"
-                for source in content_sources:
-                    context += f"- {source['title']}: {source['content'][:300]}...\n"
+                print("🤖 Processando conteúdo com IA...")
                 
-                prompt = f"""Como A.E.M.I, especialista em manutenção industrial, analise estas informações e responda de forma técnica e prática:
+                # Monta contexto rico com todo o conteúdo extraído
+                context = f"PERGUNTA DO USUÁRIO: {original_query}\n\n"
+                context += "CONTEÚDO ENCONTRADO NA INTERNET:\n\n"
+                
+                for i, source in enumerate(content_sources, 1):
+                    context += f"FONTE {i} - {source['title']}\n"
+                    context += f"URL: {source['url']}\n"
+                    context += f"CONTEÚDO: {source['content']}\n"
+                    context += "="*80 + "\n\n"
+                
+                # Prompt otimizado para resposta direta como ChatGPT
+                prompt = f"""Você é a A.E.M.I, especialista em manutenção industrial. Analise o conteúdo extraído da internet e responda DIRETAMENTE à pergunta do usuário.
 
 {context}
 
-Instruções:
-1. Foque em aspectos técnicos de manutenção industrial
-2. Seja prática e objetiva
-3. Use as informações para dar uma resposta completa
-4. Mantenha o contexto de manutenção industrial
+INSTRUÇÕES IMPORTANTES:
+1. Responda de forma DIRETA e COMPLETA à pergunta
+2. Use APENAS as informações encontradas nas fontes
+3. Seja técnica e precisa
+4. Organize a informação de forma clara
+5. NÃO liste as fontes no texto (isso será feito separadamente)
+6. Foque em manutenção industrial se aplicável
+7. Se a informação não for suficiente, diga isso claramente
 
-Resposta técnica:"""
+RESPOSTA DIRETA:"""
 
                 llm_response = client.text_generation(
                     prompt,
-                    max_new_tokens=800,
-                    temperature=0.7,
+                    max_new_tokens=1200,
+                    temperature=0.3,  # Mais conservador para ser mais preciso
                     return_full_text=False
                 )
                 
                 if llm_response and llm_response.strip():
-                    response += f"🤖 **Análise AEMI:**\n{llm_response.strip()}\n\n"
+                    print("✅ Resposta IA gerada com sucesso")
+                    
+                    # Formata resposta final estilo ChatGPT/Gemini
+                    final_response = f"🌐 **Resposta baseada em pesquisa na internet:**\n\n"
+                    final_response += f"{llm_response.strip()}\n\n"
+                    
+                    # Adiciona fontes consultadas
+                    final_response += "📚 **Fontes consultadas:**\n"
+                    for i, source in enumerate(content_sources, 1):
+                        final_response += f"{i}. {source['title']}\n"
+                        final_response += f"   🔗 {source['url']}\n"
+                    
+                    return final_response
+                else:
+                    print("❌ IA não conseguiu gerar resposta")
         
         except Exception as e:
-            print(f"Erro ao usar LLM para análise: {e}")
+            print(f"❌ Erro ao processar com IA: {e}")
     
-    response += "📚 **Fontes consultadas:**\n"
-    for i, result in enumerate(results, 1):
-        title = result.get('title', f'Resultado {i}')
-        url = result.get('link', result.get('url', ''))
-        response += f"{i}. {title}\n   🔗 {url}\n"
+    # FALLBACK: Se não conseguiu usar IA, monta resposta básica
+    print("⚠️ Usando fallback - resposta básica")
+    response = f"🔍 **Pesquisa na Internet:**\n\n"
+    
+    if content_sources:
+        response += f"Encontrei informações sobre **{original_query}**:\n\n"
+        
+        for i, source in enumerate(content_sources, 1):
+            response += f"**{i}. {source['title']}**\n"
+            
+            # Usa o conteúdo extraído ou snippet
+            content_preview = source['content'][:400] if source['content'] else source['snippet']
+            if content_preview:
+                response += f"📄 {content_preview}...\n"
+            
+            response += f"🔗 {source['url']}\n\n"
+    else:
+        # Se não conseguiu extrair conteúdo, usa snippets do Google
+        response += f"📊 Encontrei {len(results)} resultado(s) para **{original_query}**:\n\n"
+        
+        for i, result in enumerate(results, 1):
+            title = result.get('title', f'Resultado {i}')
+            snippet = result.get('snippet', '')
+            url = result.get('link', result.get('url', ''))
+            
+            response += f"**{i}. {title}**\n"
+            if snippet:
+                response += f"📋 {snippet}\n"
+            response += f"🔗 {url}\n\n"
     
     return response
 
