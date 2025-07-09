@@ -21,6 +21,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const tabToggleOptions = document.querySelectorAll('.tab-toggle-option');
     const tabContents = document.querySelectorAll('.tab-content');
     let menuOpen = false;
+    // Remove qualquer resquício do modo Treinamento/Quiz
+    if (tabToggleMenu) {
+        const quizOption = tabToggleMenu.querySelector('.tab-toggle-option[data-tab="quiz-tab"]');
+        if (quizOption) quizOption.remove();
+    }
+    const quizTab = document.getElementById('quiz-tab');
+    if (quizTab) quizTab.remove();
     if (tabToggleBtn && tabToggleMenu) {
         tabToggleBtn.addEventListener('click', function(e) {
             e.stopPropagation();
@@ -33,15 +40,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 menuOpen = false;
             }
         });
-        tabToggleOptions.forEach(btn => {
-            btn.addEventListener('click', function() {
-                tabToggleOptions.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                tabContents.forEach(tc => tc.style.display = 'none');
-                document.getElementById(btn.dataset.tab).style.display = '';
-                tabToggleMenu.classList.remove('open');
-                menuOpen = false;
-            });
+        tabToggleMenu.addEventListener('click', function(e) {
+            const btn = e.target.closest('.tab-toggle-option');
+            if (!btn) return;
+            document.querySelectorAll('.tab-toggle-option').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(tc => tc.style.display = 'none');
+            const tab = document.getElementById(btn.dataset.tab);
+            if (tab) tab.style.display = '';
+            tabToggleMenu.classList.remove('open');
+            menuOpen = false;
         });
     }
 });
@@ -90,10 +98,39 @@ if (kbForm) {
         if (kbFile.files[0]) formData.append('file', kbFile.files[0]);
         if (kbFaq.value.trim()) formData.append('faq', kbFaq.value.trim());
         if (!kbFile.files[0] && !kbFaq.value.trim()) return alert('Adicione um arquivo ou texto!');
-        await fetch('/kb/upload', { method: 'POST', body: formData });
-        kbFile.value = '';
-        kbFaq.value = '';
-        fetchKbList();
+        const btn = kbForm.querySelector('button[type="submit"]');
+        if (btn) {
+            btn.disabled = true;
+            btn.textContent = 'Adicionando...';
+        }
+        try {
+            const resp = await fetch('/kb/upload', { method: 'POST', body: formData });
+            if (resp.ok) {
+                kbFile.value = '';
+                kbFaq.value = '';
+                fetchKbList();
+                // Feedback visual
+                if (btn) {
+                    btn.textContent = 'Adicionado!';
+                    setTimeout(() => {
+                        btn.textContent = 'Adicionar';
+                        btn.disabled = false;
+                    }, 1200);
+                }
+            } else {
+                alert('Erro ao adicionar à base de conhecimento.');
+                if (btn) {
+                    btn.textContent = 'Adicionar';
+                    btn.disabled = false;
+                }
+            }
+        } catch (err) {
+            alert('Erro ao adicionar à base de conhecimento.');
+            if (btn) {
+                btn.textContent = 'Adicionar';
+                btn.disabled = false;
+            }
+        }
     };
 }
 
@@ -103,11 +140,16 @@ if (kbSearch) {
     };
 }
 
-// Carregar lista ao abrir a aba KB
+// Carregar lista ao abrir a aba KB e dar feedback visual
 document.addEventListener('DOMContentLoaded', function() {
     const kbTabBtn = document.querySelector('.tab-btn[data-tab="kb-tab"]');
     if (kbTabBtn) {
         kbTabBtn.addEventListener('click', () => fetchKbList(kbSearch.value));
+    }
+    // Dica visual para FAQ
+    const faqLabel = document.querySelector('label[for="kb-faq"]');
+    if (faqLabel) {
+        faqLabel.innerHTML += ' <span style="color:var(--cor-destaque);font-size:0.95em;">(clique em Adicionar para salvar)</span>';
     }
 });
 // --- Tema claro/escuro ---
@@ -152,72 +194,71 @@ document.querySelectorAll('.suggestion-btn').forEach(btn => {
 
 document.addEventListener("DOMContentLoaded", () => {
 
+
     // ==================================================
-    // INÍCIO: NOVO CÓDIGO DO MENU LATERAL (SIDEBAR)
+    // INÍCIO: MENU LATERAL (SIDEBAR) - BOTÃO SEMPRE AO LADO DO MODO NOTURNO
     // ==================================================
     const sideMenu = document.getElementById("side-menu");
     const openMenuBtn = document.getElementById("open-menu-btn");
     const menuOverlay = document.getElementById("menu-overlay");
+    const themeToggleBtn = document.getElementById('theme-toggle-btn');
 
-    // Verifica se os elementos do menu existem antes de adicionar eventos
+    // Função para garantir que o botão de menu fique ao lado do modo noturno em todas as telas
+    function positionMenuBtn() {
+        if (!openMenuBtn || !themeToggleBtn) return;
+        // Remove o botão do local atual
+        openMenuBtn.parentNode?.removeChild(openMenuBtn);
+        // Insere logo antes do botão de tema
+        themeToggleBtn.parentNode.insertBefore(openMenuBtn, themeToggleBtn);
+        // Garante que ambos fiquem visíveis e alinhados
+        openMenuBtn.style.display = 'inline-flex';
+        openMenuBtn.style.verticalAlign = 'middle';
+        themeToggleBtn.style.display = 'inline-flex';
+        themeToggleBtn.style.verticalAlign = 'middle';
+    }
+    positionMenuBtn();
+    window.addEventListener('resize', positionMenuBtn);
+
+    // Eventos do menu lateral (iguais para desktop e mobile)
     if (sideMenu && openMenuBtn && menuOverlay) {
-        // Abrir menu via botão
         openMenuBtn.addEventListener("click", () => {
             sideMenu.classList.add("open");
-            menuOverlay.classList.add("show"); // Use 'show' ou 'active' dependendo do seu CSS
+            menuOverlay.classList.add("show");
         });
-
-        // Fechar menu via overlay
         menuOverlay.addEventListener("click", () => {
             sideMenu.classList.remove("open");
-            menuOverlay.classList.remove("show"); // Use 'show' ou 'active' dependendo do seu CSS
+            menuOverlay.classList.remove("show");
         });
-
-        // Fechar com a tecla 'Escape' para melhor acessibilidade
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Escape' && sideMenu.classList.contains('open')) {
                 sideMenu.classList.remove("open");
                 menuOverlay.classList.remove("show");
             }
         });
-
-        // Swipe para abrir (mobile)
+        // Swipe para abrir/fechar (mobile)
         let startX = null;
         document.addEventListener("touchstart", function(e) {
-            // Pega apenas o primeiro toque
             if (e.touches.length === 1) {
                 startX = e.touches[0].clientX;
             }
-        }, { passive: true }); // Otimização para rolagem suave
-
+        }, { passive: true });
         document.addEventListener("touchend", function(e) {
-            if (!startX) return; // Se o toque não começou, ignora
-
+            if (!startX) return;
             let endX = e.changedTouches[0].clientX;
             let diffX = endX - startX;
-
-            // Condições para abrir:
-            // 1. O toque inicial foi perto da borda esquerda (startX < 50 pixels)
-            // 2. O deslize foi para a direita e de tamanho suficiente (diffX > 60 pixels)
-            // 3. O menu já não está aberto
             if (startX < 50 && diffX > 60 && !sideMenu.classList.contains("open")) {
                 sideMenu.classList.add("open");
                 menuOverlay.classList.add("show");
             }
-
-            // Condições para fechar:
-            // 1. O deslize foi da direita para a esquerda e de tamanho suficiente (diffX < -60 pixels)
-            // 2. O menu está aberto
             if (diffX < -60 && sideMenu.classList.contains("open")) {
                 sideMenu.classList.remove("open");
                 menuOverlay.classList.remove("show");
             }
-
-            startX = null; // Reseta a posição inicial do toque
+            startX = null;
         });
     }
     // ==================================================
-    // FIM: NOVO CÓDIGO DO MENU LATERAL (SIDEBAR)
+    // FIM: MENU LATERAL (SIDEBAR)
     // ==================================================
 
 
