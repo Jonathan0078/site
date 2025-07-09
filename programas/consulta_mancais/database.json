@@ -1,284 +1,80 @@
 {
-  "SBM": {
-    "tipo": "Bipartido",
-    "designacao_completa": "Mancal Bipartido SBM",
-    "rolamentos_compativeis": [
-      { "tipo": "Rolos (Furo Cônico)", "rolamento": "222-K", "bucha": "Com bucha de fixação", "eixo": "35 a 470 mm" },
-      { "tipo": "Rolos (Furo Cônico)", "rolamento": "231-K", "bucha": "Com bucha de fixação", "eixo": "35 a 470 mm" }
-    ],
-    "vedacoes_compativeis": [
-      "ASR", "AS", "R", "ZF", "GS", "TC", "RR", "GSGS", "ZFZF", "ASZF", "ASZFZF", "ASRR", "TSGS", "TSR"
-    ]
-  },
-  "SBP": {
-    "tipo": "Bipartido",
-    "designacao_completa": "Mancal Bipartido SBP",
-    "rolamentos_compativeis": [
-      { "tipo": "Rolos (Furo Cônico)", "rolamento": "222-K", "bucha": "Com bucha de fixação", "eixo": "40 a 470 mm" },
-      { "tipo": "Rolos (Furo Cônico)", "rolamento": "230-K", "bucha": "Com bucha de fixação", "eixo": "40 a 470 mm" }
-    ],
-    "vedacoes_compativeis": [
-      "ASR", "AS", "R", "ZF", "GS", "TC", "RR", "GSGS", "ZFZF", "ASZF", "ASZFZF", "ASRR", "TSGS", "TSR"
-    ]
-  },
-  "HMI": {
-    "tipo": "Bipartido a 30°",
-    "designacao_completa": "Mancal Bipartido HMI",
-    "rolamentos_compativeis": [
-      { "tipo": "Rolos (Furo Cônico)", "rolamento": "222-K", "bucha": "Com bucha de fixação", "eixo": "35 a 470 mm" },
-      { "tipo": "Rolos (Furo Cônico)", "rolamento": "231-K", "bucha": "Com bucha de fixação", "eixo": "35 a 470 mm" }
-    ],
-    "vedacoes_compativeis": [
-      "ASR", "AS", "R", "ZF", "GS", "TC", "RR", "GSGS", "ZFZF", "ASZF", "ASZFZF", "ASRR", "TSGS", "TSR"
-    ]
-  },
-  "HPI": {
-    "tipo": "Bipartido a 30°",
-    "designacao_completa": "Mancal Bipartido HPI",
-    "rolamentos_compativeis": [
-      { "tipo": "Rolos (Furo Cônico)", "rolamento": "222-K", "bucha": "Com bucha de fixação", "eixo": "40 a 470 mm" },
-      { "tipo": "Rolos (Furo Cônico)", "rolamento": "230-K", "bucha": "Com bucha de fixação", "eixo": "40 a 470 mm" }
-    ],
-    "vedacoes_compativeis": [
-      "ASR", "AS", "R", "ZF", "GS", "TC", "RR", "GSGS", "ZFZF", "ASZF", "ASZFZF", "ASRR", "TSGS", "TSR"
-    ]
-  }
-}
-{
-  "SBPC": {
-    "tipo": "Bipartido",
-    "designacao_completa": "Mancal Bipartido SBPC",
-    "rolamentos_compativeis": [
-      { "tipo": "Rolos (Furo Cilíndrico)", "rolamento": "222-C", "bucha": "Sem bucha de fixação", "eixo": "54/42,9 a 330,2/292,1 mm" },
-      { "tipo": "Rolos (Furo Cilíndrico)", "rolamento": "230-C", "bucha": "Sem bucha de fixação", "eixo": "54/42,9 a 330,2/292,1 mm" }
-    ],
-    "vedacoes_compativeis": [
-      "AS", "ASR", "R", "ZF", "TC", "GS", "RR", "GSGS"
-    ]
-  },
-  "SD-31": {
-    "tipo": "Bipartido",
-    "designacao_completa": "Mancal Bipartido SD-31",
-    "rolamentos_compativeis": [
-      { "tipo": "Rolos (Furo Cônico)", "rolamento": "231-K", "bucha": "Com bucha de fixação", "eixo": "150 a 320 mm" }
-    ],
-    "vedacoes_compativeis": [
-      "TS"
-    ]
-  },
-  "SD-500": {
-    "tipo": "Bipartido",
-    "designacao_completa": "Mancal Bipartido SD-500",
-    "rolamentos_compativeis": [
-      { "tipo": "Rolos (Furo Cônico)", "rolamento": "222-K", "bucha": "Com bucha de fixação", "eixo": "135 a 300 mm" }
-    ],
-    "vedacoes_compativeis": [
-      "FF", "RR", "TS", "GSGS"
-    ]
-  },
-  "SD-600": {
-    "tipo": "Bipartido",
-    "designacao_completa": "Mancal Bipartido SD-600",
-    "rolamentos_compativeis": [
-      { "tipo": "Rolos (Furo Cônico)", "rolamento": "223-K", "bucha": "Com bucha de fixação", "eixo": "135 a 260 mm" }
-    ],
-    "vedacoes_compativeis": [
-      "FF", "RR", "TS", "GSGS"
-    ]
-  }
-}
-{
-  "SN-30": {
-    "tipo": "Bipartido",
-    "designacao_completa": "Mancal Bipartido SN-30",
-    "rolamentos_compativeis": [
-      { "tipo": "Rolos (Furo Cônico)", "rolamento": "230-K", "bucha": "Com bucha de fixação", "eixo": "110 a 260 mm" }
-    ],
-    "vedacoes_compativeis": [
-      "TC", "ZF", "GS", "TS"
-    ]
-  },
-  "SNHL-200": {
-    "tipo": "Bipartido",
-    "designacao_completa": "Mancal Bipartido SNHL-200",
-    "rolamentos_compativeis": [
-      { "tipo": "Esferas (Furo Cilíndrico)", "rolamento": "12-C / 22-C", "bucha": "Sem bucha", "eixo": "25 a 160 mm" },
-      { "tipo": "Rolos (Furo Cilíndrico)", "rolamento": "222-C / 32-C", "bucha": "Sem bucha", "eixo": "25 a 160 mm" }
-    ],
-    "vedacoes_compativeis": [
-      "TC (tsna-c)", "TG (tsna-g)", "TA (tsna-a)", "TS"
-    ]
-  },
-  "SNHL-300": {
-    "tipo": "Bipartido",
-    "designacao_completa": "Mancal Bipartido SNHL-300",
-    "rolamentos_compativeis": [
-      { "tipo": "Esferas (Furo Cilíndrico)", "rolamento": "13-C / 23-C", "bucha": "Sem bucha", "eixo": "25 a 100 mm" },
-      { "tipo": "Rolos (Furo Cilíndrico)", "rolamento": "213-C / 23-C", "bucha": "Sem bucha", "eixo": "25 a 100 mm" }
-    ],
-    "vedacoes_compativeis": [
-      "TC (tsna-c)", "TG (tsna-g)", "TA (tsna-a)", "TS"
-    ]
-  },
-  "SNHL-500": {
-    "tipo": "Bipartido",
-    "designacao_completa": "Mancal Bipartido SNHL-500",
-    "rolamentos_compativeis": [
-      { "tipo": "Esferas (Furo Cônico)", "rolamento": "12-K / 22-K", "bucha": "Com bucha de fixação", "eixo": "20 a 140 mm" },
-      { "tipo": "Rolos (Furo Cônico)", "rolamento": "222-K / 32-K", "bucha": "Com bucha de fixação", "eixo": "20 a 140 mm" }
-    ],
-    "vedacoes_compativeis": [
-      "TC (tsna-c)", "TG (tsna-g)", "TA (tsna-a)", "TS"
-    ]
-  },
-  "SNHL-600": {
-    "tipo": "Bipartido",
-    "designacao_completa": "Mancal Bipartido SNHL-600",
-    "rolamentos_compativeis": [
-      { "tipo": "Esferas (Furo Cônico)", "rolamento": "13-K / 23-K", "bucha": "Sem bucha", "eixo": "20 a 90 mm" },
-      { "tipo": "Rolos (Furo Cônico)", "rolamento": "213-K / 22-K", "bucha": "Sem bucha", "eixo": "20 a 90 mm" }
-    ],
-    "vedacoes_compativeis": [
-      "TC (tsna-c)", "TG (tsna-g)", "TA (tsna-a)", "TS"
-    ]
-  }
-}
-{
-  "SAF-200": {
-    "tipo": "Bipartido",
-    "designacao_completa": "Mancal Bipartido SAF-200",
-    "rolamentos_compativeis": [
-      { "tipo": "Rolos (Furo Cilíndrico)", "rolamento": "222-C", "bucha": "Sem bucha de fixação", "eixo": "3.5/8\"–3\" a 9.9/16\"–8.5/16\"" }
-    ],
-    "vedacoes_compativeis": [
-      "TS", "TAS"
-    ]
-  },
-  "SAF-300": {
-    "tipo": "Bipartido",
-    "designacao_completa": "Mancal Bipartido SAF-300",
-    "rolamentos_compativeis": [
-      { "tipo": "Rolos (Furo Cilíndrico)", "rolamento": "223-C", "bucha": "Sem bucha de fixação", "eixo": "1.15/16\"–1.7/16\" a 8.3/8\"–7.1/4\"" }
-    ],
-    "vedacoes_compativeis": [
-      "TS", "TAS"
-    ]
-  },
-  "SAF-500": {
-    "tipo": "Bipartido",
-    "designacao_completa": "Mancal Bipartido SAF-500",
-    "rolamentos_compativeis": [
-      { "tipo": "Rolos (Furo Cônico)", "rolamento": "222-K / 202-K / 232-K", "bucha": "Com bucha de fixação", "eixo": "40 a 200 mm" },
-      { "tipo": "Esferas (Furo Cônico)", "rolamento": "12-K / 22-K", "bucha": "Com bucha de fixação", "eixo": "40 a 200 mm" }
-    ],
-    "vedacoes_compativeis": [
-      "TS", "TAS"
-    ]
-  },
-  "SAF-600": {
-    "tipo": "Bipartido",
-    "designacao_completa": "Mancal Bipartido SAF-600",
-    "rolamentos_compativeis": [
-      { "tipo": "Rolos (Furo Cônico)", "rolamento": "223-K", "bucha": "Com bucha de fixação", "eixo": "40 a 170 mm" }
-    ],
-    "vedacoes_compativeis": [
-      "TS", "TAS"
-    ]
-  }
-}
-{
-  "SOFN-200": {
-    "tipo": "Bipartido",
-    "designacao_completa": "Mancal Bipartido SOFN-200",
-    "rolamentos_compativeis": [
-      { "tipo": "Rolos (Furo Cilíndrico)", "rolamento": "222-C", "bucha": "Sem bucha de fixação", "eixo": "85 a 240 mm" }
-    ],
-    "vedacoes_compativeis": [
-      "Anel labirinto específico"
-    ]
-  },
-  "SOFN-300": {
-    "tipo": "Bipartido",
-    "designacao_completa": "Mancal Bipartido SOFN-300",
-    "rolamentos_compativeis": [
-      { "tipo": "Rolos (Furo Cilíndrico)", "rolamento": "223-C", "bucha": "Sem bucha de fixação", "eixo": "50 a 180 mm" }
-    ],
-    "vedacoes_compativeis": [
-      "Anel labirinto específico"
-    ]
-  },
-  "SOFN-500": {
-    "tipo": "Bipartido",
-    "designacao_completa": "Mancal Bipartido SOFN-500",
-    "rolamentos_compativeis": [
-      { "tipo": "Rolos (Furo Cônico)", "rolamento": "222-K", "bucha": "Com bucha de fixação", "eixo": "75 a 220 mm" }
-    ],
-    "vedacoes_compativeis": [
-      "Anel labirinto específico"
-    ]
-  },
-  "SOFN-600": {
-    "tipo": "Bipartido",
-    "designacao_completa": "Mancal Bipartido SOFN-600",
-    "rolamentos_compativeis": [
-      { "tipo": "Rolos (Furo Cônico)", "rolamento": "223-K", "bucha": "Com bucha de fixação", "eixo": "45 a 160 mm" }
-    ],
-    "vedacoes_compativeis": [
-      "Anel labirinto específico"
-    ]
-  },
-  "SAI": {
-    "tipo": "Inteiriço",
-    "designacao_completa": "Mancal Inteiriço SAI",
-    "rolamentos_compativeis": [
-      { "tipo": "Rolos (Furo Cônico)", "rolamento": "222-K", "bucha": "Com bucha de fixação", "eixo": "40 a 300 mm" }
-    ],
-    "vedacoes_compativeis": [
-      "AS", "ASZF", "ASR", "R", "ZF", "TC", "GS", "RR", "GSGS"
-    ]
-  },
-  "STM": {
-    "tipo": "Inteiriço Tensora",
-    "designacao_completa": "Mancal Inteiriço STM",
-    "rolamentos_compativeis": [
-      { "tipo": "Rolos (Furo Cônico)", "rolamento": "222-K", "bucha": "Com bucha de fixação", "eixo": "35 a 135 mm" }
-    ],
-    "vedacoes_compativeis": [
-      "AS", "ASR", "R", "ZF", "TC", "GS", "RR", "GSGS", "ASRR", "ASZFZF"
-    ]
-  },
-  "F-500": {
-    "tipo": "Inteiriço Flangeado",
-    "designacao_completa": "Mancal Inteiriço Flangeado F-500 / 722500",
-    "rolamentos_compativeis": [
-      { "tipo": "Esferas (Furo Cônico)", "rolamento": "12-K / 22-K", "bucha": "Com bucha de fixação", "eixo": "20 a 100 mm" },
-      { "tipo": "Rolos (Furo Cônico)", "rolamento": "222-K", "bucha": "Com bucha de fixação", "eixo": "20 a 100 mm" }
-    ],
-    "vedacoes_compativeis": [
-      "TC", "ZF", "GS"
-    ]
-  },
-  "HFR": {
-    "tipo": "Inteiriço Flangeado",
-    "designacao_completa": "Mancal Inteiriço Flangeado HFR",
-    "rolamentos_compativeis": [
-      { "tipo": "Esferas (Furo Cônico)", "rolamento": "22-K", "bucha": "Com bucha de fixação", "eixo": "20 a 100 mm" },
-      { "tipo": "Rolos (Furo Cônico)", "rolamento": "222-K", "bucha": "Com bucha de fixação", "eixo": "20 a 100 mm" }
-    ],
-    "vedacoes_compativeis": [
-      "R"
-    ]
-  }
-}
-{
-  "HEC": {
-    "tipo": "Bipartido com Bucha de Bronze",
-    "designacao_completa": "Mancal Bipartido HEC com Bucha de Bronze SAE 67",
-    "rolamentos_compativeis": [
-      { "tipo": "Bucha de Deslizamento", "rolamento": "Bronze SAE 67", "bucha": "Bipartida", "eixo": "76,2 a 254 mm" }
-    ],
-    "vedacoes_compativeis": [
-      "TC", "R"
-    ]
-  }
+    "SNL 505": { "tipo": "Bipartido Padrão", "designacao_completa": "Mancal Bipartido SNL 505", "rolamentos_compativeis": [ { "tipo": "Esferas (Furo Cônico)", "rolamento": "1205 K", "bucha": "H 205", "eixo": 20 }, { "tipo": "Rolos (Furo Cônico)", "rolamento": "22205 K", "bucha": "H 305", "eixo": 20 } ], "vedacoes_compativeis": ["TSN 505 L", "TSN 505 S"] },
+    "SNL 506": { "tipo": "Bipartido Padrão", "designacao_completa": "Mancal Bipartido SNL 506", "rolamentos_compativeis": [ { "tipo": "Esferas (Furo Cônico)", "rolamento": "1206 K", "bucha": "H 206", "eixo": 25 }, { "tipo": "Rolos (Furo Cônico)", "rolamento": "22206 K", "bucha": "H 306", "eixo": 25 } ], "vedacoes_compativeis": ["TSN 506 L", "TSN 506 S"] },
+    "SNL 507": { "tipo": "Bipartido Padrão", "designacao_completa": "Mancal Bipartido SNL 507", "rolamentos_compativeis": [ { "tipo": "Esferas (Furo Cônico)", "rolamento": "1207 K", "bucha": "H 207", "eixo": 30 }, { "tipo": "Rolos (Furo Cônico)", "rolamento": "22207 K", "bucha": "H 307", "eixo": 30 } ], "vedacoes_compativeis": ["TSN 507 L", "TSN 507 S"] },
+    "SNL 508": { "tipo": "Bipartido Padrão", "designacao_completa": "Mancal Bipartido SNL 508", "rolamentos_compativeis": [ { "tipo": "Esferas (Furo Cônico)", "rolamento": "1208 K", "bucha": "H 208", "eixo": 35 }, { "tipo": "Rolos (Furo Cônico)", "rolamento": "22208 K", "bucha": "H 308", "eixo": 35 } ], "vedacoes_compativeis": ["TSN 508 L", "TSN 508 S"] },
+    "SNL 509": { "tipo": "Bipartido Padrão", "designacao_completa": "Mancal Bipartido SNL 509", "rolamentos_compativeis": [ { "tipo": "Esferas (Furo Cônico)", "rolamento": "1209 K", "bucha": "H 209", "eixo": 40 }, { "tipo": "Rolos (Furo Cônico)", "rolamento": "22209 K", "bucha": "H 309", "eixo": 40 } ], "vedacoes_compativeis": ["TSN 509 L", "TSN 509 S"] },
+    "SNL 510": { "tipo": "Bipartido Padrão", "designacao_completa": "Mancal Bipartido SNL 510", "rolamentos_compativeis": [ { "tipo": "Esferas (Furo Cônico)", "rolamento": "1210 K", "bucha": "H 210", "eixo": 45 }, { "tipo": "Rolos (Furo Cônico)", "rolamento": "22210 K", "bucha": "H 310", "eixo": 45 } ], "vedacoes_compativeis": ["TSN 510 L", "TSN 510 S"] },
+    "SNL 511": { "tipo": "Bipartido Padrão", "designacao_completa": "Mancal Bipartido SNL 511", "rolamentos_compativeis": [ { "tipo": "Esferas (Furo Cônico)", "rolamento": "1211 K", "bucha": "H 211", "eixo": 50 }, { "tipo": "Rolos (Furo Cônico)", "rolamento": "22211 K", "bucha": "H 311", "eixo": 50 }, { "tipo": "Rolos (Furo Cilíndrico)", "rolamento": "2211", "bucha": "N/A", "eixo": 55 } ], "vedacoes_compativeis": ["TSN 511 L", "TSN 511 S"] },
+    "SNL 512": { "tipo": "Bipartido Padrão", "designacao_completa": "Mancal Bipartido SNL 512", "rolamentos_compativeis": [ { "tipo": "Esferas (Furo Cônico)", "rolamento": "1212 K", "bucha": "H 212", "eixo": 55 }, { "tipo": "Rolos (Furo Cônico)", "rolamento": "22212 K", "bucha": "H 312", "eixo": 55 }, { "tipo": "Rolos (Furo Cilíndrico)", "rolamento": "2212", "bucha": "N/A", "eixo": 60 } ], "vedacoes_compativeis": ["TSN 512 L", "TSN 512 S"] },
+    "SNL 513": { "tipo": "Bipartido Padrão", "designacao_completa": "Mancal Bipartido SNL 513", "rolamentos_compativeis": [ { "tipo": "Esferas (Furo Cônico)", "rolamento": "1213 K", "bucha": "H 213", "eixo": 60 }, { "tipo": "Rolos (Furo Cônico)", "rolamento": "22213 K", "bucha": "H 313", "eixo": 60 }, { "tipo": "Rolos (Furo Cilíndrico)", "rolamento": "2213", "bucha": "N/A", "eixo": 65 } ], "vedacoes_compativeis": ["TSN 513 L", "TSN 513 S"] },
+    "SNL 515": { "tipo": "Bipartido Padrão", "designacao_completa": "Mancal Bipartido SNL 515", "rolamentos_compativeis": [ { "tipo": "Esferas (Furo Cônico)", "rolamento": "1215 K", "bucha": "H 215", "eixo": 65 }, { "tipo": "Rolos (Furo Cônico)", "rolamento": "22215 K", "bucha": "H 315", "eixo": 65 }, { "tipo": "Rolos (Furo Cilíndrico)", "rolamento": "2215", "bucha": "N/A", "eixo": 75 } ], "vedacoes_compativeis": ["TSN 515 L", "TSN 515 S"] },
+    "SNL 516": { "tipo": "Bipartido Padrão", "designacao_completa": "Mancal Bipartido SNL 516", "rolamentos_compativeis": [ { "tipo": "Esferas (Furo Cônico)", "rolamento": "1216 K", "bucha": "H 216", "eixo": 70 }, { "tipo": "Rolos (Furo Cônico)", "rolamento": "22216 K", "bucha": "H 316", "eixo": 70 }, { "tipo": "Rolos (Furo Cilíndrico)", "rolamento": "2216", "bucha": "N/A", "eixo": 80 } ], "vedacoes_compativeis": ["TSN 516 L", "TSN 516 S"] },
+    "SNL 517": { "tipo": "Bipartido Padrão", "designacao_completa": "Mancal Bipartido SNL 517", "rolamentos_compativeis": [ { "tipo": "Esferas (Furo Cônico)", "rolamento": "1217 K", "bucha": "H 217", "eixo": 75 }, { "tipo": "Rolos (Furo Cônico)", "rolamento": "22217 K", "bucha": "H 317", "eixo": 75 } ], "vedacoes_compativeis": ["TSN 517 L", "TSN 517 S"] },
+    "SNL 518": { "tipo": "Bipartido Padrão", "designacao_completa": "Mancal Bipartido SNL 518", "rolamentos_compativeis": [ { "tipo": "Esferas (Furo Cônico)", "rolamento": "1218 K", "bucha": "H 218", "eixo": 80 }, { "tipo": "Rolos (Furo Cônico)", "rolamento": "22218 K", "bucha": "H 318", "eixo": 80 }, { "tipo": "Rolos (Furo Cilíndrico)", "rolamento": "2218", "bucha": "N/A", "eixo": 90 } ], "vedacoes_compativeis": ["TSN 518 L", "TSN 518 S"] },
+    "SNL 520": { "tipo": "Bipartido Padrão", "designacao_completa": "Mancal Bipartido SNL 520", "rolamentos_compativeis": [ { "tipo": "Esferas (Furo Cônico)", "rolamento": "1220 K", "bucha": "H 220", "eixo": 90 }, { "tipo": "Rolos (Furo Cônico)", "rolamento": "22220 K", "bucha": "H 320", "eixo": 90 }, { "tipo": "Rolos (Furo Cilíndrico)", "rolamento": "2220", "bucha": "N/A", "eixo": 100 } ], "vedacoes_compativeis": ["TSN 520 L", "TSN 520 S"] },
+    "SNL 522": { "tipo": "Bipartido Padrão", "designacao_completa": "Mancal Bipartido SNL 522", "rolamentos_compativeis": [ { "tipo": "Esferas (Furo Cônico)", "rolamento": "1222 K", "bucha": "H 222", "eixo": 100 }, { "tipo": "Rolos (Furo Cônico)", "rolamento": "22222 K", "bucha": "H 322", "eixo": 100 }, { "tipo": "Rolos (Furo Cilíndrico)", "rolamento": "2222", "bucha": "N/A", "eixo": 110 } ], "vedacoes_compativeis": ["TSN 522 L", "TSN 522 S"] },
+    "SNL 524": { "tipo": "Bipartido Padrão", "designacao_completa": "Mancal Bipartido SNL 524", "rolamentos_compativeis": [ { "tipo": "Rolos (Furo Cônico)", "rolamento": "22224 K", "bucha": "H 324", "eixo": 110 }, { "tipo": "Rolos (Furo Cilíndrico)", "rolamento": "2224", "bucha": "N/A", "eixo": 120 } ], "vedacoes_compativeis": ["TSN 524 L", "TSN 524 S"] },
+    "SNL 526": { "tipo": "Bipartido Padrão", "designacao_completa": "Mancal Bipartido SNL 526", "rolamentos_compativeis": [ { "tipo": "Rolos (Furo Cônico)", "rolamento": "22226 K", "bucha": "H 3126", "eixo": 115 }, { "tipo": "Rolos (Furo Cilíndrico)", "rolamento": "2226", "bucha": "N/A", "eixo": 130 } ], "vedacoes_compativeis": ["TSN 526 L", "TSN 526 S"] },
+    "SNL 528": { "tipo": "Bipartido Padrão", "designacao_completa": "Mancal Bipartido SNL 528", "rolamentos_compativeis": [ { "tipo": "Rolos (Furo Cônico)", "rolamento": "22228 K", "bucha": "H 3128", "eixo": 125 }, { "tipo": "Rolos (Furo Cilíndrico)", "rolamento": "2228", "bucha": "N/A", "eixo": 140 } ], "vedacoes_compativeis": ["TSN 528 L", "TSN 528 S"] },
+    "SNL 530": { "tipo": "Bipartido Padrão", "designacao_completa": "Mancal Bipartido SNL 530", "rolamentos_compativeis": [ { "tipo": "Rolos (Furo Cônico)", "rolamento": "22230 K", "bucha": "H 3130", "eixo": 135 }, { "tipo": "Rolos (Furo Cilíndrico)", "rolamento": "2230", "bucha": "N/A", "eixo": 150 } ], "vedacoes_compativeis": ["TSN 530 L", "TSN 530 S"] },
+    "SNL 532": { "tipo": "Bipartido Padrão", "designacao_completa": "Mancal Bipartido SNL 532", "rolamentos_compativeis": [ { "tipo": "Rolos (Furo Cônico)", "rolamento": "22232 K", "bucha": "H 3132", "eixo": 150 }, { "tipo": "Rolos (Furo Cilíndrico)", "rolamento": "2232", "bucha": "N/A", "eixo": 160 } ], "vedacoes_compativeis": ["TSN 532 L", "TSN 532 S"] },
+    "SD 3036": { "tipo": "Bipartido Pesado (Série 30)", "designacao_completa": "Mancal Bipartido SD 3036", "rolamentos_compativeis": [ { "tipo": "Rolos (Furo Cônico)", "rolamento": "23036 K", "bucha": "H 3036", "eixo": 160 } ], "vedacoes_compativeis": ["TSN 3036 S"] },
+    "SD 3038": { "tipo": "Bipartido Pesado (Série 30)", "designacao_completa": "Mancal Bipartido SD 3038", "rolamentos_compativeis": [ { "tipo": "Rolos (Furo Cônico)", "rolamento": "23038 K", "bucha": "H 3038", "eixo": 170 } ], "vedacoes_compativeis": ["TSN 3038 S"] },
+    "SD 3040": { "tipo": "Bipartido Pesado (Série 30)", "designacao_completa": "Mancal Bipartido SD 3040", "rolamentos_compativeis": [ { "tipo": "Rolos (Furo Cônico)", "rolamento": "23040 K", "bucha": "H 3040", "eixo": 180 } ], "vedacoes_compativeis": ["TSN 3040 S"] },
+    "SD 3134": { "tipo": "Bipartido Pesado (Série 31)", "designacao_completa": "Mancal Bipartido SD 3134", "rolamentos_compativeis": [ { "tipo": "Rolos (Furo Cônico)", "rolamento": "23134 K", "bucha": "H 3134", "eixo": 150 } ], "vedacoes_compativeis": ["TSN 3134 L", "TSN 3134 S"] },
+    "SD 3136": { "tipo": "Bipartido Pesado (Série 31)", "designacao_completa": "Mancal Bipartido SD 3136", "rolamentos_compativeis": [ { "tipo": "Rolos (Furo Cônico)", "rolamento": "23136 K", "bucha": "H 3136", "eixo": 160 } ], "vedacoes_compativeis": ["TSN 3136 L", "TSN 3136 S"] },
+    "SD 3138": { "tipo": "Bipartido Pesado (Série 31)", "designacao_completa": "Mancal Bipartido SD 3138", "rolamentos_compativeis": [ { "tipo": "Rolos (Furo Cônico)", "rolamento": "23138 K", "bucha": "H 3138", "eixo": 170 } ], "vedacoes_compativeis": ["TSN 3138 L", "TSN 3138 S"] },
+    "SD 3140": { "tipo": "Bipartido Pesado (Série 31)", "designacao_completa": "Mancal Bipartido SD 3140", "rolamentos_compativeis": [ { "tipo": "Rolos (Furo Cônico)", "rolamento": "23140 K", "bucha": "H 3140", "eixo": 180 } ], "vedacoes_compativeis": ["TSN 3140 L"] },
+    "SD 3240": { "tipo": "Bipartido Pesado (Série 32)", "designacao_completa": "Mancal Bipartido SD 3240", "rolamentos_compativeis": [ { "tipo": "Rolos (Furo Cônico)", "rolamento": "23240 K", "bucha": "H 2340", "eixo": 180 } ], "vedacoes_compativeis": ["TSN 240 L"] },
+    "UCP201": { "tipo": "Unidade Pillow Block", "designacao_completa": "Mancal com Rolamento UCP201", "eixo_mm": 12, "unidade_rolamento": { "rolamento_inserido": "UC201", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações são parte integrante do rolamento inserido." },
+    "UCP202": { "tipo": "Unidade Pillow Block", "designacao_completa": "Mancal com Rolamento UCP202", "eixo_mm": 15, "unidade_rolamento": { "rolamento_inserido": "UC202", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações são parte integrante do rolamento inserido." },
+    "UCP203": { "tipo": "Unidade Pillow Block", "designacao_completa": "Mancal com Rolamento UCP203", "eixo_mm": 17, "unidade_rolamento": { "rolamento_inserido": "UC203", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações são parte integrante do rolamento inserido." },
+    "UCP204": { "tipo": "Unidade Pillow Block", "designacao_completa": "Mancal com Rolamento UCP204", "eixo_mm": 20, "unidade_rolamento": { "rolamento_inserido": "UC204", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações são parte integrante do rolamento inserido." },
+    "UCP205": { "tipo": "Unidade Pillow Block", "designacao_completa": "Mancal com Rolamento UCP205", "eixo_mm": 25, "unidade_rolamento": { "rolamento_inserido": "UC205", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações são parte integrante do rolamento inserido." },
+    "UCP205-16": { "tipo": "Unidade Pillow Block (Polegada)", "designacao_completa": "Mancal com Rolamento UCP205-16", "eixo_pol": "1\"", "eixo_mm": 25.4, "unidade_rolamento": { "rolamento_inserido": "UC205-16", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações integradas." },
+    "UCP206": { "tipo": "Unidade Pillow Block", "designacao_completa": "Mancal com Rolamento UCP206", "eixo_mm": 30, "unidade_rolamento": { "rolamento_inserido": "UC206", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações são parte integrante do rolamento inserido." },
+    "UCP206-18": { "tipo": "Unidade Pillow Block (Polegada)", "designacao_completa": "Mancal com Rolamento UCP206-18", "eixo_pol": "1.1/8\"", "eixo_mm": 28.57, "unidade_rolamento": { "rolamento_inserido": "UC206-18", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações integradas." },
+    "UCP207": { "tipo": "Unidade Pillow Block", "designacao_completa": "Mancal com Rolamento UCP207", "eixo_mm": 35, "unidade_rolamento": { "rolamento_inserido": "UC207", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações são parte integrante do rolamento inserido." },
+    "UCP207-20": { "tipo": "Unidade Pillow Block (Polegada)", "designacao_completa": "Mancal com Rolamento UCP207-20", "eixo_pol": "1.1/4\"", "eixo_mm": 31.75, "unidade_rolamento": { "rolamento_inserido": "UC207-20", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações integradas." },
+    "UCP208": { "tipo": "Unidade Pillow Block", "designacao_completa": "Mancal com Rolamento UCP208", "eixo_mm": 40, "unidade_rolamento": { "rolamento_inserido": "UC208", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações são parte integrante do rolamento inserido." },
+    "UCP209": { "tipo": "Unidade Pillow Block", "designacao_completa": "Mancal com Rolamento UCP209", "eixo_mm": 45, "unidade_rolamento": { "rolamento_inserido": "UC209", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações são parte integrante do rolamento inserido." },
+    "UCP210": { "tipo": "Unidade Pillow Block", "designacao_completa": "Mancal com Rolamento UCP210", "eixo_mm": 50, "unidade_rolamento": { "rolamento_inserido": "UC210", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações são parte integrante do rolamento inserido." },
+    "UCP211": { "tipo": "Unidade Pillow Block", "designacao_completa": "Mancal com Rolamento UCP211", "eixo_mm": 55, "unidade_rolamento": { "rolamento_inserido": "UC211", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações são parte integrante do rolamento inserido." },
+    "UCP212": { "tipo": "Unidade Pillow Block", "designacao_completa": "Mancal com Rolamento UCP212", "eixo_mm": 60, "unidade_rolamento": { "rolamento_inserido": "UC212", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações são parte integrante do rolamento inserido." },
+    "UCP213": { "tipo": "Unidade Pillow Block", "designacao_completa": "Mancal com Rolamento UCP213", "eixo_mm": 65, "unidade_rolamento": { "rolamento_inserido": "UC213", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações são parte integrante do rolamento inserido." },
+    "UCP214": { "tipo": "Unidade Pillow Block", "designacao_completa": "Mancal com Rolamento UCP214", "eixo_mm": 70, "unidade_rolamento": { "rolamento_inserido": "UC214", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações são parte integrante do rolamento inserido." },
+    "UCP215": { "tipo": "Unidade Pillow Block", "designacao_completa": "Mancal com Rolamento UCP215", "eixo_mm": 75, "unidade_rolamento": { "rolamento_inserido": "UC215", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações são parte integrante do rolamento inserido." },
+    "UCF204": { "tipo": "Unidade Flangeada Quadrada 4 Furos", "designacao_completa": "Mancal com Rolamento UCF204", "eixo_mm": 20, "unidade_rolamento": { "rolamento_inserido": "UC204", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações integradas." },
+    "UCF205": { "tipo": "Unidade Flangeada Quadrada 4 Furos", "designacao_completa": "Mancal com Rolamento UCF205", "eixo_mm": 25, "unidade_rolamento": { "rolamento_inserido": "UC205", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações integradas." },
+    "UCF205-16": { "tipo": "Unidade Flangeada Quadrada (Polegada)", "designacao_completa": "Mancal com Rolamento UCF205-16", "eixo_pol": "1\"", "eixo_mm": 25.4, "unidade_rolamento": { "rolamento_inserido": "UC205-16", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações integradas." },
+    "UCF206": { "tipo": "Unidade Flangeada Quadrada 4 Furos", "designacao_completa": "Mancal com Rolamento UCF206", "eixo_mm": 30, "unidade_rolamento": { "rolamento_inserido": "UC206", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações integradas." },
+    "UCF207": { "tipo": "Unidade Flangeada Quadrada 4 Furos", "designacao_completa": "Mancal com Rolamento UCF207", "eixo_mm": 35, "unidade_rolamento": { "rolamento_inserido": "UC207", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações integradas." },
+    "UCF208": { "tipo": "Unidade Flangeada Quadrada 4 Furos", "designacao_completa": "Mancal com Rolamento UCF208", "eixo_mm": 40, "unidade_rolamento": { "rolamento_inserido": "UC208", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações integradas." },
+    "UCF209": { "tipo": "Unidade Flangeada Quadrada 4 Furos", "designacao_completa": "Mancal com Rolamento UCF209", "eixo_mm": 45, "unidade_rolamento": { "rolamento_inserido": "UC209", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações integradas." },
+    "UCF210": { "tipo": "Unidade Flangeada Quadrada 4 Furos", "designacao_completa": "Mancal com Rolamento UCF210", "eixo_mm": 50, "unidade_rolamento": { "rolamento_inserido": "UC210", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações integradas." },
+    "UCFL204": { "tipo": "Unidade Flangeada Oval 2 Furos", "designacao_completa": "Mancal com Rolamento UCFL204", "eixo_mm": 20, "unidade_rolamento": { "rolamento_inserido": "UC204", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações são parte integrante do rolamento inserido." },
+    "UCFL205": { "tipo": "Unidade Flangeada Oval 2 Furos", "designacao_completa": "Mancal com Rolamento UCFL205", "eixo_mm": 25, "unidade_rolamento": { "rolamento_inserido": "UC205", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações são parte integrante do rolamento inserido." },
+    "UCFL205-16": { "tipo": "Unidade Flangeada Oval (Polegada)", "designacao_completa": "Mancal com Rolamento UCFL205-16", "eixo_pol": "1\"", "eixo_mm": 25.4, "unidade_rolamento": { "rolamento_inserido": "UC205-16", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações integradas." },
+    "UCFL206": { "tipo": "Unidade Flangeada Oval 2 Furos", "designacao_completa": "Mancal com Rolamento UCFL206", "eixo_mm": 30, "unidade_rolamento": { "rolamento_inserido": "UC206", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações são parte integrante do rolamento inserido." },
+    "UCFL207": { "tipo": "Unidade Flangeada Oval 2 Furos", "designacao_completa": "Mancal com Rolamento UCFL207", "eixo_mm": 35, "unidade_rolamento": { "rolamento_inserido": "UC207", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações são parte integrante do rolamento inserido." },
+    "UCFL208": { "tipo": "Unidade Flangeada Oval 2 Furos", "designacao_completa": "Mancal com Rolamento UCFL208", "eixo_mm": 40, "unidade_rolamento": { "rolamento_inserido": "UC208", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações são parte integrante do rolamento inserido." },
+    "UCFL209": { "tipo": "Unidade Flangeada Oval 2 Furos", "designacao_completa": "Mancal com Rolamento UCFL209", "eixo_mm": 45, "unidade_rolamento": { "rolamento_inserido": "UC209", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações são parte integrante do rolamento inserido." },
+    "UCFL210": { "tipo": "Unidade Flangeada Oval 2 Furos", "designacao_completa": "Mancal com Rolamento UCFL210", "eixo_mm": 50, "unidade_rolamento": { "rolamento_inserido": "UC210", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações são parte integrante do rolamento inserido." },
+    "UCT205": { "tipo": "Unidade Tensora (Take-up)", "designacao_completa": "Mancal com Rolamento UCT205", "eixo_mm": 25, "unidade_rolamento": { "rolamento_inserido": "UC205", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Usado em guias para tensionamento." },
+    "UCT206": { "tipo": "Unidade Tensora (Take-up)", "designacao_completa": "Mancal com Rolamento UCT206", "eixo_mm": 30, "unidade_rolamento": { "rolamento_inserido": "UC206", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Usado em guias para tensionamento." },
+    "UCT207": { "tipo": "Unidade Tensora (Take-up)", "designacao_completa": "Mancal com Rolamento UCT207", "eixo_mm": 35, "unidade_rolamento": { "rolamento_inserido": "UC207", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Usado em guias para tensionamento." },
+    "UCT208": { "tipo": "Unidade Tensora (Take-up)", "designacao_completa": "Mancal com Rolamento UCT208", "eixo_mm": 40, "unidade_rolamento": { "rolamento_inserido": "UC208", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Usado em guias para tensionamento." },
+    "UCT209": { "tipo": "Unidade Tensora (Take-up)", "designacao_completa": "Mancal com Rolamento UCT209", "eixo_mm": 45, "unidade_rolamento": { "rolamento_inserido": "UC209", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Usado em guias para tensionamento." },
+    "UCT210": { "tipo": "Unidade Tensora (Take-up)", "designacao_completa": "Mancal com Rolamento UCT210", "eixo_mm": 50, "unidade_rolamento": { "rolamento_inserido": "UC210", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Usado em guias para tensionamento." },
+    "FYT 20 TF": { "tipo": "Unidade Flangeada Quadrada", "designacao_completa": "Mancal Flangeado FYT 20 TF", "eixo_mm": 20, "unidade_rolamento": { "rolamento_inserido": "YAR 204-2F", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações são parte integrante do rolamento inserido." },
+    "FYT 25 TF": { "tipo": "Unidade Flangeada Quadrada", "designacao_completa": "Mancal Flangeado FYT 25 TF", "eixo_mm": 25, "unidade_rolamento": { "rolamento_inserido": "YAR 205-2F", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações são parte integrante do rolamento inserido." },
+    "FYT 30 TF": { "tipo": "Unidade Flangeada Quadrada", "designacao_completa": "Mancal Flangeado FYT 30 TF", "eixo_mm": 30, "unidade_rolamento": { "rolamento_inserido": "YAR 206-2F", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações são parte integrante do rolamento inserido." },
+    "FLT 20 TF": { "tipo": "Unidade Flangeada Oval", "designacao_completa": "Mancal Flangeado FLT 20 TF", "eixo_mm": 20, "unidade_rolamento": { "rolamento_inserido": "YAR 204-2F", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Vedações são parte integrante do rolamento inserido. Carcaça oval de 2 furos." },
+    "SBPP201": { "tipo": "Unidade Pillow Block (Aço Prensado)", "designacao_completa": "Mancal com Rolamento SBPP201", "eixo_mm": 12, "unidade_rolamento": { "rolamento_inserido": "SB201", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Carcaça de aço estampado para aplicações leves." },
+    "SBPP204": { "tipo": "Unidade Pillow Block (Aço Prensado)", "designacao_completa": "Mancal com Rolamento SBPP204", "eixo_mm": 20, "unidade_rolamento": { "rolamento_inserido": "SB204", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Carcaça de aço estampado para aplicações leves." },
+    "SBPP205": { "tipo": "Unidade Pillow Block (Aço Prensado)", "designacao_completa": "Mancal com Rolamento SBPP205", "eixo_mm": 25, "unidade_rolamento": { "rolamento_inserido": "SB205", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Carcaça de aço estampado para aplicações leves." },
+    "SBPF204": { "tipo": "Unidade Flangeada Quadrada (Aço Prensado)", "designacao_completa": "Mancal com Rolamento SBPF204", "eixo_mm": 20, "unidade_rolamento": { "rolamento_inserido": "SB204", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Carcaça de aço estampado para aplicações leves." },
+    "SBPF205": { "tipo": "Unidade Flangeada Quadrada (Aço Prensado)", "designacao_completa": "Mancal com Rolamento SBPF205", "eixo_mm": 25, "unidade_rolamento": { "rolamento_inserido": "SB205", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Carcaça de aço estampado para aplicações leves." },
+    "SBPF206": { "tipo": "Unidade Flangeada Quadrada (Aço Prensado)", "designacao_completa": "Mancal com Rolamento SBPF206", "eixo_mm": 30, "unidade_rolamento": { "rolamento_inserido": "SB206", "metodo_fixacao": "Parafusos de fixação (set screw)" }, "notas_tecnicas": "Carcaça de aço estampado para aplicações leves." }
 }
