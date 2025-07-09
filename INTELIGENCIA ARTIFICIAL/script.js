@@ -419,309 +419,153 @@ document.addEventListener("DOMContentLoaded", () => {
         type();
     }
 
-    
     // --- Chat por voz: reconhecimento e síntese ---
-const micBtn = document.getElementById('mic-btn');
-const chatInput = document.querySelector('.chat-input textarea'); // Captura o chatInput aqui para uso posterior
+    const micBtn = document.getElementById('mic-btn');
+    if (micBtn && window.SpeechRecognition || window.webkitSpeechRecognition) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'pt-BR';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+        let recognizing = false;
 
-// A SÍNTESE DE FALA ESTÁ AGORA DESATIVADA POR PADRÃO
-let speechSynthesisEnabled = false;
-
-// Variáveis e funções do chat (algumas são apenas declarações para evitar ReferenceError)
-// Substitua API_URL_CHAT, userMessage, API_URL_CLEAR, chatbox, createChatLi, typeText,
-// saveCurrentConv, getConvs, startNewConv, loadConv, sendChatBtn, clearChatBtn, newConvBtn
-// pelas suas declarações reais, caso ainda não estejam no seu escopo global ou superior.
-// Exemplo de declarações dummy para que o código funcione isoladamente
-const API_URL_CHAT = "https://example.com/api/chat"; // Substitua pela sua URL real
-const API_URL_CLEAR = "https://example.com/api/clear"; // Substitua pela sua URL real
-let userMessage = "";
-const chatbox = document.getElementById('chatbox'); // Certifique-se de que este elemento existe no seu HTML
-const sendChatBtn = document.getElementById('send-chat-btn'); // Certifique-se de que este elemento existe no seu HTML
-const clearChatBtn = document.getElementById('clear-chat-btn'); // Certifique-se de que este elemento existe no seu HTML
-const newConvBtn = document.getElementById('new-conv-btn'); // Certifique-se de que este elemento existe no seu HTML
-
-// Funções dummy para que o código compile, substitua pelas suas reais
-function createChatLi(message, className) {
-    const li = document.createElement("li");
-    li.classList.add("chat", className);
-    if (className === "incoming") {
-        const span = document.createElement("span");
-        span.classList.add("material-symbols-outlined");
-        span.textContent = "smart_toy";
-        li.appendChild(span);
-    }
-    const p = document.createElement("p");
-    p.textContent = message;
-    li.appendChild(p);
-    return li;
-}
-function typeText(element, text) {
-    let i = 0;
-    element.textContent = '';
-    const interval = setInterval(() => {
-        if (i < text.length) {
-            element.textContent += text.charAt(i);
-            i++;
-        } else {
-            clearInterval(interval);
-        }
-    }, 20); // Velocidade da digitação, ajuste conforme necessário
-}
-function saveCurrentConv() { console.log("Salvar conversa..."); }
-function getConvs() { return []; } // Retorna array vazio para este exemplo
-function startNewConv() { console.log("Iniciar nova conversa..."); }
-function loadConv(id) { console.log(`Carregar conversa ${id}...`); }
-
-
-if (micBtn && (window.SpeechRecognition || window.webkitSpeechRecognition)) {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
-    recognition.lang = 'pt-BR';
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-    let recognizing = false;
-
-    micBtn.addEventListener('click', () => {
-        if (!recognizing) {
-            recognition.start();
+        micBtn.addEventListener('click', () => {
+            if (!recognizing) {
+                recognition.start();
+                micBtn.classList.add('gravando');
+                micBtn.querySelector('span').textContent = 'mic_off';
+            } else {
+                recognition.stop();
+                micBtn.classList.remove('gravando');
+                micBtn.querySelector('span').textContent = 'mic';
+            }
+        });
+        recognition.onstart = () => {
+            recognizing = true;
             micBtn.classList.add('gravando');
-            micBtn.querySelector('span').textContent = 'mic_off';
-        } else {
-            recognition.stop();
+        };
+        recognition.onend = () => {
+            recognizing = false;
             micBtn.classList.remove('gravando');
             micBtn.querySelector('span').textContent = 'mic';
-        }
-    });
-
-    recognition.onstart = () => {
-        recognizing = true;
-        micBtn.classList.add('gravando');
-    };
-
-    recognition.onend = () => {
-        recognizing = false;
-        micBtn.classList.remove('gravando');
-        micBtn.querySelector('span').textContent = 'mic';
-    };
-
-    recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        if (chatInput) {
-            chatInput.value = transcript;
-            chatInput.focus();
-            // Processa o comando de voz se for o caso. Se for um comando, ele será consumido.
-            // Se não for um comando, o texto permanece no chatInput.
-            processVoiceCommand(transcript);
-        }
-    };
-
-    // --- Adiciona tratamento de erros para o reconhecimento de voz ---
-    recognition.onerror = (event) => {
-        console.error('Erro no reconhecimento de voz:', event.error);
-        recognizing = false;
-        micBtn.classList.remove('gravando');
-        micBtn.querySelector('span').textContent = 'mic';
-        if (event.error === 'not-allowed') {
-            console.warn('Permissão para usar o microfone negada. Habilite nas configurações do navegador.');
-        }
-    };
-
-} else if (micBtn) {
-    micBtn.disabled = true;
-    micBtn.title = 'Reconhecimento de voz não suportado neste navegador.';
-    console.warn('Reconhecimento de voz não suportado neste navegador.');
-}
-
-// --- Síntese de fala para resposta da AEMI ---
-function speakText(text) {
-    // Só fala se a síntese de fala estiver ativada
-    if (!speechSynthesisEnabled) {
-        console.log(`Síntese de fala desativada. Texto não falado: "${text}"`);
-        return;
-    }
-
-    if ('speechSynthesis' in window) {
-        // Cancela qualquer fala atual para evitar sobreposição
-        window.speechSynthesis.cancel();
-
-        const utter = new SpeechSynthesisUtterance(text);
-        utter.lang = 'pt-BR';
-        utter.rate = 1;
-        utter.pitch = 1;
-
-        utter.onerror = (event) => {
-            console.error('Erro na síntese de fala:', event.error);
         };
-
-        window.speechSynthesis.speak(utter);
-    } else {
-        console.warn('Síntese de fala não suportada neste navegador.');
-    }
-}
-
-// --- Função para processar comandos de voz digitados/transcritos ---
-// Esta função é chamada tanto pelo reconhecimento de voz quanto pela digitação.
-function processVoiceCommand(commandText) {
-    const cleanedCommand = commandText.trim().toLowerCase();
-
-    if (cleanedCommand === 'ativar voz') {
-        speechSynthesisEnabled = true;
-        console.log('Comando recebido: "ativar voz". Síntese de voz ATIVADA.');
-        speakText('Síntese de voz ativada.');
-        // Limpa o campo de input após o comando
-        if (chatInput) chatInput.value = '';
-        return true; // Indica que um comando foi processado
-    } else if (cleanedCommand === 'desativar voz') {
-        speechSynthesisEnabled = false;
-        window.speechSynthesis.cancel(); // Para qualquer fala em andamento imediatamente
-        console.log('Comando recebido: "desativar voz". Síntese de voz DESATIVADA.');
-        // Limpa o campo de input após o comando
-        if (chatInput) chatInput.value = '';
-        return true; // Indica que um comando foi processado
-    }
-    return false; // Indica que não foi um comando de voz
-}
-
-// --- Monitora o campo de chat para comandos digitados ---
-// Este listener é importante para capturar comandos digitados antes do handleChat.
-if (chatInput) {
-    // O evento 'change' é acionado quando o valor do elemento muda e ele perde o foco
-    // Isso é útil para quando o usuário digita e clica fora, ou envia de alguma outra forma
-    chatInput.addEventListener('change', (event) => {
-        const typedText = event.target.value;
-        if (typedText.trim() !== '') {
-            // Se o texto digitado for um comando de voz, ele será processado aqui.
-            // Se processVoiceCommand retornar true, o comando foi tratado e não precisa ir para o handleChat normal.
-            processVoiceCommand(typedText);
-        }
-    });
-
-    // Monitora o 'keydown' para o Enter, permitindo processar comandos digitados
-    chatInput.addEventListener('keydown', (e) => {
-        if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault(); // Impede a quebra de linha padrão no textarea
-            const typedText = chatInput.value;
-            if (typedText.trim() !== '') {
-                // Se o texto digitado for um comando de voz, ele será processado.
-                const isCommand = processVoiceCommand(typedText);
-                if (!isCommand) {
-                    // Se não for um comando de voz, então é uma mensagem normal para o chat.
-                    // Chama a função handleChat para enviar a mensagem.
-                    handleChat();
-                }
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            const chatInput = document.querySelector('.chat-input textarea');
+            if (chatInput) {
+                chatInput.value = transcript;
+                chatInput.focus();
             }
+        };
+    } else if (micBtn) {
+        micBtn.disabled = true;
+        micBtn.title = 'Reconhecimento de voz não suportado neste navegador.';
+    }
+
+    // --- Síntese de fala para resposta da AEMI ---
+    function speakText(text) {
+        if ('speechSynthesis' in window) {
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'pt-BR';
+            utter.rate = 1;
+            utter.pitch = 1;
+            window.speechSynthesis.speak(utter);
         }
-    });
-}
+    }
 
-// --- Envio de Mensagem e Resposta ---
-const generateResponse = (incomingChatLi) => {
-    // Certifique-se de que 'userMessage' esteja definida antes de 'requestOptions'
-    // userMessage é definida em handleChat, então este trecho é chamado após handleChat.
-    const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({ message: userMessage }) // userMessage deve ser do escopo externo
+    // --- Envio de Mensagem e Resposta ---
+    const generateResponse = (incomingChatLi) => {
+        const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({ message: userMessage })
+        };
+        const pElement = incomingChatLi.querySelector("p") || document.createElement("p");
+        if(!incomingChatLi.querySelector("p")){
+            incomingChatLi.appendChild(pElement);
+        }
+        // Efeito de "digitando..."
+        pElement.textContent = "";
+        pElement.classList.add("typing-animation");
+        fetch(API_URL_CHAT, requestOptions)
+            .then(res => res.ok ? res.json() : Promise.reject(res))
+            .then(data => {
+                pElement.classList.remove("typing-animation");
+                pElement.textContent = "";
+                typeText(pElement, data.response);
+                speakText(data.response); // Fala a resposta da AEMI
+            })
+            .catch(() => {
+                pElement.classList.remove("typing-animation");
+                pElement.textContent = "[Erro ao obter resposta da IA]";
+            })
+            .finally(() => {
+                chatbox.scrollTop = chatbox.scrollHeight;
+            });
     };
-    const pElement = incomingChatLi.querySelector("p") || document.createElement("p");
-    if(!incomingChatLi.querySelector("p")){
-        incomingChatLi.appendChild(pElement);
-    }
-    // Efeito de "digitando..."
-    pElement.textContent = "";
-    pElement.classList.add("typing-animation");
-    fetch(API_URL_CHAT, requestOptions)
-        .then(res => res.ok ? res.json() : Promise.reject(res))
-        .then(data => {
-            pElement.classList.remove("typing-animation");
-            pElement.textContent = "";
-            typeText(pElement, data.response);
-            speakText(data.response); // Fala a resposta da AEMI (se estiver ativada)
-        })
-        .catch(() => {
-            pElement.classList.remove("typing-animation");
-            pElement.textContent = "[Erro ao obter resposta da IA]";
-        })
-        .finally(() => {
-            chatbox.scrollTop = chatbox.scrollHeight;
-        });
-};
 
-// --- Envio de Mensagem ---
-const handleChat = () => {
-    if(!chatInput) return;
-    userMessage = chatInput.value.trim();
-    if (!userMessage) return;
+    // --- Envio de Mensagem ---
+    const handleChat = () => {
+        if(!chatInput) return;
+        userMessage = chatInput.value.trim();
+        if (!userMessage) return;
+        
+        chatInput.value = "";
+        chatInput.disabled = true;
+        sendChatBtn.disabled = true;
 
-    // AQUI É A PARTE CRÍTICA: Não chamamos processVoiceCommand aqui, pois ele já é chamado no keydown.
-    // Se um comando de voz foi digitado e processado pelo keydown, o chatInput.value já terá sido limpo.
-    // Se o chatInput.value NÃO estiver vazio aqui, significa que era uma mensagem normal.
-
-    // Se a mensagem for um comando, ele já terá sido consumido e o input limpo.
-    // Se o input não estiver vazio, é uma mensagem para a IA.
-    if (chatInput.value.trim() === '') {
-        // O comando de voz foi processado e o input limpo, então não há mensagem para enviar à IA.
-        chatInput.disabled = false; // Habilita o input novamente
-        if(sendChatBtn) sendChatBtn.disabled = false; // Habilita o botão de enviar
-        return;
-    }
-
-    // Se chegou até aqui, é uma mensagem normal para a IA.
-    chatInput.value = "";
-    chatInput.disabled = true;
-    if(sendChatBtn) sendChatBtn.disabled = true;
-
-
-    if(chatbox) {
-        chatbox.appendChild(createChatLi(userMessage, "outgoing"));
-        chatbox.scrollTo(0, chatbox.scrollHeight);
-
-        setTimeout(() => {
-            const incomingChatLi = createChatLi("typing", "incoming");
-            chatbox.appendChild(incomingChatLi);
+        if(chatbox) {
+            chatbox.appendChild(createChatLi(userMessage, "outgoing"));
             chatbox.scrollTo(0, chatbox.scrollHeight);
-            generateResponse(incomingChatLi);
-        }, 600);
-    }
-    saveCurrentConv();
-};
-
-// --- Limpar Chat ---
-const clearChat = () => {
-    if (confirm("Você tem certeza que deseja limpar o histórico desta conversa?")) {
-        if(chatbox) chatbox.innerHTML = `<li class="chat incoming"><span class="material-symbols-outlined">smart_toy</span><p>Olá. Sou AEMI, uma IA da Manutenção Industrial. Envie uma mensagem para começarmos.</p></li>`;
-        fetch(API_URL_CLEAR, { method: "POST" }).catch(() => {});
+        
+            setTimeout(() => {
+                const incomingChatLi = createChatLi("typing", "incoming");
+                chatbox.appendChild(incomingChatLi);
+                chatbox.scrollTo(0, chatbox.scrollHeight);
+                generateResponse(incomingChatLi);
+            }, 600);
+        }
         saveCurrentConv();
-    }
-};
+    };
 
-// --- Inicialização ---
-function init() {
-    const convs = getConvs();
-    if (convs.length === 0) {
-        startNewConv();
-    } else {
-        const lastConvId = convs[convs.length - 1].id;
-        loadConv(lastConvId);
-    }
-}
+    // --- Limpar Chat ---
+    const clearChat = () => {
+        if (confirm("Você tem certeza que deseja limpar o histórico desta conversa?")) {
+            if(chatbox) chatbox.innerHTML = `<li class="chat incoming"><span class="material-symbols-outlined">smart_toy</span><p>Olá. Sou AEMI, uma IA da Manutenção Industrial. Envie uma mensagem para começarmos.</p></li>`;
+            fetch(API_URL_CLEAR, { method: "POST" }).catch(() => {});
+            saveCurrentConv();
+        }
+    };
 
-// --- Event Listeners ---
-// window.onload para garantir que todos os elementos estejam disponíveis
-window.addEventListener("load", () => {
+    // --- Inicialização ---
+    function init() {
+        const convs = getConvs();
+        if (convs.length === 0) {
+            startNewConv();
+        } else {
+            const lastConvId = convs[convs.length - 1].id;
+            loadConv(lastConvId);
+        }
+    }
+
+    // --- Event Listeners ---
     if(sendChatBtn) sendChatBtn.addEventListener("click", handleChat);
     if(clearChatBtn) clearChatBtn.addEventListener("click", clearChat);
-    // O chatInput.addEventListener("keydown") foi movido para o bloco do processVoiceCommand
-    // para melhor integração da lógica de comando antes do handleChat.
+    if(chatInput) chatInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            handleChat();
+        }
+    });
     if(newConvBtn) newConvBtn.addEventListener("click", startNewConv);
-
+    
     // --- Salvar Conversa ao Sair ---
     window.addEventListener("beforeunload", saveCurrentConv);
 
     // --- Inicia a aplicação ---
     init();
-});
 
-// O CÓDIGO ANTIGO DO SIDEBAR QUE ESTAVA AQUI FOI REMOVIDO
-// PARA EVITAR CONFLITO COM A NOVA IMPLEMENTAÇÃO NO INÍCIO DO ARQUIVO.
-                          
+    /* O CÓDIGO ANTIGO DO SIDEBAR QUE ESTAVA AQUI FOI REMOVIDO 
+    PARA EVITAR CONFLITO COM A NOVA IMPLEMENTAÇÃO NO INÍCIO DO ARQUIVO.
+    */
+});
