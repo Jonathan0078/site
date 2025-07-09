@@ -11,6 +11,16 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelector('.tab-toggle-option[data-tab="chat-tab"]').classList.add('active');
         });
     }
+    // Botão de limpar conversa (agora é um <button> e não mais <span>)
+    const clearBtn = document.getElementById('clear-btn');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', async function() {
+            if (confirm('Deseja realmente limpar a conversa?')) {
+                await fetch('/clear-session', { method: 'POST' });
+                location.reload();
+            }
+        });
+    }
 });
 
 

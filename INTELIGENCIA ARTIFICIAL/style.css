@@ -492,6 +492,18 @@ header h2 {
     padding: 0;
     transition: background-color 0.2s;
     color: #ffffff; /* Cor ajustada para o fundo escuro */
+    position: relative;
+}
+
+/* Centraliza o ícone da lixeira no botão de limpar conversa */
+#clear-btn .material-icons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: 1.6em;
+    margin: 0;
 }
 
 .header-btn:hover {

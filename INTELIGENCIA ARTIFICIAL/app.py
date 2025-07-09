@@ -115,11 +115,15 @@ def kb_download(item_id):
         return 'Arquivo não encontrado', 404
     return send_from_directory(KB_DIR, item['filename'], as_attachment=True, download_name=item['name'])
 
+
 from flask_cors import CORS
 from huggingface_hub import InferenceClient
 
-
-CORS(app, supports_credentials=True) # Habilita credenciais para que as sessões funcionem entre domínios
+# Permite apenas o domínio do GitHub Pages do seu projeto e o endereço do backend Render
+CORS(app, supports_credentials=True, origins=[
+    "https://jonathan0078.github.io",
+    "https://aemi.onrender.com"
+])
 
 # Carrega as chaves da aplicação a partir de variáveis de ambiente
 FLASK_SECRET_KEY = os.getenv("FLASK_SECRET_KEY")
