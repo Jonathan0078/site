@@ -246,27 +246,47 @@ def extract_page_content(url, max_chars=1000):
     """Extrai conteúdo de uma página web para análise."""
     try:
         headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'Accept-Language': 'pt-BR,pt;q=0.9,en;q=0.8',
+            'Accept-Encoding': 'gzip, deflate',
+            'Connection': 'keep-alive',
+            'Upgrade-Insecure-Requests': '1'
         }
         
-        response = requests.get(url, headers=headers, timeout=8)
+        response = requests.get(url, headers=headers, timeout=10, allow_redirects=True)
         
         if response.status_code == 200 and BeautifulSoup:
             soup = BeautifulSoup(response.text, 'html.parser')
             
-            # Remove scripts e estilos
-            for script in soup(["script", "style"]):
-                script.decompose()
+            # Remove elementos desnecessários
+            for element in soup(['script', 'style', 'nav', 'header', 'footer', 'aside', 'iframe', 'noscript']):
+                element.decompose()
             
-            # Pega o texto principal
-            text = soup.get_text()
+            # Tenta encontrar o conteúdo principal
+            main_content = soup.find('main') or soup.find('article') or soup.find('div', {'class': ['content', 'post', 'article']})
+            
+            if main_content:
+                text = main_content.get_text()
+            else:
+                text = soup.get_text()
             
             # Limpa o texto
             lines = (line.strip() for line in text.splitlines())
             chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
             text = ' '.join(chunk for chunk in chunks if chunk)
             
-            return text[:max_chars]
+            # Remove linhas muito curtas e repetitivas
+            sentences = text.split('.')
+            meaningful_sentences = []
+            for sentence in sentences:
+                sentence = sentence.strip()
+                if len(sentence) > 20 and sentence not in meaningful_sentences:
+                    meaningful_sentences.append(sentence)
+            
+            cleaned_text = '. '.join(meaningful_sentences[:10])  # Primeiras 10 frases
+            
+            return cleaned_text[:max_chars]
         
         return ""
     except Exception as e:
@@ -281,14 +301,41 @@ def should_search_internet(message):
         'preço', 'valor', 'custo', 'onde comprar', 'fornecedor',
         'norma', 'regulamento', 'lei', 'nbr', 'iso', 'abnt',
         'fabricante', 'marca', 'modelo', 'especificação',
-        'curso', 'treinamento', 'certificação', 'capacitação'
+        'curso', 'treinamento', 'certificação', 'capacitação',
+        'empresa', 'fábrica', 'catálogo', 'manual',
+        'novidade', 'lançamento', 'tecnologia', 'inovação',
+        'mercado', 'tendência', 'estatística', 'dados',
+        'comparar', 'diferença', 'vantagem', 'desvantagem'
     ]
     
     message_lower = message.lower()
-    return any(trigger in message_lower for trigger in search_triggers)
+    
+    # Busca por gatilhos diretos
+    if any(trigger in message_lower for trigger in search_triggers):
+        return True
+    
+    # Busca por padrões de perguntas que podem precisar de informações atuais
+    current_info_patterns = [
+        'qual', 'quais', 'como', 'onde', 'quando', 'por que', 'porque',
+        'existe', 'tem', 'há', 'possui', 'funciona', 'serve'
+    ]
+    
+    # Se a mensagem contém padrões de pergunta E palavras técnicas, pode precisar de pesquisa
+    if any(pattern in message_lower for pattern in current_info_patterns):
+        technical_words = [
+            'equipamento', 'máquina', 'motor', 'bomba', 'válvula', 'sensor',
+            'automação', 'industrial', 'manutenção', 'falha', 'diagnóstico',
+            'lubrificação', 'rolamento', 'correia', 'engrenagem', 'hidráulica',
+            'pneumática', 'elétrica', 'eletrônica', 'software', 'sistema'
+        ]
+        
+        if any(word in message_lower for word in technical_words):
+            return True
+    
+    return False
 
-def format_search_results(search_data, original_query):
-    """Formata os resultados de pesquisa para apresentação."""
+def analyze_search_content(search_data, original_query):
+    """Analisa o conteúdo dos resultados de pesquisa e gera uma resposta elaborada."""
     if "error" in search_data:
         return f"🔍 **Pesquisa na Internet**\n\n❌ {search_data['error']}\n\nComo alternativa, posso ajudar com base no meu conhecimento sobre manutenção industrial."
     
@@ -296,23 +343,81 @@ def format_search_results(search_data, original_query):
     if not results:
         return f"🔍 **Pesquisa na Internet**\n\n🚫 Nenhum resultado encontrado para: \"{original_query}\"\n\nComo alternativa, posso ajudar com base no meu conhecimento sobre manutenção industrial."
     
-    formatted = f"🔍 **Pesquisa na Internet - \"{search_data['query']}\"**\n\n"
-    formatted += f"📊 **Encontrei {len(results)} resultado(s) relevante(s):**\n\n"
+    # Extrai conteúdo dos primeiros resultados
+    content_sources = []
+    for result in results[:3]:  # Analisa os 3 primeiros resultados
+        content = extract_page_content(result['url'], max_chars=800)
+        if content.strip():
+            content_sources.append({
+                'title': result['title'],
+                'url': result['url'],
+                'content': content,
+                'snippet': result.get('snippet', '')
+            })
     
-    for i, result in enumerate(results, 1):
-        formatted += f"**{i}. {result['title']}**\n"
-        formatted += f"🔗 {result['url']}\n"
-        if result['snippet']:
-            formatted += f"📝 {result['snippet']}\n"
-        formatted += "\n"
+    if not content_sources:
+        return f"🔍 **Pesquisa na Internet**\n\n⚠️ Encontrei resultados para \"{original_query}\", mas não consegui acessar o conteúdo dos sites.\n\nComo alternativa, posso ajudar com base no meu conhecimento sobre manutenção industrial."
     
-    formatted += "💡 **Como usar essas informações:**\n"
-    formatted += "• Clique nos links para acessar o conteúdo completo\n"
-    formatted += "• Se precisar de análise específica, me envie o conteúdo\n"
-    formatted += "• Posso ajudar a interpretar informações técnicas\n\n"
-    formatted += "🔧 **Próximo passo:** Me conte se encontrou o que precisava ou se posso ajudar de outra forma!"
+    # Prepara o contexto para o LLM
+    context = f"Pergunta do usuário: {original_query}\n\n"
+    context += "Informações encontradas na internet:\n\n"
     
-    return formatted
+    for i, source in enumerate(content_sources, 1):
+        context += f"Fonte {i} - {source['title']}:\n"
+        context += f"URL: {source['url']}\n"
+        context += f"Conteúdo: {source['content']}\n\n"
+    
+    # Gera resposta usando LLM
+    try:
+        client = get_text_client()
+        if client:
+            prompt = f"""Como A.E.M.I, especialista em manutenção industrial, responda à pergunta do usuário com base nas informações encontradas na internet. Seja detalhada e técnica.
+
+{context}
+
+Instruções:
+1. Responda de forma completa e técnica sobre o assunto
+2. Use as informações das fontes para embasar sua resposta
+3. Mantenha o foco em manutenção industrial
+4. No final, cite as fontes utilizadas
+5. Seja prática e objetiva
+
+Resposta:"""
+
+            response = client.text_generation(
+                prompt,
+                max_new_tokens=1000,
+                temperature=0.7,
+                return_full_text=False
+            )
+            
+            ai_response = response.strip()
+            
+            # Adiciona as fontes ao final
+            sources_text = "\n\n📚 **Fontes consultadas:**\n"
+            for i, source in enumerate(content_sources, 1):
+                sources_text += f"{i}. {source['title']}\n   🔗 {source['url']}\n"
+            
+            return f"🔍 **Pesquisa na Internet - \"{original_query}\"**\n\n{ai_response}{sources_text}"
+        
+    except Exception as e:
+        print(f"Erro ao gerar resposta com LLM: {e}")
+    
+    # Fallback: resposta baseada nos snippets
+    response = f"🔍 **Pesquisa na Internet - \"{original_query}\"**\n\n"
+    response += "📝 **Informações encontradas:**\n\n"
+    
+    for i, source in enumerate(content_sources, 1):
+        response += f"**{i}. {source['title']}**\n"
+        if source['snippet']:
+            response += f"📋 {source['snippet']}\n"
+        response += f"🔗 {source['url']}\n\n"
+    
+    response += "📚 **Fontes consultadas:**\n"
+    for i, source in enumerate(content_sources, 1):
+        response += f"{i}. {source['title']} - {source['url']}\n"
+    
+    return response
 
 # --- FUNÇÕES DE PROCESSAMENTO ---
 def get_text_client():
@@ -537,193 +642,6 @@ def interpret_for_maintenance(vision_text):
     else:
         return "📋 **Análise geral:** Identifiquei elementos industriais. Me descreva sua dúvida específica para orientação detalhada."
 
-def analyze_uploaded_file(file_info, user_message):
-    """Analisa arquivo enviado quando solicitado pelo usuário."""
-    try:
-        filepath = file_info['filepath']
-        filename = file_info['filename']
-        ext = file_info['extension']
-        
-        print(f"Iniciando análise do arquivo: {filename}")
-        
-        # Análise de imagem com IA
-        if ext in ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']:
-            print("Analisando imagem com IA...")
-            vision_analysis = analyze_image_with_ai(filepath)
-            
-            if vision_analysis:
-                response = f"🔍 **Análise da imagem {filename}:**\n\n"
-                response += f"🤖 **O que vejo na imagem:**\n{vision_analysis}\n\n"
-                response += f"🔧 **Como posso ajudar:**\n"
-                response += "Baseado no que vejo, posso te orientar sobre manutenção, falhas, procedimentos ou componentes mostrados na imagem. Me faça suas perguntas específicas!"
-                return response
-            else:
-                return f"❌ Não consegui analisar a imagem {filename} no momento. Descreva o que você vê e posso te ajudar!"
-        
-        # Análise de PDF
-        elif ext == '.pdf' and PyPDF2:
-            print("Analisando PDF...")
-            content = extract_pdf_content(filepath)
-            if content:
-                # Usa IA para interpretar o conteúdo
-                interpreted_content = interpret_document_with_ai(content, user_message)
-                response = f"📄 **Análise do PDF {filename}:**\n\n"
-                response += interpreted_content
-                return response
-            else:
-                return f"❌ Não consegui extrair texto do PDF {filename}. Pode ser protegido ou conter apenas imagens."
-        
-        # Análise de documento Word
-        elif ext in ['.docx'] and docx:
-            print("Analisando documento Word...")
-            content = extract_docx_content(filepath)
-            if content:
-                interpreted_content = interpret_document_with_ai(content, user_message)
-                response = f"📄 **Análise do documento {filename}:**\n\n"
-                response += interpreted_content
-                return response
-            else:
-                return f"❌ Não consegui extrair conteúdo do documento {filename}."
-        
-        # Análise de arquivo de texto
-        elif ext in ['.txt', '.md', '.csv']:
-            print("Analisando arquivo de texto...")
-            content = extract_text_content(filepath)
-            if content:
-                interpreted_content = interpret_document_with_ai(content, user_message)
-                response = f"📝 **Análise do arquivo {filename}:**\n\n"
-                response += interpreted_content
-                return response
-            else:
-                return f"❌ Arquivo {filename} está vazio ou não consegui ler o conteúdo."
-        
-        else:
-            return f"📎 **Arquivo {filename}** - Tipo não suportado para análise automática. Me descreva o conteúdo que posso ajudar!"
-    
-    except Exception as e:
-        print(f"Erro na análise do arquivo: {e}")
-        return f"❌ Erro ao analisar o arquivo {file_info['filename']}. Tente enviar novamente."
-
-def analyze_image_with_ai(image_path):
-    """Faz análise visual da imagem usando IA."""
-    try:
-        client = get_vision_client()
-        if not client or not HUGGING_FACE_TOKEN:
-            print("Cliente de visão não disponível")
-            return None
-        
-        # Abre e processa a imagem
-        with open(image_path, 'rb') as f:
-            image_data = f.read()
-        
-        img = Image.open(io.BytesIO(image_data))
-        
-        # Redimensiona se muito grande
-        if img.width > 1024 or img.height > 1024:
-            img.thumbnail((1024, 1024), Image.Resampling.LANCZOS)
-        
-        # Converte para RGB se necessário
-        if img.mode != 'RGB':
-            img = img.convert('RGB')
-        
-        # Salva temporariamente para análise
-        temp_buffer = io.BytesIO()
-        img.save(temp_buffer, format='JPEG', quality=85)
-        temp_buffer.seek(0)
-        
-        # Faz a análise visual com IA
-        result = client.image_to_text(temp_buffer.getvalue())
-        vision_text = result.get('generated_text', '') if isinstance(result, dict) else str(result)
-        
-        if vision_text:
-            # Interpreta para contexto de manutenção industrial
-            maintenance_context = interpret_for_maintenance(vision_text)
-            return f"{vision_text}\n\n🔧 **Contexto de Manutenção Industrial:**\n{maintenance_context}"
-        
-        return None
-        
-    except Exception as e:
-        print(f"Erro na análise visual: {e}")
-        return None
-
-def extract_pdf_content(filepath):
-    """Extrai conteúdo de PDF."""
-    try:
-        with open(filepath, 'rb') as f:
-            reader = PyPDF2.PdfReader(f)
-            text_content = ""
-            
-            # Extrai texto de até 10 páginas
-            pages_to_read = min(10, len(reader.pages))
-            for i in range(pages_to_read):
-                page_text = reader.pages[i].extract_text() or ''
-                text_content += page_text + "\n"
-            
-            return text_content.strip()[:3000]  # Limita a 3000 caracteres
-    except Exception as e:
-        print(f"Erro ao extrair PDF: {e}")
-        return None
-
-def extract_docx_content(filepath):
-    """Extrai conteúdo de documento Word."""
-    try:
-        doc = docx.Document(filepath)
-        paragraphs = [p.text for p in doc.paragraphs if p.text.strip()]
-        content = '\n'.join(paragraphs[:20])  # Primeiros 20 parágrafos
-        return content[:3000]  # Limita a 3000 caracteres
-    except Exception as e:
-        print(f"Erro ao extrair DOCX: {e}")
-        return None
-
-def extract_text_content(filepath):
-    """Extrai conteúdo de arquivo de texto."""
-    try:
-        with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
-            content = f.read(3000)  # Primeiros 3000 caracteres
-            return content.strip()
-    except Exception as e:
-        print(f"Erro ao extrair texto: {e}")
-        return None
-
-def interpret_document_with_ai(content, user_question):
-    """Usa IA para interpretar documento no contexto da pergunta do usuário."""
-    try:
-        client = get_text_client()
-        if not client:
-            return f"📄 **Conteúdo do documento:**\n{content[:1000]}...\n\n🔧 Como especialista em manutenção industrial, posso te ajudar a interpretar este conteúdo. Me faça perguntas específicas!"
-        
-        # Prompt para análise do documento
-        analysis_prompt = f"""Como especialista em manutenção industrial (A.E.M.I), analise este documento e responda à pergunta do usuário.
-
-DOCUMENTO:
-{content}
-
-PERGUNTA DO USUÁRIO: {user_question}
-
-Forneça uma análise focada em manutenção industrial, identificando:
-- Equipamentos mencionados
-- Procedimentos descritos
-- Especificações técnicas relevantes
-- Possíveis problemas ou soluções
-- Recomendações práticas
-
-Seja objetivo e prático na resposta."""
-
-        response = client.chat_completion(
-            messages=[
-                {"role": "system", "content": "Você é a A.E.M.I, especialista em manutenção industrial. Analise documentos e forneça insights práticos."},
-                {"role": "user", "content": analysis_prompt}
-            ],
-            max_tokens=1000,
-            stream=False
-        )
-        
-        return response.choices[0].message.content
-        
-    except Exception as e:
-        print(f"Erro na interpretação com IA: {e}")
-        return f"📄 **Conteúdo encontrado:**\n{content[:800]}...\n\n🔧 **Como posso ajudar:** Me faça perguntas específicas sobre este conteúdo relacionadas à manutenção industrial!"
-
 def generate_chat_response(chat_history):
     """Processa um histórico de chat e retorna a resposta do modelo."""
     client = get_text_client()
@@ -819,50 +737,35 @@ def chat():
         if should_search_internet(user_message):
             print(f"Realizando pesquisa na internet para: {user_message}")
             search_results = search_internet(user_message, max_results=5)
-            formatted_results = format_search_results(search_results, user_message)
+            analyzed_results = analyze_search_content(search_results, user_message)
             
-            # Se encontrou resultados, retorna eles
+            # Se encontrou e analisou resultados, retorna eles
             if "results" in search_results and search_results["results"]:
-                return jsonify({"response": formatted_results})
+                return jsonify({"response": analyzed_results})
             
             # Se não encontrou, continua para o LLM com uma nota sobre a pesquisa
             user_message += " (Pesquisa na internet não retornou resultados úteis)"
         
-        # 5. Verificar se há arquivos enviados recentemente para análise
-        file_analysis_response = None
-        if uploaded_files:
-            # Verifica se a mensagem é sobre análise de arquivo
-            analysis_triggers = [
-                'que tem na imagem', 'o que vê', 'analise', 'analisa', 'analisar',
-                'que tem no arquivo', 'conteúdo', 'documento', 'pdf', 'imagem',
-                'foto', 'picture', 'what do you see', 'analyze', 'content',
-                'me fale sobre', 'explique', 'descreva', 'o que é', 'que mostra'
-            ]
-            
-            if any(trigger in user_message_lower for trigger in analysis_triggers):
-                # Pega o arquivo mais recente
-                latest_file_id = max(uploaded_files.keys(), key=lambda x: uploaded_files[x]['upload_time'])
-                file_info = uploaded_files[latest_file_id]
-                
-                print(f"Analisando arquivo: {file_info['filename']}")
-                file_analysis_response = analyze_uploaded_file(file_info, user_message)
-                
-                # Remove o arquivo após análise
-                try:
-                    os.remove(file_info['filepath'])
-                    del uploaded_files[latest_file_id]
-                except:
-                    pass
-        
-        # Se temos análise de arquivo, retorna ela
-        if file_analysis_response:
-            return jsonify({"response": file_analysis_response})
-        
-        # 6. Se não encontrou na KB nem precisou pesquisar, usar o LLM
+        # 5. Se não encontrou na KB nem precisou pesquisar, usar o LLM
         if 'chat_history' not in session:
             session['chat_history'] = [{"role": "system", "content": SYSTEM_PROMPT}]
         
-        session['chat_history'].append({"role": "user", "content": user_message})
+        # Verifica se há conteúdo de arquivo enviado para incluir na análise
+        enhanced_message = user_message
+        if 'uploaded_file_content' in session and session['uploaded_file_content']:
+            file_data = session['uploaded_file_content']
+            
+            # Adiciona o conteúdo do arquivo à mensagem para análise
+            enhanced_message = f"""Pergunta sobre o arquivo enviado: {user_message}
+
+Arquivo: {file_data['filename']} (tipo: {file_data['type']})
+
+Conteúdo do arquivo:
+{file_data['content']}
+
+Instruções: Analise o conteúdo do arquivo e responda à pergunta do usuário com base nessas informações."""
+        
+        session['chat_history'].append({"role": "user", "content": enhanced_message})
         
         if len(session['chat_history']) > MAX_HISTORY_LENGTH:
             session['chat_history'] = [session['chat_history'][0]] + session['chat_history'][-MAX_HISTORY_LENGTH:]
@@ -882,12 +785,9 @@ def chat():
         traceback.print_exc()
         return jsonify({"error": f"Ocorreu um erro inesperado no servidor. Detalhes: {str(e)}"}), 500
 
-# Dicionário para armazenar arquivos temporários para análise posterior
-uploaded_files = {}
-
 @app.route('/upload-file', methods=['POST'])
 def upload_file():
-    """Upload de arquivo - resposta simples, análise sob demanda."""
+    """Upload de arquivo para análise no chat."""
     try:
         if 'file' not in request.files:
             return jsonify({'error': 'Nenhum arquivo enviado'}), 400
@@ -903,22 +803,97 @@ def upload_file():
         temp_path = os.path.join(KB_DIR, filename)
         file.save(temp_path)
         
-        # Armazena informações do arquivo para análise posterior
-        uploaded_files[file_id] = {
-            'filename': file.filename,
-            'filepath': temp_path,
-            'extension': ext,
-            'upload_time': str(uuid.uuid4())  # Timestamp simples
-        }
+        # Analisa o arquivo
+        response_text = ""
         
-        # Resposta simples como solicitado
-        response_text = f"📎 ARQUIVO RECEBIDO: {file.filename}\n\nNO QUE POSSO AJUDAR?"
+        # Verifica se é imagem
+        if ext in ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']:
+            response_text = "📸 **ARQUIVO RECEBIDO, NO QUE POSSO AJUDAR?**"
+        
+        # Verifica se é PDF
+        elif ext == '.pdf' and PyPDF2:
+            response_text = "📄 **ARQUIVO RECEBIDO, NO QUE POSSO AJUDAR?**"
+            
+            # Salva o conteúdo do PDF na sessão para análise posterior
+            try:
+                with open(temp_path, 'rb') as f:
+                    reader = PyPDF2.PdfReader(f)
+                    text_content = ""
+                    
+                    # Extrai texto de até 10 páginas
+                    pages_to_read = min(10, len(reader.pages))
+                    for i in range(pages_to_read):
+                        page_text = reader.pages[i].extract_text() or ''
+                        text_content += page_text
+                    
+                    # Salva na sessão
+                    if 'uploaded_file_content' not in session:
+                        session['uploaded_file_content'] = {}
+                    session['uploaded_file_content'] = {
+                        'filename': file.filename,
+                        'type': 'pdf',
+                        'content': text_content[:10000]  # Limita a 10k caracteres
+                    }
+                    session.modified = True
+            except Exception as e:
+                print(f"Erro ao processar PDF: {e}")
+        
+        # Verifica se é documento Word
+        elif ext in ['.docx'] and docx:
+            response_text = "📄 **ARQUIVO RECEBIDO, NO QUE POSSO AJUDAR?**"
+            
+            # Salva o conteúdo do documento na sessão
+            try:
+                doc = docx.Document(temp_path)
+                paragraphs = [p.text for p in doc.paragraphs if p.text.strip()]
+                text_content = '\n'.join(paragraphs[:20])  # Primeiros 20 parágrafos
+                
+                # Salva na sessão
+                if 'uploaded_file_content' not in session:
+                    session['uploaded_file_content'] = {}
+                session['uploaded_file_content'] = {
+                    'filename': file.filename,
+                    'type': 'docx',
+                    'content': text_content[:10000]  # Limita a 10k caracteres
+                }
+                session.modified = True
+            except Exception as e:
+                print(f"Erro ao processar documento: {e}")
+        
+        # Arquivo de texto
+        elif ext in ['.txt', '.md', '.csv']:
+            response_text = "📝 **ARQUIVO RECEBIDO, NO QUE POSSO AJUDAR?**"
+            
+            # Salva o conteúdo do arquivo na sessão
+            try:
+                with open(temp_path, 'r', encoding='utf-8', errors='ignore') as f:
+                    content = f.read(10000)  # Primeiros 10k caracteres
+                    
+                    # Salva na sessão
+                    if 'uploaded_file_content' not in session:
+                        session['uploaded_file_content'] = {}
+                    session['uploaded_file_content'] = {
+                        'filename': file.filename,
+                        'type': ext,
+                        'content': content
+                    }
+                    session.modified = True
+            except Exception as e:
+                print(f"Erro ao processar arquivo: {e}")
+        
+        else:
+            response_text = "📎 **ARQUIVO RECEBIDO, NO QUE POSSO AJUDAR?**"
+        
+        # Remove o arquivo temporário
+        try:
+            os.remove(temp_path)
+        except:
+            pass
         
         return jsonify({
             'response': response_text,
             'filename': file.filename,
-            'file_type': ext,
-            'file_id': file_id
+            'file_type': ext
         })
     
     except Exception as e:
