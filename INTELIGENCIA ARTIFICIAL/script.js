@@ -289,6 +289,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let userMessage = null;
     let currentConvId = null;
 
+    // Variável para controlar se a síntese de voz está ativada (desativada por padrão)
+    let isVoiceOutputEnabled = false;
+
     // --- Conversas Salvas no LocalStorage ---
     function getConvs() {
         return JSON.parse(localStorage.getItem("aemi_convs") || "[]");
@@ -493,13 +496,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 pElement.classList.remove("typing-animation");
                 pElement.textContent = "";
                 typeText(pElement, data.response);
-                speakText(data.response); // Fala a resposta da AEMI
+                if (isVoiceOutputEnabled) {
+                    speakText(data.response); // Fala a resposta da AEMI se a voz estiver ativada
+                }
             })
             .catch(() => {
                 pElement.classList.remove("typing-animation");
                 pElement.textContent = "[Erro ao obter resposta da IA]";
             })
             .finally(() => {
+                chatInput.disabled = false; // Reabilita o input
+                sendChatBtn.disabled = false; // Reabilita o botão de enviar
                 chatbox.scrollTop = chatbox.scrollHeight;
             });
     };
@@ -508,18 +515,41 @@ document.addEventListener("DOMContentLoaded", () => {
     const handleChat = () => {
         if(!chatInput) return;
         userMessage = chatInput.value.trim();
-        if (!userMessage) return;
+        const lowerCaseMessage = userMessage.toLowerCase(); // Converte para minúsculas para comparação
+
+        if (!lowerCaseMessage) return;
         
         chatInput.value = "";
-        chatInput.disabled = true;
-        sendChatBtn.disabled = true;
+        // chatInput.disabled = true; // Removido para permitir digitação enquanto a IA responde
+        // sendChatBtn.disabled = true; // Removido para permitir digitação enquanto a IA responde
 
-        if(chatbox) {
-            chatbox.appendChild(createChatLi(userMessage, "outgoing"));
-            chatbox.scrollTo(0, chatbox.scrollHeight);
-        
-            setTimeout(() => {
+        // Verifica se é um comando de voz ou uma mensagem normal
+        if (lowerCaseMessage === "ativar voz") {
+            isVoiceOutputEnabled = true;
+            if(chatbox) {
+                 chatbox.appendChild(createChatLi(userMessage, "outgoing"));
+                 chatbox.appendChild(createChatLi("Síntese de voz ativada.", "incoming"));
+                 chatbox.scrollTo(0, chatbox.scrollHeight);
+            }
+            chatInput.disabled = false; // Reabilita o input após o comando
+            sendChatBtn.disabled = false; // Reabilita o botão de enviar após o comando
+        } else if (lowerCaseMessage === "desativar voz") {
+            isVoiceOutputEnabled = false;
+             if(chatbox) {
+                 chatbox.appendChild(createChatLi(userMessage, "outgoing"));
+                 chatbox.appendChild(createChatLi("Síntese de voz desativada.", "incoming"));
+                 chatbox.scrollTo(0, chatbox.scrollHeight);
+             }
+            chatInput.disabled = false; // Reabilita o input após o comando
+            sendChatBtn.disabled = false; // Reabilita o botão de enviar após o comando
+        } else {
+            // Se não for comando de voz, continua com a lógica normal
+            if(chatbox) {
+                chatbox.appendChild(createChatLi(userMessage, "outgoing"));
+                chatbox.scrollTo(0, chatbox.scrollHeight);
+                // Cria a mensagem de "typing" antes de chamar generateResponse
                 const incomingChatLi = createChatLi("typing", "incoming");
+            setTimeout(() => {
                 chatbox.appendChild(incomingChatLi);
                 chatbox.scrollTo(0, chatbox.scrollHeight);
                 generateResponse(incomingChatLi);
@@ -527,6 +557,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         saveCurrentConv();
     };
+    }
 
     // --- Limpar Chat ---
     const clearChat = () => {
@@ -557,6 +588,15 @@ document.addEventListener("DOMContentLoaded", () => {
             handleChat();
         }
     });
+
+    // Interromper a fala da IA ao começar a digitar
+    if(chatInput && 'speechSynthesis' in window) {
+        chatInput.addEventListener('input', () => {
+            if (window.speechSynthesis.speaking) {
+                window.speechSynthesis.cancel();
+            }
+        });
+    }
     if(newConvBtn) newConvBtn.addEventListener("click", startNewConv);
     
     // --- Salvar Conversa ao Sair ---
