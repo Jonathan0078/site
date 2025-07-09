@@ -1,0 +1,25 @@
+
+services:
+  - type: web
+    name: aemi-backend
+    env: python
+    plan: free
+    dockerfilePath: ""
+    buildCommand: pip install -r requirements.txt
+    startCommand: python app.py
+    envVars:
+      - key: FLASK_SECRET_KEY
+        generateValue: true
+      - key: HF_TOKEN
+        sync: false
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: GOOGLE_CSE_ID
+        sync: false
+      - key: PORT
+        value: 10000
+    healthCheckPath: /health
+    disk:
+      name: aemi-storage
+      mountPath: /opt/render/project/src/knowledge_base
+      sizeGB: 1
