@@ -1,8 +1,21 @@
-# --- Rotas para Base de Conhecimento (Knowledge Base) ---
+
 import os
 import uuid
 import json
-from flask import request, jsonify, send_from_directory
+import mimetypes
+try:
+    import PyPDF2
+except ImportError:
+    PyPDF2 = None
+try:
+    import docx
+except ImportError:
+    docx = None
+from flask import Flask, request, jsonify, send_from_directory, session
+
+# --- INICIALIZAÇÃO DO FLASK (deve vir antes das rotas) ---
+app = Flask(__name__)
+
 
 KB_DIR = os.path.join(os.path.dirname(__file__), 'knowledge_base')
 KB_DB = os.path.join(KB_DIR, 'kb_data.json')
@@ -27,12 +40,36 @@ def kb_upload():
         ext = os.path.splitext(file.filename)[1].lower()
         file_id = str(uuid.uuid4())
         filename = f"{file_id}{ext}"
-        file.save(os.path.join(KB_DIR, filename))
+        file_path = os.path.join(KB_DIR, filename)
+        file.save(file_path)
+        # Extração de texto
+        extracted_text = ''
+        if ext == '.pdf' and PyPDF2:
+            try:
+                with open(file_path, 'rb') as f:
+                    reader = PyPDF2.PdfReader(f)
+                    for page in reader.pages:
+                        extracted_text += page.extract_text() or ''
+            except Exception as e:
+                extracted_text = ''
+        elif ext in ['.docx'] and docx:
+            try:
+                doc = docx.Document(file_path)
+                extracted_text = '\n'.join([p.text for p in doc.paragraphs])
+            except Exception as e:
+                extracted_text = ''
+        elif ext in ['.txt', '.md', '.csv']:
+            try:
+                with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+                    extracted_text = f.read()
+            except Exception as e:
+                extracted_text = ''
         kb.append({
             'id': file_id,
             'type': 'file',
             'name': file.filename,
-            'filename': filename
+            'filename': filename,
+            'content': extracted_text[:20000] if extracted_text else ''
         })
     # Cadastro de FAQ/manual (texto)
     faq = request.form.get('faq', '').strip()
@@ -77,15 +114,11 @@ def kb_download(item_id):
     if not item:
         return 'Arquivo não encontrado', 404
     return send_from_directory(KB_DIR, item['filename'], as_attachment=True, download_name=item['name'])
-# app.py - Versão com Memória de Conversa
 
-import os
-from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 from huggingface_hub import InferenceClient
 
-# --- CONFIGURAÇÃO INICIAL ---
-app = Flask(__name__)
+
 CORS(app, supports_credentials=True) # Habilita credenciais para que as sessões funcionem entre domínios
 
 # Carrega as chaves da aplicação a partir de variáveis de ambiente
@@ -142,12 +175,12 @@ def chat():
         # 1. Buscar resposta na base de conhecimento (FAQ/texto) com correspondência inteligente
         kb = load_kb()
         user_message_lower = user_message.lower()
-        # Busca exata ou substring
+        import difflib
+        # Busca exata ou substring em FAQ
         for item in kb:
             if item['type'] == 'faq' and user_message_lower in item.get('content','').lower():
                 return jsonify({'response': f"[Base de Conhecimento]\n{item['content'][:600]}"})
-        # Busca por similaridade de palavras (fuzzy)
-        import difflib
+        # Busca fuzzy em FAQ
         best_match = None
         best_ratio = 0.0
         for item in kb:
@@ -157,10 +190,27 @@ def chat():
                 if ratio > best_ratio:
                     best_ratio = ratio
                     best_match = item
-        if best_match and best_ratio > 0.45:  # 0.45 é tolerante, pode ajustar
+        if best_match and best_ratio > 0.45:
             return jsonify({'response': f"[Base de Conhecimento - resposta aproximada]\n{best_match['content'][:600]}"})
 
-        # 2. Buscar por nome de arquivo/documento (substring ou similaridade)
+        # 2. Buscar por conteúdo extraído de arquivos
+        for item in kb:
+            if item['type'] == 'file' and item.get('content') and user_message_lower in item['content'].lower():
+                return jsonify({'response': f"[Arquivo: {item['name']}]\n{item['content'][:600]}..."})
+        # Busca fuzzy no conteúdo de arquivos
+        best_file_match = None
+        best_file_ratio = 0.0
+        for item in kb:
+            if item['type'] == 'file' and item.get('content'):
+                content = item['content'].lower()
+                ratio = difflib.SequenceMatcher(None, user_message_lower, content).ratio()
+                if ratio > best_file_ratio:
+                    best_file_ratio = ratio
+                    best_file_match = item
+        if best_file_match and best_file_ratio > 0.45:
+            return jsonify({'response': f"[Arquivo (aprox.): {best_file_match['name']}]\n{best_file_match['content'][:600]}..."})
+
+        # 3. Buscar por nome de arquivo/documento (substring ou similaridade)
         for item in kb:
             if item['type'] == 'file' and user_message_lower in item.get('name','').lower():
                 return jsonify({'response': f"Encontrei um documento relacionado: {item['name']}\nClique para baixar: /kb/download/{item['id']}"})
