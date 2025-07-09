@@ -387,31 +387,45 @@ header h2 {
 
 /* --- Layout Responsivo para Celular (Tela Cheia) --- */
 @media (max-width: 768px) {
-    .chatbot-container {
-        padding: 0; /* Remove o padding para ocupar a tela toda */
-    }
-
-    .chatbot {
-        height: 100vh; /* Altura total da tela */
-        max-height: 100vh; /* Garante a altura total */
-        border-radius: 0; /* Remove bordas arredondadas para um visual de tela cheia */
-        box-shadow: none; /* Remove sombra em telas pequenas */
-    }
-
     header {
-        padding: 0.75rem 1rem; /* Padding do cabeçalho um pouco menor */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        z-index: 1100;
+        border-radius: 0;
+        min-height: 60px;
     }
-
-    header h2 {
-        font-size: 1.3rem; /* Fonte do título menor em telas pequenas */
+    .chatbot {
+        padding-top: 60px;
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
     }
-
-    .chatbox {
-        padding: 15px; /* Ajusta o padding interno do chat */
+    .chatbot-container {
+        padding: 0;
     }
-
-    .chat-input {
-        padding: 10px 15px; /* Ajusta o padding do input */
+    #open-menu-btn {
+        position: fixed;
+        top: 12px;
+        left: 12px;
+        z-index: 1200;
+        background: var(--cor-destaque);
+        color: var(--cor-primaria);
+        border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        box-shadow: 0 2px 8px var(--cor-sombra);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        font-size: 2rem;
+        transition: background 0.2s;
+    }
+    #open-menu-btn:hover {
+        background: var(--cor-destaque);
+        filter: brightness(1.1);
     }
 }
 

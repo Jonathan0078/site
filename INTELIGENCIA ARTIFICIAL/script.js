@@ -229,17 +229,32 @@ document.addEventListener("DOMContentLoaded", () => {
         chatLi.classList.add("chat", className);
         let chatContent;
         if (className === "incoming" && message === "typing") {
-            chatContent = `<span class="material-symbols-outlined">smart_toy</span><div class="typing-animation"><span></span><span></span><span></span></div>`;
+            chatContent = `<span class="material-symbols-outlined" style="color:var(--cor-destaque);font-size:2.1em;">engineering</span><p class="typing-animation"><span></span><span></span><span></span></p>`;
         } else {
-            const icon = className === "outgoing" ? "" : `<span class="material-symbols-outlined">smart_toy</span>`;
-            chatContent = `${icon}<p></p>`;
+            chatContent = className === "incoming"
+                ? `<span class="material-symbols-outlined" style="color:var(--cor-destaque);font-size:2.1em;">engineering</span><p></p>`
+                : `<p></p>`;
         }
         chatLi.innerHTML = chatContent;
         if (message !== "typing") {
-            chatLi.querySelector("p").textContent = message;
+            const p = chatLi.querySelector("p");
+            if (p) p.textContent = message;
         }
         return chatLi;
     };
+
+    // --- Efeito de digitação na resposta da AEMI ---
+    function typeText(element, text, delay = 18) {
+        let i = 0;
+        function type() {
+            if (i < text.length) {
+                element.textContent += text.charAt(i);
+                i++;
+                setTimeout(type, delay);
+            }
+        }
+        type();
+    }
 
     // --- Envio de Mensagem e Resposta ---
     const generateResponse = (incomingChatLi) => {
@@ -250,23 +265,24 @@ document.addEventListener("DOMContentLoaded", () => {
         };
         const pElement = incomingChatLi.querySelector("p") || document.createElement("p");
         if(!incomingChatLi.querySelector("p")){
-            incomingChatLi.querySelector(".typing-animation").replaceWith(pElement);
+            incomingChatLi.appendChild(pElement);
         }
-        
+        // Efeito de "digitando..."
+        pElement.textContent = "";
+        pElement.classList.add("typing-animation");
         fetch(API_URL_CHAT, requestOptions)
             .then(res => res.ok ? res.json() : Promise.reject(res))
             .then(data => {
-                pElement.textContent = data.response || "Desculpe, não recebi uma resposta válida.";
+                pElement.classList.remove("typing-animation");
+                pElement.textContent = "";
+                typeText(pElement, data.response);
             })
             .catch(() => {
-                pElement.classList.add("error");
-                pElement.textContent = "Oops! Algo deu errado. Não foi possível conectar ao servidor. Verifique sua conexão ou tente novamente mais tarde.";
+                pElement.classList.remove("typing-animation");
+                pElement.textContent = "[Erro ao obter resposta da IA]";
             })
             .finally(() => {
-                if(chatInput) chatInput.disabled = false;
-                if(sendChatBtn) sendChatBtn.disabled = false;
-                if(chatbox) chatbox.scrollTo(0, chatbox.scrollHeight);
-                saveCurrentConv();
+                chatbox.scrollTop = chatbox.scrollHeight;
             });
     };
 
