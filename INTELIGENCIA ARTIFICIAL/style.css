@@ -1,3 +1,313 @@
+/* --- Botão de voltar para o chat na base de conhecimento --- */
+.kb-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--cor-destaque);
+    color: var(--cor-primaria);
+    border: none;
+    border-radius: 8px;
+    padding: 7px 18px;
+    font-size: 1.08em;
+    font-weight: 600;
+    margin-bottom: 10px;
+    margin-right: auto;
+    box-shadow: 0 2px 8px var(--cor-sombra);
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+}
+.kb-back-btn:hover, .kb-back-btn:focus {
+    background: var(--cor-primaria);
+    color: #fff;
+}
+.kb-back-btn .material-symbols-outlined {
+    font-size: 1.3em;
+    vertical-align: middle;
+    color: inherit;
+}
+.dark-theme .kb-back-btn {
+    background: var(--cor-destaque);
+    color: var(--cor-primaria);
+}
+.dark-theme .kb-back-btn:hover, .dark-theme .kb-back-btn:focus {
+    background: var(--cor-primaria);
+    color: #fff;
+}
+/* --- Estilo especial para a Base de Conhecimento (AEMI) --- */
+.kb-section {
+    background: var(--cor-superficie);
+    border-radius: 18px;
+    box-shadow: 0 4px 18px var(--cor-sombra);
+    margin: 28px auto 0 auto;
+    max-width: 650px;
+    padding: 32px 28px 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    border: 2px solid var(--cor-borda);
+    position: relative;
+}
+.kb-section h3 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.45rem;
+    color: var(--cor-primaria);
+    margin-bottom: 8px;
+    letter-spacing: 0.01em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.kb-section h3:before {
+    content: '\e0ef';
+    font-family: 'Material Symbols Outlined';
+    font-size: 1.5em;
+    color: var(--cor-destaque);
+    margin-right: 4px;
+    vertical-align: middle;
+    font-variation-settings: 'FILL' 1, 'wght' 700;
+}
+.kb-upload-form {
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 16px 14px 10px 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    border: 1px solid var(--cor-borda);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.dark-theme .kb-section {
+    background: #232a36;
+    color: var(--cor-texto);
+    border: 2px solid var(--cor-borda);
+    box-shadow: 0 4px 18px var(--cor-sombra);
+}
+.dark-theme .kb-upload-form {
+    background: #232a36;
+    border: 1px solid var(--cor-borda);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+.kb-upload-form label {
+    font-weight: 600;
+    color: var(--cor-primaria);
+    font-size: 1em;
+    margin-bottom: 2px;
+}
+.dark-theme .kb-upload-form label {
+    color: var(--cor-destaque);
+}
+.kb-upload-form input[type="file"],
+.kb-upload-form textarea {
+    background: #fff;
+    border: 1px solid var(--cor-borda);
+    border-radius: 6px;
+    font-size: 1em;
+    padding: 8px 10px;
+    color: var(--cor-texto);
+    font-family: inherit;
+}
+.dark-theme .kb-upload-form input[type="file"],
+.dark-theme .kb-upload-form textarea {
+    background: #232a36;
+    color: var(--cor-texto);
+    border: 1px solid var(--cor-borda);
+}
+.kb-upload-form button {
+    align-self: flex-end;
+    background: var(--cor-destaque);
+    color: var(--cor-primaria);
+    border: none;
+    border-radius: 6px;
+    padding: 8px 22px;
+    font-weight: 700;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    margin-top: 6px;
+    box-shadow: 0 2px 8px var(--cor-sombra);
+}
+.kb-upload-form button:hover {
+    background: var(--cor-primaria);
+    color: #fff;
+}
+.kb-search {
+    width: 100%;
+    border-radius: 6px;
+    border: 1px solid var(--cor-borda);
+    padding: 8px 12px;
+    font-size: 1em;
+    margin-bottom: 0;
+    background: #fff;
+    color: var(--cor-texto);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.dark-theme .kb-search {
+    background: #232a36;
+    color: var(--cor-texto);
+    border: 1px solid var(--cor-borda);
+}
+.kb-list {
+    max-height: 260px;
+    overflow-y: auto;
+    margin-top: 6px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid var(--cor-borda);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    padding: 8px 0;
+}
+.dark-theme .kb-list {
+    background: #232a36;
+    border: 1px solid var(--cor-borda);
+}
+.kb-list-item {
+    font-size: 1.04rem;
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--cor-borda);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--cor-texto);
+    background: transparent;
+    transition: background 0.15s;
+}
+.kb-list-item:last-child {
+    border-bottom: none;
+}
+.kb-list-item button {
+    margin-left: 10px;
+    background: var(--cor-destaque);
+    color: var(--cor-primaria);
+    border: none;
+    border-radius: 4px;
+    padding: 4px 12px;
+    cursor: pointer;
+    font-size: 0.98em;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+    box-shadow: 0 1px 4px var(--cor-sombra);
+}
+.kb-list-item button:hover {
+    background: var(--cor-primaria);
+    color: #fff;
+}
+.kb-list-item a {
+    color: var(--cor-secundaria);
+    text-decoration: underline;
+    font-size: 0.98em;
+    margin-left: 8px;
+    transition: color 0.18s;
+}
+.kb-list-item a:hover {
+    color: var(--cor-primaria);
+}
+.dark-theme .kb-list-item a {
+    color: var(--cor-destaque);
+}
+.dark-theme .kb-list-item a:hover {
+    color: #fff;
+}
+@media (max-width: 768px) {
+    .kb-section {
+        padding: 16px 4px 12px 4px;
+        max-width: 99vw;
+        border-radius: 10px;
+    }
+    .kb-upload-form {
+        padding: 10px 4px 6px 4px;
+    }
+    .kb-list {
+        padding: 4px 0;
+    }
+    .kb-list-item {
+        padding: 8px 8px;
+        font-size: 0.98rem;
+    }
+}
+/* --- Botão de alternância de modo (Assistente/KB) --- */
+.tab-toggle-btn {
+    background: var(--cor-destaque);
+    color: var(--cor-primaria);
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    cursor: pointer;
+    margin-left: 8px;
+    box-shadow: 0 2px 8px var(--cor-sombra);
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    position: relative;
+    z-index: 1201;
+}
+.tab-toggle-btn:hover, .tab-toggle-btn:focus {
+    background: var(--cor-primaria);
+    color: #fff;
+}
+.tab-toggle-menu {
+    display: none;
+    position: absolute;
+    bottom: 54px;
+    right: 0;
+    background: var(--cor-superficie);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px var(--cor-sombra);
+    min-width: 180px;
+    padding: 8px 0;
+    flex-direction: column;
+    gap: 0;
+    z-index: 1202;
+    border: 1px solid var(--cor-borda);
+}
+.tab-toggle-menu.open {
+    display: flex;
+    animation: fadeInMenu 0.18s;
+}
+@keyframes fadeInMenu {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.tab-toggle-menu button {
+    background: none;
+    border: none;
+    color: var(--cor-primaria);
+    font-size: 1.08em;
+    padding: 12px 18px;
+    text-align: left;
+    width: 100%;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+    border-radius: 0;
+}
+.tab-toggle-menu button:hover, .tab-toggle-menu button:focus {
+    background: var(--cor-destaque);
+    color: var(--cor-primaria);
+}
+.tab-toggle-menu .active {
+    font-weight: bold;
+    background: #ffe082;
+}
+
+@media (max-width: 768px) {
+    .tab-toggle-btn {
+        width: 42px;
+        height: 42px;
+        font-size: 1.7rem;
+        margin-left: 4px;
+    }
+    .tab-toggle-menu {
+        min-width: 140px;
+        right: 0;
+        left: auto;
+    }
+    .tab-toggle-menu button {
+        padding: 11px 12px;
+        font-size: 1em;
+    }
+}
 /* =================================================================== */
 /* ARQUIVO CSS COMPLETO PARA AEMI ASSISTENTE (COM NOVA IDENTIDADE VISUAL) */
 /* =================================================================== */
@@ -404,6 +714,101 @@ header h2 {
     }
     .chatbot-container {
         padding: 0;
+    }
+    /* Knowledge Base: responsivo */
+    .kb-section {
+        padding: 10px 5px;
+    }
+    .kb-list {
+        max-height: 250px;
+        overflow-y: auto;
+    }
+    .kb-upload-form input[type="file"] {
+        width: 100%;
+    }
+    .kb-search {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .kb-list-item {
+        font-size: 1rem;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--cor-borda);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .kb-list-item button {
+        margin-left: 10px;
+        background: var(--cor-destaque);
+        color: var(--cor-primaria);
+        border: none;
+        border-radius: 4px;
+        padding: 4px 10px;
+        cursor: pointer;
+        font-size: 0.95em;
+        transition: background 0.2s, color 0.2s;
+    }
+    .kb-list-item button:hover {
+        background: var(--cor-primaria);
+        color: #fff;
+    }
+    .kb-section h3 {
+        font-family: 'Oswald', sans-serif;
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+        color: var(--cor-primaria);
+    }
+    .kb-upload-form {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 15px;
+    }
+    .kb-upload-form input, .kb-upload-form textarea {
+        font-size: 1em;
+        padding: 7px 10px;
+        border: 1px solid var(--cor-borda);
+        border-radius: 6px;
+    }
+    .kb-upload-form button {
+        align-self: flex-end;
+        background: var(--cor-destaque);
+        color: var(--cor-primaria);
+        border: none;
+        border-radius: 6px;
+        padding: 7px 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s;
+    }
+    .kb-upload-form button:hover {
+        background: var(--cor-primaria);
+        color: #fff;
+    }
+    .kb-section {
+        background: var(--cor-superficie);
+        border-radius: 12px;
+        box-shadow: 0 2px 8px var(--cor-sombra);
+        margin: 20px auto;
+        max-width: 600px;
+        padding: 24px 20px;
+    }
+    .dark-theme .kb-section {
+        background: #232a36;
+        color: var(--cor-texto);
+        box-shadow: 0 2px 12px var(--cor-sombra);
+    }
+    .dark-theme .kb-section h3 {
+        color: var(--cor-destaque);
+    }
+    .dark-theme .kb-list-item button {
+        background: var(--cor-destaque);
+        color: var(--cor-primaria);
+    }
+    .dark-theme .kb-list-item button:hover {
+        background: var(--cor-primaria);
+        color: #fff;
     }
     #open-menu-btn {
         position: fixed;

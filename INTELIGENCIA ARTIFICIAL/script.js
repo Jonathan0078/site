@@ -1,3 +1,115 @@
+// --- Botão de voltar para o chat na base de conhecimento ---
+document.addEventListener('DOMContentLoaded', function() {
+    const kbBackBtn = document.getElementById('kb-back-btn');
+    if (kbBackBtn) {
+        kbBackBtn.addEventListener('click', function() {
+            // Alterna para a aba do chat
+            document.getElementById('chat-tab').style.display = '';
+            document.getElementById('kb-tab').style.display = 'none';
+            // Atualiza o estado do menu de alternância
+            document.querySelectorAll('.tab-toggle-option').forEach(b => b.classList.remove('active'));
+            document.querySelector('.tab-toggle-option[data-tab="chat-tab"]').classList.add('active');
+        });
+    }
+});
+
+
+// --- Botão de alternância de modo (Assistente/KB) na área de input ---
+document.addEventListener('DOMContentLoaded', function() {
+    const tabToggleBtn = document.getElementById('tab-toggle-btn');
+    const tabToggleMenu = document.getElementById('tab-toggle-menu');
+    const tabToggleOptions = document.querySelectorAll('.tab-toggle-option');
+    const tabContents = document.querySelectorAll('.tab-content');
+    let menuOpen = false;
+    if (tabToggleBtn && tabToggleMenu) {
+        tabToggleBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            menuOpen = !menuOpen;
+            tabToggleMenu.classList.toggle('open', menuOpen);
+        });
+        document.addEventListener('click', function(e) {
+            if (menuOpen && !tabToggleMenu.contains(e.target) && e.target !== tabToggleBtn) {
+                tabToggleMenu.classList.remove('open');
+                menuOpen = false;
+            }
+        });
+        tabToggleOptions.forEach(btn => {
+            btn.addEventListener('click', function() {
+                tabToggleOptions.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                tabContents.forEach(tc => tc.style.display = 'none');
+                document.getElementById(btn.dataset.tab).style.display = '';
+                tabToggleMenu.classList.remove('open');
+                menuOpen = false;
+            });
+        });
+    }
+});
+
+// --- Base de Conhecimento: Upload, Listagem, Busca, Remoção (Frontend) ---
+const kbForm = document.getElementById('kb-upload-form');
+const kbFile = document.getElementById('kb-file');
+const kbFaq = document.getElementById('kb-faq');
+const kbList = document.getElementById('kb-list');
+const kbSearch = document.getElementById('kb-search');
+
+async function fetchKbList(query = '') {
+    const res = await fetch('/kb/list?q=' + encodeURIComponent(query));
+    const data = await res.json();
+    renderKbList(data);
+}
+
+function renderKbList(items) {
+    kbList.innerHTML = '';
+    if (!items.length) {
+        kbList.innerHTML = '<div style="color:var(--cor-texto-secundario);padding:10px;">Nenhum item encontrado.</div>';
+        return;
+    }
+    items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'kb-list-item';
+        div.innerHTML = `<span>${item.type === 'file' ? '📄' : '💬'} <b>${item.name}</b></span>` +
+            `<button data-id="${item.id}" class="kb-remove-btn" title="Remover">Remover</button>` +
+            (item.type === 'file' ? ` <a href="/kb/download/${item.id}" target="_blank" style="margin-left:8px;">Baixar</a>` : '');
+        kbList.appendChild(div);
+    });
+    document.querySelectorAll('.kb-remove-btn').forEach(btn => {
+        btn.onclick = async function() {
+            if (confirm('Remover este item da base de conhecimento?')) {
+                await fetch('/kb/remove/' + btn.dataset.id, { method: 'DELETE' });
+                fetchKbList(kbSearch.value);
+            }
+        };
+    });
+}
+
+if (kbForm) {
+    kbForm.onsubmit = async function(e) {
+        e.preventDefault();
+        const formData = new FormData();
+        if (kbFile.files[0]) formData.append('file', kbFile.files[0]);
+        if (kbFaq.value.trim()) formData.append('faq', kbFaq.value.trim());
+        if (!kbFile.files[0] && !kbFaq.value.trim()) return alert('Adicione um arquivo ou texto!');
+        await fetch('/kb/upload', { method: 'POST', body: formData });
+        kbFile.value = '';
+        kbFaq.value = '';
+        fetchKbList();
+    };
+}
+
+if (kbSearch) {
+    kbSearch.oninput = function() {
+        fetchKbList(kbSearch.value);
+    };
+}
+
+// Carregar lista ao abrir a aba KB
+document.addEventListener('DOMContentLoaded', function() {
+    const kbTabBtn = document.querySelector('.tab-btn[data-tab="kb-tab"]');
+    if (kbTabBtn) {
+        kbTabBtn.addEventListener('click', () => fetchKbList(kbSearch.value));
+    }
+});
 // --- Tema claro/escuro ---
 const themeToggleBtn = document.getElementById('theme-toggle-btn');
 const themeIcon = document.getElementById('theme-icon');
@@ -256,6 +368,60 @@ document.addEventListener("DOMContentLoaded", () => {
         type();
     }
 
+    // --- Chat por voz: reconhecimento e síntese ---
+    const micBtn = document.getElementById('mic-btn');
+    if (micBtn && window.SpeechRecognition || window.webkitSpeechRecognition) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'pt-BR';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+        let recognizing = false;
+
+        micBtn.addEventListener('click', () => {
+            if (!recognizing) {
+                recognition.start();
+                micBtn.classList.add('gravando');
+                micBtn.querySelector('span').textContent = 'mic_off';
+            } else {
+                recognition.stop();
+                micBtn.classList.remove('gravando');
+                micBtn.querySelector('span').textContent = 'mic';
+            }
+        });
+        recognition.onstart = () => {
+            recognizing = true;
+            micBtn.classList.add('gravando');
+        };
+        recognition.onend = () => {
+            recognizing = false;
+            micBtn.classList.remove('gravando');
+            micBtn.querySelector('span').textContent = 'mic';
+        };
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            const chatInput = document.querySelector('.chat-input textarea');
+            if (chatInput) {
+                chatInput.value = transcript;
+                chatInput.focus();
+            }
+        };
+    } else if (micBtn) {
+        micBtn.disabled = true;
+        micBtn.title = 'Reconhecimento de voz não suportado neste navegador.';
+    }
+
+    // --- Síntese de fala para resposta da AEMI ---
+    function speakText(text) {
+        if ('speechSynthesis' in window) {
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'pt-BR';
+            utter.rate = 1;
+            utter.pitch = 1;
+            window.speechSynthesis.speak(utter);
+        }
+    }
+
     // --- Envio de Mensagem e Resposta ---
     const generateResponse = (incomingChatLi) => {
         const requestOptions = {
@@ -276,6 +442,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 pElement.classList.remove("typing-animation");
                 pElement.textContent = "";
                 typeText(pElement, data.response);
+                speakText(data.response); // Fala a resposta da AEMI
             })
             .catch(() => {
                 pElement.classList.remove("typing-animation");

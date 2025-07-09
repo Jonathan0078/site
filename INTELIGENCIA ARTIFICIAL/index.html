@@ -28,7 +28,8 @@
     <div id="menu-overlay"></div>
 
     <div class="chatbot-container">
-        <div class="chatbot">
+        <!-- Removido: Botão de alternância de modo do topo -->
+        <div class="chatbot tab-content" id="chat-tab">
             <header>
                 <h2>AEMI - Assistente Industrial</h2>
                 <div style="display:flex;align-items:center;gap:8px;">
@@ -52,10 +53,35 @@
             </ul>
             <div class="chat-input">
                 <textarea placeholder="Digite uma mensagem..." spellcheck="false" required></textarea>
+                <button id="mic-btn" class="header-btn" title="Falar com a AEMI" style="margin-right:4px;">
+                    <span class="material-symbols-outlined">mic</span>
+                </button>
+                <button class="tab-toggle-btn" id="tab-toggle-btn" title="Alternar modo" tabindex="0">
+                    <span class="material-symbols-outlined">swap_horiz</span>
+                </button>
+                <div class="tab-toggle-menu" id="tab-toggle-menu">
+                    <button class="tab-toggle-option active" data-tab="chat-tab"><span class="material-symbols-outlined" style="vertical-align:middle;">smart_toy</span> Assistente</button>
+                    <button class="tab-toggle-option" data-tab="kb-tab"><span class="material-symbols-outlined" style="vertical-align:middle;">menu_book</span> Base de Conhecimento</button>
+                </div>
                 <button id="send-btn" class="header-btn" title="Enviar mensagem">
                     <span class="material-symbols-outlined">send</span>
                 </button>
             </div>
+        </div>
+        <div class="kb-section tab-content" id="kb-tab" style="display:none">
+            <button id="kb-back-btn" class="kb-back-btn" title="Voltar para o chat" type="button">
+                <span class="material-symbols-outlined">arrow_back</span> Voltar para o Chat
+            </button>
+            <h3>Base de Conhecimento</h3>
+            <form class="kb-upload-form" id="kb-upload-form" enctype="multipart/form-data">
+                <label for="kb-file">Arquivo (PDF, DOCX, TXT, etc):</label>
+                <input type="file" id="kb-file" name="file" accept=".pdf,.doc,.docx,.txt,.md,.csv" />
+                <label for="kb-faq">Ou cadastrar FAQ/manual (texto):</label>
+                <textarea id="kb-faq" name="faq" rows="3" placeholder="Digite uma pergunta e resposta, ou cole um texto..."></textarea>
+                <button type="submit">Adicionar</button>
+            </form>
+            <input class="kb-search" id="kb-search" type="text" placeholder="Buscar na base de conhecimento..." aria-label="Buscar na base de conhecimento" />
+            <div class="kb-list" id="kb-list" aria-live="polite"></div>
         </div>
     </div>
 
