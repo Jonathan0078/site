@@ -718,6 +718,24 @@ ul {
     color: #fff !important;
 }
 
+.attachment-btn, .search-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: var(--cor-texto);
+    transition: color 0.3s ease;
+    margin-right: 10px;
+}
+
+.attachment-btn:hover, .search-btn:hover {
+    color: var(--cor-destaque);
+}
+
+.search-btn {
+    font-size: 1.1rem;
+}
+
 /* --- Layout Responsivo para Celular (Tela Cheia) --- */
 @media (max-width: 768px) {
     header {
