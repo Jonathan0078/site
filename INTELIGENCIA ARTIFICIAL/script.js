@@ -419,9 +419,15 @@ document.addEventListener("DOMContentLoaded", () => {
         type();
     }
 
+    
     // --- Chat por voz: reconhecimento e síntese ---
     const micBtn = document.getElementById('mic-btn');
-    if (micBtn && window.SpeechRecognition || window.webkitSpeechRecognition) {
+    const chatInput = document.querySelector('.chat-input textarea'); // Captura o chatInput aqui para uso posterior
+
+    // A SÍNTESE DE FALA ESTÁ AGORA DESATIVADA POR PADRÃO
+    let speechSynthesisEnabled = false; 
+
+    if (micBtn && (window.SpeechRecognition || window.webkitSpeechRecognition)) {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         const recognition = new SpeechRecognition();
         recognition.lang = 'pt-BR';
@@ -440,38 +446,115 @@ document.addEventListener("DOMContentLoaded", () => {
                 micBtn.querySelector('span').textContent = 'mic';
             }
         });
+
         recognition.onstart = () => {
             recognizing = true;
             micBtn.classList.add('gravando');
         };
+
         recognition.onend = () => {
             recognizing = false;
             micBtn.classList.remove('gravando');
             micBtn.querySelector('span').textContent = 'mic';
         };
+
         recognition.onresult = (event) => {
             const transcript = event.results[0][0].transcript;
-            const chatInput = document.querySelector('.chat-input textarea');
             if (chatInput) {
                 chatInput.value = transcript;
                 chatInput.focus();
+                // Processa o comando de voz se for o caso
+                processVoiceCommand(transcript);
             }
         };
+
+        // --- Adiciona tratamento de erros para o reconhecimento de voz ---
+        recognition.onerror = (event) => {
+            console.error('Erro no reconhecimento de voz:', event.error);
+            recognizing = false;
+            micBtn.classList.remove('gravando');
+            micBtn.querySelector('span').textContent = 'mic';
+            if (event.error === 'not-allowed') {
+                console.warn('Permissão para usar o microfone negada. Habilite nas configurações do navegador.');
+            }
+        };
+
     } else if (micBtn) {
         micBtn.disabled = true;
         micBtn.title = 'Reconhecimento de voz não suportado neste navegador.';
+        console.warn('Reconhecimento de voz não suportado neste navegador.');
     }
 
     // --- Síntese de fala para resposta da AEMI ---
     function speakText(text) {
+        // Só fala se a síntese de fala estiver ativada
+        if (!speechSynthesisEnabled) {
+            console.log(`Síntese de fala desativada. Texto não falado: "${text}"`);
+            return;
+        }
+
         if ('speechSynthesis' in window) {
+            // Cancela qualquer fala atual para evitar sobreposição
+            window.speechSynthesis.cancel();
+
             const utter = new SpeechSynthesisUtterance(text);
             utter.lang = 'pt-BR';
             utter.rate = 1;
             utter.pitch = 1;
+
+            utter.onerror = (event) => {
+                console.error('Erro na síntese de fala:', event.error);
+            };
+
             window.speechSynthesis.speak(utter);
+        } else {
+            console.warn('Síntese de fala não suportada neste navegador.');
         }
     }
+
+    // --- Função para processar comandos de voz digitados/transcritos ---
+    function processVoiceCommand(commandText) {
+        const cleanedCommand = commandText.trim().toLowerCase();
+
+        if (cleanedCommand === 'ativar voz') {
+            speechSynthesisEnabled = true;
+            console.log('Comando recebido: "ativar voz". Síntese de voz ATIVADA.');
+            speakText('Síntese de voz ativada.');
+            // Opcional: Limpar o campo de input após o comando
+            if (chatInput) chatInput.value = '';
+        } else if (cleanedCommand === 'desativar voz') {
+            speechSynthesisEnabled = false;
+            window.speechSynthesis.cancel(); // Para qualquer fala em andamento imediatamente
+            console.log('Comando recebido: "desativar voz". Síntese de voz DESATIVADA.');
+            // Opcional: Limpar o campo de input após o comando
+            if (chatInput) chatInput.value = '';
+        }
+        // Se o comando não for "ativar voz" ou "desativar voz", ele é tratado como uma entrada normal do chat.
+    }
+
+    // --- Monitora o campo de chat para comandos digitados ---
+    if (chatInput) {
+        chatInput.addEventListener('change', (event) => {
+            const typedText = event.target.value;
+            if (typedText.trim() !== '') {
+                processVoiceCommand(typedText);
+            }
+        });
+
+        chatInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                const typedText = chatInput.value;
+                if (typedText.trim() !== '') {
+                    processVoiceCommand(typedText);
+                }
+            }
+        });
+    }
+
+    // --- Exemplo de como você pode usar a função speakText para uma resposta da AEMI ---
+    // speakText("Olá! Eu sou a AEMI. Digite 'ativar voz' para me ouvir."); // Esta linha não falará ao iniciar, pois a voz está desativada.
+
 
     // --- Envio de Mensagem e Resposta ---
     const generateResponse = (incomingChatLi) => {
