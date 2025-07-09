@@ -194,41 +194,104 @@ def get_vision_client():
     return InferenceClient(model="microsoft/DiT-large-patch16-224", token=HUGGING_FACE_TOKEN)
 
 def analyze_image(image_path):
-    """Analisa uma imagem e retorna uma descrição."""
+    """Analisa uma imagem e retorna uma descrição detalhada."""
     try:
         # Abre e processa a imagem
         with open(image_path, 'rb') as f:
             image_data = f.read()
         
-        # Converte para base64
-        image_base64 = base64.b64encode(image_data).decode('utf-8')
+        # Análise detalhada da imagem
+        img = Image.open(io.BytesIO(image_data))
+        width, height = img.size
+        format_img = img.format or "Desconhecido"
+        mode = img.mode
         
-        # Usa o cliente de visão do Hugging Face
-        client = get_vision_client()
-        if not client:
-            return "Análise de imagem não disponível."
+        # Calcula tamanho do arquivo
+        file_size = len(image_data)
+        size_mb = file_size / (1024 * 1024)
         
-        # Análise básica da imagem
+        # Análise de cores dominantes
+        colors_info = ""
         try:
-            img = Image.open(io.BytesIO(image_data))
-            width, height = img.size
-            format_img = img.format
-            mode = img.mode
+            img_small = img.resize((50, 50))
+            img_small = img_small.convert('RGB')
+            pixels = list(img_small.getdata())
             
-            # Descrição técnica básica
-            description = f"Imagem analisada: {format_img} {mode}, dimensões {width}x{height} pixels."
+            # Conta cores predominantes
+            from collections import Counter
+            color_counts = Counter(pixels)
+            most_common = color_counts.most_common(3)
             
-            # Verifica se é uma imagem relacionada à manutenção industrial
-            filename = os.path.basename(image_path).lower()
-            if any(keyword in filename for keyword in ['motor', 'rolamento', 'engrenagem', 'bomba', 'valvula', 'manutencao']):
-                description += " Esta imagem parece estar relacionada à manutenção industrial."
-            
-            return description
-        except Exception as e:
-            return f"Erro ao analisar imagem: {str(e)}"
-    
+            colors_info = f"\n🎨 Cores predominantes: "
+            for i, (color, count) in enumerate(most_common):
+                r, g, b = color
+                colors_info += f"RGB({r},{g},{b})"
+                if i < len(most_common) - 1:
+                    colors_info += ", "
+        except:
+            colors_info = ""
+        
+        # Análise do nome do arquivo
+        filename = os.path.basename(image_path).lower()
+        context_analysis = ""
+        
+        # Palavras-chave relacionadas à manutenção industrial
+        maintenance_keywords = {
+            'motor': 'Motor elétrico/mecânico',
+            'rolamento': 'Rolamento/bearing',
+            'engrenagem': 'Sistema de engrenagens',
+            'bomba': 'Bomba hidráulica/pneumática',
+            'valvula': 'Válvula de controle',
+            'manutencao': 'Manutenção industrial',
+            'equipamento': 'Equipamento industrial',
+            'falha': 'Análise de falha',
+            'desgaste': 'Desgaste de componente',
+            'vibração': 'Análise de vibração',
+            'temperatura': 'Análise térmica',
+            'pressao': 'Sistema de pressão',
+            'hidraulica': 'Sistema hidráulico',
+            'pneumatica': 'Sistema pneumático',
+            'correia': 'Correias e transmissão',
+            'polia': 'Polias e transmissão',
+            'mancal': 'Mancais e suportes',
+            'lubrificacao': 'Lubrificação',
+            'oleo': 'Óleo lubrificante',
+            'graxa': 'Graxa lubrificante'
+        }
+        
+        found_keywords = []
+        for keyword, description in maintenance_keywords.items():
+            if keyword in filename:
+                found_keywords.append(description)
+        
+        if found_keywords:
+            context_analysis = f"\n🔧 Contexto identificado: {', '.join(found_keywords)}"
+        
+        # Monta a descrição completa
+        description = f"""📸 **Análise de Imagem Completa:**
+
+📊 **Informações Técnicas:**
+- Formato: {format_img}
+- Modo de cor: {mode}
+- Dimensões: {width}x{height} pixels
+- Tamanho: {size_mb:.2f} MB{colors_info}{context_analysis}
+
+🤖 **Análise AEMI:**
+Imagem recebida e processada com sucesso. Como especialista em manutenção industrial, posso te ajudar a:
+
+• Identificar componentes e equipamentos
+• Analisar possíveis falhas ou desgastes
+• Sugerir procedimentos de manutenção
+• Orientar sobre normas de segurança
+• Recomendar ferramentas adequadas
+
+💡 **Próximos passos:**
+Descreva o que você gostaria de saber sobre esta imagem ou conte-me sobre o problema que está enfrentando."""
+        
+        return description
+        
     except Exception as e:
-        return f"Erro ao processar imagem: {str(e)}"
+        return f"❌ Erro ao analisar imagem: {str(e)}\n\nTente enviar a imagem novamente ou verifique se o formato é suportado (JPG, PNG, GIF, BMP, WEBP)."
 
 def generate_chat_response(chat_history):
     """Processa um histórico de chat e retorna a resposta do modelo."""
@@ -378,39 +441,75 @@ def upload_file():
             try:
                 with open(temp_path, 'rb') as f:
                     reader = PyPDF2.PdfReader(f)
+                    num_pages = len(reader.pages)
                     text_content = ""
-                    for page in reader.pages[:3]:  # Apenas primeiras 3 páginas
-                        text_content += page.extract_text() or ''
                     
-                    if text_content:
-                        response_text += f"Conteúdo extraído (primeiras páginas):\n{text_content[:500]}..."
+                    # Extrai texto de até 5 páginas
+                    pages_to_read = min(5, num_pages)
+                    for i in range(pages_to_read):
+                        page_text = reader.pages[i].extract_text() or ''
+                        text_content += page_text
+                    
+                    if text_content.strip():
+                        response_text += f"📊 **Informações do PDF:**\n"
+                        response_text += f"• Número de páginas: {num_pages}\n"
+                        response_text += f"• Páginas analisadas: {pages_to_read}\n"
+                        response_text += f"• Caracteres extraídos: {len(text_content)}\n\n"
+                        response_text += f"📝 **Conteúdo extraído:**\n{text_content[:800]}..."
+                        
+                        # Análise de contexto
+                        content_lower = text_content.lower()
+                        if any(word in content_lower for word in ['manutenção', 'equipamento', 'motor', 'rolamento', 'bomba']):
+                            response_text += f"\n\n🔧 **Análise AEMI:** Este documento parece conter informações sobre manutenção industrial. Posso te ajudar a interpretar procedimentos, especificações técnicas ou análise de falhas."
                     else:
-                        response_text += "Não foi possível extrair texto do PDF."
+                        response_text += "⚠️ Não foi possível extrair texto do PDF. Pode ser um documento com imagens ou protegido."
             except Exception as e:
-                response_text += f"Erro ao ler PDF: {str(e)}"
+                response_text += f"❌ Erro ao processar PDF: {str(e)}"
         
         # Verifica se é documento Word
         elif ext in ['.docx'] and docx:
-            response_text = f"📄 **Documento recebido:** {file.filename}\n\n"
+            response_text = f"📄 **Documento Word recebido:** {file.filename}\n\n"
             try:
                 doc = docx.Document(temp_path)
-                text_content = '\n'.join([p.text for p in doc.paragraphs[:10]])  # Primeiros 10 parágrafos
-                if text_content:
-                    response_text += f"Conteúdo extraído:\n{text_content[:500]}..."
+                paragraphs = [p.text for p in doc.paragraphs if p.text.strip()]
+                
+                if paragraphs:
+                    text_content = '\n'.join(paragraphs[:15])  # Primeiros 15 parágrafos
+                    response_text += f"📊 **Informações do documento:**\n"
+                    response_text += f"• Número de parágrafos: {len(paragraphs)}\n"
+                    response_text += f"• Parágrafos analisados: {min(15, len(paragraphs))}\n\n"
+                    response_text += f"📝 **Conteúdo extraído:**\n{text_content[:800]}..."
+                    
+                    # Análise de contexto
+                    content_lower = text_content.lower()
+                    if any(word in content_lower for word in ['manutenção', 'equipamento', 'motor', 'rolamento', 'bomba']):
+                        response_text += f"\n\n🔧 **Análise AEMI:** Este documento parece conter informações sobre manutenção industrial. Posso te ajudar a interpretar procedimentos, especificações técnicas ou análise de falhas."
                 else:
-                    response_text += "Documento vazio ou não foi possível extrair texto."
+                    response_text += "⚠️ Documento vazio ou não foi possível extrair texto."
             except Exception as e:
-                response_text += f"Erro ao ler documento: {str(e)}"
+                response_text += f"❌ Erro ao processar documento: {str(e)}"
         
         # Arquivo de texto
         elif ext in ['.txt', '.md', '.csv']:
             response_text = f"📝 **Arquivo de texto recebido:** {file.filename}\n\n"
             try:
                 with open(temp_path, 'r', encoding='utf-8', errors='ignore') as f:
-                    content = f.read(1000)  # Primeiros 1000 caracteres
-                    response_text += f"Conteúdo:\n{content}"
+                    content = f.read(2000)  # Primeiros 2000 caracteres
+                    
+                    if content.strip():
+                        response_text += f"📊 **Informações do arquivo:**\n"
+                        response_text += f"• Tamanho: {len(content)} caracteres\n"
+                        response_text += f"• Tipo: {ext.upper()}\n\n"
+                        response_text += f"📝 **Conteúdo:**\n{content}"
+                        
+                        # Análise de contexto
+                        content_lower = content.lower()
+                        if any(word in content_lower for word in ['manutenção', 'equipamento', 'motor', 'rolamento', 'bomba']):
+                            response_text += f"\n\n🔧 **Análise AEMI:** Este arquivo contém informações sobre manutenção industrial. Posso te ajudar a interpretar os dados, procedimentos ou especificações técnicas."
+                    else:
+                        response_text += "⚠️ Arquivo vazio ou não foi possível extrair conteúdo."
             except Exception as e:
-                response_text += f"Erro ao ler arquivo: {str(e)}"
+                response_text += f"❌ Erro ao processar arquivo: {str(e)}"
         
         else:
             response_text = f"📎 **Arquivo recebido:** {file.filename}\n\nTipo de arquivo não suportado para análise automática. Posso ajudar com informações sobre o arquivo se você me disser do que se trata."
