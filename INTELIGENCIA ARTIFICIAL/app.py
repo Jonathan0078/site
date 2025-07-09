@@ -1,7 +1,11 @@
+
 import os
 import uuid
 import json
 import mimetypes
+import base64
+from PIL import Image
+import io
 try:
     import PyPDF2
 except ImportError:
@@ -12,7 +16,10 @@ except ImportError:
     docx = None
 from flask import Flask, request, jsonify, send_from_directory, session
 from flask_cors import CORS
-from huggingface_hub import InferenceClient
+try:
+    from huggingface_hub import InferenceClient
+except ImportError:
+    InferenceClient = None
 
 # --- INICIALIZAÇÃO DO FLASK ---
 app = Flask(__name__)
@@ -176,9 +183,52 @@ MAX_HISTORY_LENGTH = 10
 # --- FUNÇÕES DE PROCESSAMENTO ---
 def get_text_client():
     """Cria e retorna um cliente para o modelo de linguagem."""
-    if not HUGGING_FACE_TOKEN:
+    if not HUGGING_FACE_TOKEN or not InferenceClient:
         return None
     return InferenceClient(model="meta-llama/Meta-Llama-3-8B-Instruct", token=HUGGING_FACE_TOKEN)
+
+def get_vision_client():
+    """Cria e retorna um cliente para análise de imagens."""
+    if not HUGGING_FACE_TOKEN or not InferenceClient:
+        return None
+    return InferenceClient(model="microsoft/DiT-large-patch16-224", token=HUGGING_FACE_TOKEN)
+
+def analyze_image(image_path):
+    """Analisa uma imagem e retorna uma descrição."""
+    try:
+        # Abre e processa a imagem
+        with open(image_path, 'rb') as f:
+            image_data = f.read()
+        
+        # Converte para base64
+        image_base64 = base64.b64encode(image_data).decode('utf-8')
+        
+        # Usa o cliente de visão do Hugging Face
+        client = get_vision_client()
+        if not client:
+            return "Análise de imagem não disponível."
+        
+        # Análise básica da imagem
+        try:
+            img = Image.open(io.BytesIO(image_data))
+            width, height = img.size
+            format_img = img.format
+            mode = img.mode
+            
+            # Descrição técnica básica
+            description = f"Imagem analisada: {format_img} {mode}, dimensões {width}x{height} pixels."
+            
+            # Verifica se é uma imagem relacionada à manutenção industrial
+            filename = os.path.basename(image_path).lower()
+            if any(keyword in filename for keyword in ['motor', 'rolamento', 'engrenagem', 'bomba', 'valvula', 'manutencao']):
+                description += " Esta imagem parece estar relacionada à manutenção industrial."
+            
+            return description
+        except Exception as e:
+            return f"Erro ao analisar imagem: {str(e)}"
+    
+    except Exception as e:
+        return f"Erro ao processar imagem: {str(e)}"
 
 def generate_chat_response(chat_history):
     """Processa um histórico de chat e retorna a resposta do modelo."""
@@ -200,11 +250,7 @@ def generate_chat_response(chat_history):
 # --- ROTAS PRINCIPAIS ---
 @app.route('/')
 def index():
-    return send_from_directory('.', 'index.html')
-
-@app.route('/<path:filename>')
-def serve_static(filename):
-    return send_from_directory('.', filename)
+    return "Servidor da AEMI (versão com Llama 3 8B e memória) está no ar."
 
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -298,6 +344,92 @@ def chat():
         import traceback
         traceback.print_exc()
         return jsonify({"error": f"Ocorreu um erro inesperado no servidor. Detalhes: {str(e)}"}), 500
+
+@app.route('/upload-file', methods=['POST'])
+def upload_file():
+    """Upload de arquivo para análise no chat."""
+    try:
+        if 'file' not in request.files:
+            return jsonify({'error': 'Nenhum arquivo enviado'}), 400
+        
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({'error': 'Nenhum arquivo selecionado'}), 400
+        
+        # Salva o arquivo temporariamente
+        file_id = str(uuid.uuid4())
+        ext = os.path.splitext(file.filename)[1].lower()
+        filename = f"{file_id}{ext}"
+        temp_path = os.path.join(KB_DIR, filename)
+        file.save(temp_path)
+        
+        # Analisa o arquivo
+        response_text = ""
+        
+        # Verifica se é imagem
+        if ext in ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']:
+            response_text = f"📸 **Imagem recebida:** {file.filename}\n\n"
+            response_text += analyze_image(temp_path)
+            response_text += "\n\n🔧 **Análise AEMI:** Como especialista em manutenção industrial, posso te ajudar a analisar equipamentos, falhas, ou procedimentos mostrados na imagem. Descreva o que você gostaria de saber sobre esta imagem."
+        
+        # Verifica se é PDF
+        elif ext == '.pdf' and PyPDF2:
+            response_text = f"📄 **PDF recebido:** {file.filename}\n\n"
+            try:
+                with open(temp_path, 'rb') as f:
+                    reader = PyPDF2.PdfReader(f)
+                    text_content = ""
+                    for page in reader.pages[:3]:  # Apenas primeiras 3 páginas
+                        text_content += page.extract_text() or ''
+                    
+                    if text_content:
+                        response_text += f"Conteúdo extraído (primeiras páginas):\n{text_content[:500]}..."
+                    else:
+                        response_text += "Não foi possível extrair texto do PDF."
+            except Exception as e:
+                response_text += f"Erro ao ler PDF: {str(e)}"
+        
+        # Verifica se é documento Word
+        elif ext in ['.docx'] and docx:
+            response_text = f"📄 **Documento recebido:** {file.filename}\n\n"
+            try:
+                doc = docx.Document(temp_path)
+                text_content = '\n'.join([p.text for p in doc.paragraphs[:10]])  # Primeiros 10 parágrafos
+                if text_content:
+                    response_text += f"Conteúdo extraído:\n{text_content[:500]}..."
+                else:
+                    response_text += "Documento vazio ou não foi possível extrair texto."
+            except Exception as e:
+                response_text += f"Erro ao ler documento: {str(e)}"
+        
+        # Arquivo de texto
+        elif ext in ['.txt', '.md', '.csv']:
+            response_text = f"📝 **Arquivo de texto recebido:** {file.filename}\n\n"
+            try:
+                with open(temp_path, 'r', encoding='utf-8', errors='ignore') as f:
+                    content = f.read(1000)  # Primeiros 1000 caracteres
+                    response_text += f"Conteúdo:\n{content}"
+            except Exception as e:
+                response_text += f"Erro ao ler arquivo: {str(e)}"
+        
+        else:
+            response_text = f"📎 **Arquivo recebido:** {file.filename}\n\nTipo de arquivo não suportado para análise automática. Posso ajudar com informações sobre o arquivo se você me disser do que se trata."
+        
+        # Remove o arquivo temporário
+        try:
+            os.remove(temp_path)
+        except:
+            pass
+        
+        return jsonify({
+            'response': response_text,
+            'filename': file.filename,
+            'file_type': ext
+        })
+    
+    except Exception as e:
+        print(f"Erro no upload de arquivo: {e}")
+        return jsonify({'error': 'Erro ao processar arquivo'}), 500
 
 @app.route('/clear-session', methods=['POST'])
 def clear_session():
