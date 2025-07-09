@@ -290,12 +290,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const clearChatBtn = document.querySelector("#clear-btn");
     const convsList = document.getElementById("convs-list");
     const newConvBtn = document.getElementById("new-conv-btn");
+    const fileInput = document.getElementById("file-input");
+    const fileBtn = document.getElementById("file-btn");
 
     // --- Configuração Dinâmica da URL do Backend ---
     const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-    const BACKEND_URL = isLocal ? "http://127.0.0.1:10000" : "https://aemi.onrender.com";
+    const BACKEND_URL = isLocal ? "http://127.0.0.1:5000" : "https://aemi.onrender.com";
     const API_URL_CHAT = `${BACKEND_URL}/chat`;
     const API_URL_CLEAR = `${BACKEND_URL}/clear-session`;
+    const API_URL_UPLOAD = `${BACKEND_URL}/upload-file`;
 
     let userMessage = null;
     let currentConvId = null;
@@ -487,6 +490,63 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // --- Upload de Arquivo ---
+    const handleFileUpload = (file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        // Adiciona mensagem do usuário
+        const userMessage = `📎 Arquivo enviado: ${file.name}`;
+        if(chatbox) {
+            chatbox.appendChild(createChatLi(userMessage, "outgoing"));
+            chatbox.scrollTo(0, chatbox.scrollHeight);
+        }
+        
+        // Cria mensagem de "analisando arquivo"
+        const incomingChatLi = createChatLi("typing", "incoming");
+        const pElement = incomingChatLi.querySelector("p");
+        if(pElement) {
+            pElement.textContent = "Analisando arquivo...";
+            pElement.classList.add("typing-animation");
+        }
+        
+        if(chatbox) {
+            chatbox.appendChild(incomingChatLi);
+            chatbox.scrollTo(0, chatbox.scrollHeight);
+        }
+        
+        // Envia arquivo para análise
+        fetch(API_URL_UPLOAD, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(pElement) {
+                pElement.classList.remove("typing-animation");
+                pElement.textContent = "";
+                typeText(pElement, data.response || data.error);
+            }
+            
+            if (isVoiceOutputEnabled && data.response) {
+                speakText(data.response);
+            }
+        })
+        .catch(error => {
+            console.error('Erro no upload:', error);
+            if(pElement) {
+                pElement.classList.remove("typing-animation");
+                pElement.textContent = "Erro ao analisar arquivo. Tente novamente.";
+            }
+        })
+        .finally(() => {
+            if(chatbox) {
+                chatbox.scrollTo(0, chatbox.scrollHeight);
+            }
+            saveCurrentConv();
+        });
+    };
+
     // --- Envio de Mensagem e Resposta ---
     const generateResponse = (incomingChatLi) => {
         const requestOptions = {
@@ -599,6 +659,21 @@ document.addEventListener("DOMContentLoaded", () => {
             handleChat();
         }
     });
+    
+    // Eventos para upload de arquivo
+    if(fileBtn && fileInput) {
+        fileBtn.addEventListener("click", () => {
+            fileInput.click();
+        });
+        
+        fileInput.addEventListener("change", (e) => {
+            const file = e.target.files[0];
+            if(file) {
+                handleFileUpload(file);
+                fileInput.value = ''; // Limpa o input
+            }
+        });
+    }
 
     // Interromper a fala da IA ao começar a digitar
     if(chatInput && 'speechSynthesis' in window) {
