@@ -459,9 +459,9 @@ ul {
 }
 
 /* --- Cabeçalho com a Nova Identidade Visual --- */
-header {
+.main-header { /* Alterado de 'header' para '.main-header' para usar a classe do HTML */
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Mantém os itens nas extremidades */
     align-items: center;
     padding: 1rem 1.5rem; /* Padding ajustado */
     background: linear-gradient(90deg, var(--cor-primaria), var(--cor-secundaria));
@@ -470,13 +470,23 @@ header {
     flex-shrink: 0;
 }
 
-header h2 {
+.header-title { /* Alterado de 'header h2' para '.header-title' para usar a classe do HTML */
     font-family: 'Oswald', sans-serif; /* Fonte do título do site */
     font-size: 1.5rem; /* Tamanho ajustado */
     margin: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    /* --- Novas propriedades para centralização e autoajuste --- */
+    flex-grow: 1; /* Permite que o título ocupe o espaço disponível */
+    text-align: center; /* Centraliza o texto dentro do espaço ocupado */
+    /* --- Fim das novas propriedades --- */
+}
+
+.header-buttons { /* Adicionada uma classe para a div de botões no HTML */
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .header-btn {
@@ -509,6 +519,7 @@ header h2 {
 .header-btn:hover {
     background-color: rgba(255, 255, 255, 0.15); /* Efeito de hover mais visível */
 }
+
 
 /* --- Menu Lateral (Sidebar) e Overlay --- */
 .sidebar {
