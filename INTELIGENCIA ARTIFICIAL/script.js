@@ -494,18 +494,33 @@ document.addEventListener("DOMContentLoaded", () => {
         const formData = new FormData();
         formData.append('file', file);
 
-        // Adiciona mensagem do usuário
-        const userMessage = `📎 Arquivo enviado: ${file.name}`;
+        // Determina o tipo de arquivo
+        const fileExt = file.name.split('.').pop().toLowerCase();
+        const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileExt);
+        const isDocument = ['pdf', 'doc', 'docx', 'txt', 'md', 'csv'].includes(fileExt);
+        
+        // Adiciona mensagem do usuário com ícone apropriado
+        let fileIcon = '📎';
+        if (isImage) fileIcon = '📸';
+        else if (isDocument) fileIcon = '📄';
+        
+        const userMessage = `${fileIcon} Arquivo enviado: ${file.name}`;
         if(chatbox) {
             chatbox.appendChild(createChatLi(userMessage, "outgoing"));
             chatbox.scrollTo(0, chatbox.scrollHeight);
         }
 
-        // Cria mensagem de "analisando arquivo"
+        // Cria mensagem de "analisando arquivo" com texto personalizado
         const incomingChatLi = createChatLi("typing", "incoming");
         const pElement = incomingChatLi.querySelector("p");
+        
+        let analysisText = "Analisando arquivo...";
+        if (isImage) analysisText = "Analisando imagem...";
+        else if (fileExt === 'pdf') analysisText = "Processando PDF...";
+        else if (fileExt === 'docx') analysisText = "Processando documento...";
+        
         if(pElement) {
-            pElement.textContent = "Analisando arquivo...";
+            pElement.textContent = analysisText;
             pElement.classList.add("typing-animation");
         }
 
@@ -519,12 +534,24 @@ document.addEventListener("DOMContentLoaded", () => {
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             if(pElement) {
                 pElement.classList.remove("typing-animation");
                 pElement.textContent = "";
-                typeText(pElement, data.response || data.error);
+                
+                if (data.response) {
+                    typeText(pElement, data.response);
+                } else if (data.error) {
+                    pElement.textContent = `❌ Erro: ${data.error}`;
+                } else {
+                    pElement.textContent = "Arquivo processado com sucesso!";
+                }
             }
 
             if (isVoiceOutputEnabled && data.response) {
@@ -535,7 +562,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error('Erro no upload:', error);
             if(pElement) {
                 pElement.classList.remove("typing-animation");
-                pElement.textContent = "Erro ao analisar arquivo. Tente novamente.";
+                pElement.textContent = "❌ Erro ao processar arquivo. Verifique se o formato é suportado e tente novamente.";
             }
         })
         .finally(() => {
