@@ -293,19 +293,56 @@
 
 @media (max-width: 768px) {
     .tab-toggle-btn {
-        width: 42px;
-        height: 42px;
-        font-size: 1.7rem;
+        width: 38px;
+        height: 38px;
+        font-size: 1.5rem;
         margin-left: 4px;
     }
     .tab-toggle-menu {
         min-width: 140px;
         right: 0;
         left: auto;
+        bottom: 48px;
     }
     .tab-toggle-menu button {
         padding: 11px 12px;
         font-size: 1em;
+    }
+    
+    /* Ajustes específicos para mobile */
+    @media (max-width: 480px) {
+        .chat-input {
+            padding: 8px 10px;
+            gap: 6px;
+        }
+        
+        .chat-input textarea {
+            min-height: 38px;
+            padding: 8px 10px;
+            font-size: 0.95rem;
+        }
+        
+        .chat-input button {
+            padding: 5px 8px;
+            font-size: 1.1rem;
+            min-width: 36px;
+        }
+        
+        .tab-toggle-btn {
+            width: 36px;
+            height: 36px;
+            font-size: 1.4rem;
+        }
+        
+        .chatbox {
+            padding: 12px;
+            height: calc(100vh - 60px - 70px);
+        }
+        
+        .chat p {
+            padding: 8px 12px;
+            font-size: 0.9rem;
+        }
     }
 }
 /* =================================================================== */
@@ -738,7 +775,7 @@ ul {
 
 /* --- Layout Responsivo para Celular (Tela Cheia) --- */
 @media (max-width: 768px) {
-    header {
+    .main-header {
         position: fixed;
         top: 0;
         left: 0;
@@ -746,15 +783,78 @@ ul {
         z-index: 1100;
         border-radius: 0;
         min-height: 60px;
+        padding: 0.8rem 1rem;
     }
+    
+    .header-title {
+        font-size: 1.3rem;
+        text-align: center;
+        flex-grow: 1;
+    }
+    
+    .header-buttons {
+        gap: 6px;
+    }
+    
+    .header-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 1.4rem;
+    }
+    
     .chatbot {
         padding-top: 60px;
         height: 100vh;
         max-height: 100vh;
         border-radius: 0;
+        margin: 0;
     }
+    
     .chatbot-container {
         padding: 0;
+        min-height: 100vh;
+    }
+    
+    .chat-input {
+        padding: 10px 15px;
+        gap: 8px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
+    
+    .chat-input textarea {
+        min-height: 40px;
+        padding: 10px 12px;
+        font-size: 1rem;
+    }
+    
+    .chat-input button {
+        padding: 6px 10px;
+        font-size: 1.2rem;
+        min-width: 40px;
+        flex-shrink: 0;
+    }
+    
+    .chatbox {
+        padding: 15px;
+        height: calc(100vh - 60px - 80px);
+        overflow-y: auto;
+    }
+    
+    .chat {
+        margin-bottom: 12px;
+        max-width: 95%;
+    }
+    
+    .chat p {
+        padding: 10px 14px;
+        font-size: 0.95rem;
+        line-height: 1.4;
+    }
+    
+    .chat .material-symbols-outlined {
+        font-size: 1.8em;
+        margin-right: 8px;
     }
     /* Knowledge Base: responsivo */
     .kb-section {
