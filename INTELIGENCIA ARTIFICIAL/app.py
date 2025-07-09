@@ -755,8 +755,36 @@ def chat():
         if 'uploaded_file_content' in session and session['uploaded_file_content']:
             file_data = session['uploaded_file_content']
             
-            # Adiciona o conteúdo do arquivo à mensagem para análise
-            enhanced_message = f"""Pergunta sobre o arquivo enviado: {user_message}
+            # Cria contexto baseado no tipo de análise
+            if file_data.get('analysis_type') == 'visual':
+                enhanced_message = f"""Como A.E.M.I, especialista em manutenção industrial, analise esta imagem e responda: {user_message}
+
+📸 **Arquivo de Imagem:** {file_data['filename']}
+🔍 **Análise Visual Completa:**
+{file_data['content']}
+
+**Instruções:**
+- Responda com base na análise visual da imagem
+- Foque em aspectos de manutenção industrial
+- Seja técnica e detalhada
+- Se identificar problemas, sugira soluções"""
+            
+            elif file_data.get('analysis_type') == 'text':
+                enhanced_message = f"""Como A.E.M.I, especialista em manutenção industrial, analise este documento e responda: {user_message}
+
+📄 **Documento:** {file_data['filename']} (tipo: {file_data['type']})
+
+**Conteúdo do Documento:**
+{file_data['content']}
+
+**Instruções:**
+- Analise o conteúdo do documento em detalhes
+- Responda à pergunta com base nas informações do arquivo
+- Seja específica e técnica
+- Cite trechos relevantes do documento quando apropriado"""
+            
+            else:
+                enhanced_message = f"""Pergunta sobre o arquivo enviado: {user_message}
 
 Arquivo: {file_data['filename']} (tipo: {file_data['type']})
 
@@ -803,36 +831,53 @@ def upload_file():
         temp_path = os.path.join(KB_DIR, filename)
         file.save(temp_path)
         
-        # Analisa o arquivo
+        # Analisa o arquivo baseado no tipo
         response_text = ""
+        file_content = ""
         
         # Verifica se é imagem
         if ext in ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']:
             response_text = "📸 **ARQUIVO RECEBIDO, NO QUE POSSO AJUDAR?**"
+            
+            # Análise visual da imagem
+            try:
+                visual_analysis = analyze_image(temp_path)
+                if visual_analysis:
+                    # Salva análise na sessão
+                    session['uploaded_file_content'] = {
+                        'filename': file.filename,
+                        'type': 'image',
+                        'content': visual_analysis,
+                        'analysis_type': 'visual'
+                    }
+                    session.modified = True
+            except Exception as e:
+                print(f"Erro na análise visual: {e}")
         
         # Verifica se é PDF
         elif ext == '.pdf' and PyPDF2:
             response_text = "📄 **ARQUIVO RECEBIDO, NO QUE POSSO AJUDAR?**"
             
-            # Salva o conteúdo do PDF na sessão para análise posterior
             try:
                 with open(temp_path, 'rb') as f:
                     reader = PyPDF2.PdfReader(f)
                     text_content = ""
                     
-                    # Extrai texto de até 10 páginas
-                    pages_to_read = min(10, len(reader.pages))
+                    # Extrai texto de até 15 páginas
+                    pages_to_read = min(15, len(reader.pages))
                     for i in range(pages_to_read):
-                        page_text = reader.pages[i].extract_text() or ''
-                        text_content += page_text
+                        try:
+                            page_text = reader.pages[i].extract_text() or ''
+                            text_content += f"\n--- Página {i+1} ---\n{page_text}"
+                        except:
+                            continue
                     
                     # Salva na sessão
-                    if 'uploaded_file_content' not in session:
-                        session['uploaded_file_content'] = {}
                     session['uploaded_file_content'] = {
                         'filename': file.filename,
                         'type': 'pdf',
-                        'content': text_content[:10000]  # Limita a 10k caracteres
+                        'content': text_content[:15000],  # Aumenta limite
+                        'analysis_type': 'text'
                     }
                     session.modified = True
             except Exception as e:
@@ -842,19 +887,23 @@ def upload_file():
         elif ext in ['.docx'] and docx:
             response_text = "📄 **ARQUIVO RECEBIDO, NO QUE POSSO AJUDAR?**"
             
-            # Salva o conteúdo do documento na sessão
             try:
                 doc = docx.Document(temp_path)
-                paragraphs = [p.text for p in doc.paragraphs if p.text.strip()]
-                text_content = '\n'.join(paragraphs[:20])  # Primeiros 20 parágrafos
+                paragraphs = []
+                
+                # Extrai parágrafos com formatação
+                for i, para in enumerate(doc.paragraphs):
+                    if para.text.strip():
+                        paragraphs.append(f"Parágrafo {i+1}: {para.text.strip()}")
+                
+                text_content = '\n'.join(paragraphs[:30])  # Primeiros 30 parágrafos
                 
                 # Salva na sessão
-                if 'uploaded_file_content' not in session:
-                    session['uploaded_file_content'] = {}
                 session['uploaded_file_content'] = {
                     'filename': file.filename,
                     'type': 'docx',
-                    'content': text_content[:10000]  # Limita a 10k caracteres
+                    'content': text_content[:15000],  # Aumenta limite
+                    'analysis_type': 'text'
                 }
                 session.modified = True
             except Exception as e:
@@ -864,18 +913,16 @@ def upload_file():
         elif ext in ['.txt', '.md', '.csv']:
             response_text = "📝 **ARQUIVO RECEBIDO, NO QUE POSSO AJUDAR?**"
             
-            # Salva o conteúdo do arquivo na sessão
             try:
                 with open(temp_path, 'r', encoding='utf-8', errors='ignore') as f:
-                    content = f.read(10000)  # Primeiros 10k caracteres
+                    content = f.read(15000)  # Aumenta limite
                     
                     # Salva na sessão
-                    if 'uploaded_file_content' not in session:
-                        session['uploaded_file_content'] = {}
                     session['uploaded_file_content'] = {
                         'filename': file.filename,
                         'type': ext,
-                        'content': content
+                        'content': content,
+                        'analysis_type': 'text'
                     }
                     session.modified = True
             except Exception as e:
