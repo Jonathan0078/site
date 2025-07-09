@@ -30,20 +30,21 @@
     <div class="chatbot-container">
         <!-- Removido: Botão de alternância de modo do topo -->
         <div class="chatbot tab-content" id="chat-tab">
-            <header>
-                <h2>A.E.M.I</h2>
-                <div style="display:flex;align-items:center;gap:8px;">
-                    <button id="open-menu-btn" title="Abrir menu" class="header-btn">
-                        <span class="material-icons">menu</span>
-                    </button>
-                    <button id="theme-toggle-btn" title="Alternar tema" class="header-btn">
-                        <span class="material-icons" id="theme-icon">dark_mode</span>
-                    </button>
-                    <button id="clear-btn" title="Limpar conversa" class="header-btn">
-                        <span class="material-icons">delete</span>
-                    </button>
-                </div>
-            </header>
+            <header class="main-header">
+    <h2 class="header-title">AEMI</h2>
+    <div class="header-buttons">
+        <button id="open-menu-btn" title="Abrir menu" class="header-btn">
+            <span class="material-icons">menu</span>
+        </button>
+        <button id="theme-toggle-btn" title="Alternar tema" class="header-btn">
+            <span class="material-icons" id="theme-icon">dark_mode</span>
+        </button>
+        <button id="clear-btn" title="Limpar conversa" class="header-btn">
+            <span class="material-icons">delete</span>
+        </button>
+    </div>
+</header>
+
             <ul class="chatbox">
                 <li class="chat incoming">
                     <span class="material-symbols-outlined" style="color:var(--cor-destaque);font-size:2.1em;">engineering</span>
