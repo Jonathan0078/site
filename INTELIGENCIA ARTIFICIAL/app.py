@@ -30,10 +30,12 @@ except ImportError:
 # --- INICIALIZAÇÃO DO FLASK ---
 app = Flask(__name__)
 
-# Permite apenas o domínio do GitHub Pages do seu projeto e o endereço do backend Render
+# Configuração CORS mais flexível para desenvolvimento
 CORS(app, supports_credentials=True, origins=[
     "https://jonathan0078.github.io",
-    "https://aemi.onrender.com"
+    "https://aemi.onrender.com",
+    "http://localhost:5000",
+    "https://127.0.0.1:5000"
 ])
 
 # Carrega as chaves da aplicação a partir de variáveis de ambiente
@@ -42,7 +44,10 @@ HUGGING_FACE_TOKEN = os.getenv("HF_TOKEN")
 
 # Validação das chaves
 if not HUGGING_FACE_TOKEN:
-    print("AVISO: Token da Hugging Face não configurado. Chat com IA não funcionará.")
+    print("⚠️ AVISO: Token da Hugging Face não configurado.")
+    print("💡 Configure a variável HF_TOKEN para ativar o chat com IA.")
+else:
+    print("✅ Token Hugging Face configurado corretamente.")
 
 app.secret_key = FLASK_SECRET_KEY
 
@@ -757,7 +762,7 @@ Mesmo sem análise visual automática, sou especialista em:
 
 📝 **Para melhor ajuda, me informe:**
 1. Que equipamento/componente você vê na imagem?
-2. Qual problema ou dúvida você tem?
+2. Qual problema ou dúvida você tem:
 3. Que tipo de análise precisa?
 
 💬 **Exemplo:** "Vejo um motor elétrico com ruído anormal" ou "Rolamento apresentando desgaste unusual"
@@ -985,6 +990,23 @@ def generate_chat_response(chat_history):
 @app.route('/')
 def index():
     return "Servidor da AEMI (versão com Llama 3 8B e memória) está no ar."
+
+@app.route('/status')
+def status():
+    """Retorna status dos serviços da A.E.M.I"""
+    try:
+        status_info = {
+            "servidor": "✅ Online",
+            "ai_disponivel": "✅ Conectado" if (HUGGING_FACE_TOKEN and InferenceClient) else "⚠️ Token necessário",
+            "processamento_pdf": "✅ Disponível" if PyPDF2 else "❌ Indisponível",
+            "processamento_word": "✅ Disponível" if docx else "❌ Indisponível", 
+            "pesquisa_web": "✅ Disponível" if BeautifulSoup else "❌ Indisponível",
+            "base_conhecimento": "✅ Funcionando",
+            "versao": "2.0 - Industrial Assistant"
+        }
+        return jsonify(status_info)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -1438,5 +1460,18 @@ Resumo:"""
         return f"📄 **Documento processado:** {filename}\n\n🔍 **Conteúdo disponível para análise** - Faça perguntas específicas sobre o documento!"
 
 if __name__ == '__main__':
+    print("🚀 Iniciando A.E.M.I - Assistente Especialista em Manutenção Industrial")
+    print("📱 Interface web disponível em: http://localhost:5000")
+
+    # Verifica se todas as dependências críticas estão disponíveis
+    if not InferenceClient:
+        print("⚠️ huggingface_hub não disponível - funcionalidades de IA limitadas")
+    if not PyPDF2:
+        print("⚠️ PyPDF2 não disponível - análise de PDF limitada")
+    if not docx:
+        print("⚠️ python-docx não disponível - análise de documentos Word limitada")
+    if not BeautifulSoup:
+        print("⚠️ BeautifulSoup não disponível - pesquisa web limitada")
+
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
