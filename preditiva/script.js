@@ -1,3 +1,441 @@
+// Funções do Quiz do Módulo 11
+let quizM11Index = 0;
+let quizM11Acertos = 0;
+function mostrarQuizM11Pergunta() {
+    const p = quizM11[quizM11Index];
+    const perguntaEl = document.getElementById('quiz-m11-pergunta');
+    const opcoesEl = document.getElementById('quiz-m11-opcoes');
+    const feedbackEl = document.getElementById('quiz-m11-feedback');
+    const btnProxima = document.getElementById('quiz-m11-proxima');
+    perguntaEl.textContent = `Pergunta ${quizM11Index + 1} de ${quizM11.length}: ${p.pergunta}`;
+    opcoesEl.innerHTML = '';
+    feedbackEl.textContent = '';
+    btnProxima.style.display = 'none';
+    p.opcoes.forEach(opcao => {
+        const btn = document.createElement('button');
+        btn.textContent = opcao;
+        btn.onclick = () => quizM11Responder(btn, opcao, p.resposta);
+        opcoesEl.appendChild(btn);
+    });
+}
+function quizM11Responder(btn, selecionada, correta) {
+    const opcoesEl = document.getElementById('quiz-m11-opcoes');
+    const botoes = opcoesEl.querySelectorAll('button');
+    const feedbackEl = document.getElementById('quiz-m11-feedback');
+    const btnProxima = document.getElementById('quiz-m11-proxima');
+    let acertou = (selecionada === correta);
+    if (acertou) quizM11Acertos++;
+    botoes.forEach(b => {
+        b.disabled = true;
+        if (b.textContent === correta) b.classList.add('correta');
+        else if (b.textContent === selecionada) b.classList.add('incorreta');
+    });
+    feedbackEl.textContent = acertou ? '✅ Correto!' : '❌ Incorreto.';
+    btnProxima.style.display = 'inline-block';
+    btnProxima.onclick = quizM11ProximaPergunta;
+}
+function quizM11ProximaPergunta() {
+    quizM11Index++;
+    if (quizM11Index < quizM11.length) {
+        mostrarQuizM11Pergunta();
+    } else {
+        mostrarQuizM11Resultado();
+    }
+}
+function mostrarQuizM11Resultado() {
+    const perguntaEl = document.getElementById('quiz-m11-pergunta');
+    const opcoesEl = document.getElementById('quiz-m11-opcoes');
+    const feedbackEl = document.getElementById('quiz-m11-feedback');
+    const btnProxima = document.getElementById('quiz-m11-proxima');
+    perguntaEl.textContent = 'Quiz finalizado!';
+    opcoesEl.innerHTML = '';
+    feedbackEl.textContent = quizM11Acertos === quizM11.length ? 'Parabéns! Você acertou tudo!' : `Você acertou ${quizM11Acertos} de ${quizM11.length}. Tente novamente para gabaritar!`;
+    btnProxima.style.display = 'none';
+}
+
+// Funções do Quiz do Módulo 12
+let quizM12Index = 0;
+let quizM12Acertos = 0;
+function mostrarQuizM12Pergunta() {
+    const p = quizM12[quizM12Index];
+    const perguntaEl = document.getElementById('quiz-m12-pergunta');
+    const opcoesEl = document.getElementById('quiz-m12-opcoes');
+    const feedbackEl = document.getElementById('quiz-m12-feedback');
+    const btnProxima = document.getElementById('quiz-m12-proxima');
+    perguntaEl.textContent = `Pergunta ${quizM12Index + 1} de ${quizM12.length}: ${p.pergunta}`;
+    opcoesEl.innerHTML = '';
+    feedbackEl.textContent = '';
+    btnProxima.style.display = 'none';
+    p.opcoes.forEach(opcao => {
+        const btn = document.createElement('button');
+        btn.textContent = opcao;
+        btn.onclick = () => quizM12Responder(btn, opcao, p.resposta);
+        opcoesEl.appendChild(btn);
+    });
+}
+function quizM12Responder(btn, selecionada, correta) {
+    const opcoesEl = document.getElementById('quiz-m12-opcoes');
+    const botoes = opcoesEl.querySelectorAll('button');
+    const feedbackEl = document.getElementById('quiz-m12-feedback');
+    const btnProxima = document.getElementById('quiz-m12-proxima');
+    let acertou = (selecionada === correta);
+    if (acertou) quizM12Acertos++;
+    botoes.forEach(b => {
+        b.disabled = true;
+        if (b.textContent === correta) b.classList.add('correta');
+        else if (b.textContent === selecionada) b.classList.add('incorreta');
+    });
+    feedbackEl.textContent = acertou ? '✅ Correto!' : '❌ Incorreto.';
+    btnProxima.style.display = 'inline-block';
+    btnProxima.onclick = quizM12ProximaPergunta;
+}
+function quizM12ProximaPergunta() {
+    quizM12Index++;
+    if (quizM12Index < quizM12.length) {
+        mostrarQuizM12Pergunta();
+    } else {
+        mostrarQuizM12Resultado();
+    }
+}
+function mostrarQuizM12Resultado() {
+    const perguntaEl = document.getElementById('quiz-m12-pergunta');
+    const opcoesEl = document.getElementById('quiz-m12-opcoes');
+    const feedbackEl = document.getElementById('quiz-m12-feedback');
+    const btnProxima = document.getElementById('quiz-m12-proxima');
+    perguntaEl.textContent = 'Quiz finalizado!';
+    opcoesEl.innerHTML = '';
+    feedbackEl.textContent = quizM12Acertos === quizM12.length ? 'Parabéns! Você acertou tudo!' : `Você acertou ${quizM12Acertos} de ${quizM12.length}. Tente novamente para gabaritar!`;
+    btnProxima.style.display = 'none';
+}
+// Quiz do Módulo 11
+const quizM11 = [
+    {
+        pergunta: "Qual é o principal objetivo da inspeção estrutural em ambientes industriais?",
+        opcoes: [
+            "Reduzir custos de energia",
+            "Garantir a integridade física das instalações e pessoas",
+            "Aumentar a produção",
+            "Melhorar a estética do ambiente"
+        ],
+        resposta: "Garantir a integridade física das instalações e pessoas"
+    },
+    {
+        pergunta: "Qual destes NÃO é um sinal de alerta em inspeção de estruturas metálicas?",
+        opcoes: [
+            "Trincas",
+            "Corrosão",
+            "Estruturas vibrando",
+            "Pintura nova"
+        ],
+        resposta: "Pintura nova"
+    },
+    {
+        pergunta: "O que deve ser feito ao identificar uma fissura em solda estrutural?",
+        opcoes: [
+            "Ignorar se for pequena",
+            "Isolar a área e acionar manutenção",
+            "Pintar por cima",
+            "Aumentar a carga na estrutura"
+        ],
+        resposta: "Isolar a área e acionar manutenção"
+    }
+];
+
+// Quiz do Módulo 12
+const quizM12 = [
+    {
+        pergunta: "O que é um plano de inspeção?",
+        opcoes: [
+            "Um documento que define o que, quando, quem e como inspecionar",
+            "Uma lista de compras",
+            "Um relatório de falhas",
+            "Um manual de operação de máquinas"
+        ],
+        resposta: "Um documento que define o que, quando, quem e como inspecionar"
+    },
+    {
+        pergunta: "Qual ferramenta NÃO é típica da melhoria contínua em inspeção?",
+        opcoes: [
+            "PDCA",
+            "Kaizen",
+            "5W2H",
+            "Desenho artístico"
+        ],
+        resposta: "Desenho artístico"
+    },
+    {
+        pergunta: "Por que registrar as inspeções é importante?",
+        opcoes: [
+            "Para controle histórico e tomada de decisão",
+            "Para aumentar o volume de papel",
+            "Para dificultar auditorias",
+            "Para evitar o uso de tecnologia"
+        ],
+        resposta: "Para controle histórico e tomada de decisão"
+    }
+];
+    // Funções de interação para botões do módulo 3
+    window.mostrarExemplo = function(id) {
+        const ids = ['exemplo1','exemplo2','exemplo3','exemplo4','exemplo5','exemplo6','exemplo7','exemplo8','exemplo9','exemplo10','exemplo11','exemplo12'];
+        ids.forEach(eid => {
+            document.getElementById(eid) && (document.getElementById(eid).style.display = (eid === id ? 'block' : 'none'));
+        });
+        const dicas = ['dica1','dica2','dica3','dica4','dica5','dica6','dica7','dica8','dica9','dica10','dica11','dica12'];
+        dicas.forEach(did => { document.getElementById(did) && (document.getElementById(did).style.display = 'none'); });
+        const resumos = ['resumo1','resumo2','resumo3','resumo4','resumo5','resumo6','resumo7','resumo8','resumo9','resumo10','resumo11','resumo12'];
+        resumos.forEach(rid => { document.getElementById(rid) && (document.getElementById(rid).style.display = 'none'); });
+    };
+    window.mostrarDica = function(id) {
+        const ids = ['exemplo1','exemplo2','exemplo3','exemplo4','exemplo5','exemplo6','exemplo7','exemplo8','exemplo9','exemplo10','exemplo11','exemplo12'];
+        ids.forEach(eid => { document.getElementById(eid) && (document.getElementById(eid).style.display = 'none'); });
+        const dicas = ['dica1','dica2','dica3','dica4','dica5','dica6','dica7','dica8','dica9','dica10','dica11','dica12'];
+        dicas.forEach(did => { document.getElementById(did) && (document.getElementById(did).style.display = (did === id ? 'block' : 'none')); });
+        const resumos = ['resumo1','resumo2','resumo3','resumo4','resumo5','resumo6','resumo7','resumo8','resumo9','resumo10','resumo11','resumo12'];
+        resumos.forEach(rid => { document.getElementById(rid) && (document.getElementById(rid).style.display = 'none'); });
+    };
+    window.mostrarResumo = function(id) {
+        const ids = ['exemplo1','exemplo2','exemplo3','exemplo4','exemplo5','exemplo6','exemplo7','exemplo8','exemplo9','exemplo10','exemplo11','exemplo12'];
+        ids.forEach(eid => { document.getElementById(eid) && (document.getElementById(eid).style.display = 'none'); });
+        const dicas = ['dica1','dica2','dica3','dica4','dica5','dica6','dica7','dica8','dica9','dica10','dica11','dica12'];
+        dicas.forEach(did => { document.getElementById(did) && (document.getElementById(did).style.display = 'none'); });
+        const resumos = ['resumo1','resumo2','resumo3','resumo4','resumo5','resumo6','resumo7','resumo8','resumo9','resumo10','resumo11','resumo12'];
+        resumos.forEach(rid => { document.getElementById(rid) && (document.getElementById(rid).style.display = (rid === id ? 'block' : 'none')); });
+    };
+
+    // Quiz do Módulo 3
+    const quizM3 = [
+        {
+            pergunta: "Qual a principal função de um checklist na inspeção?",
+            opcoes: ["Aumentar o tempo da inspeção.", "Evitar esquecimentos e garantir que todos os itens sejam verificados.", "Reduzir a segurança.", "Substituir o inspetor."],
+            resposta: "Evitar esquecimentos e garantir que todos os itens sejam verificados."
+        },
+        {
+            pergunta: "Por que é importante seguir o procedimento padrão mesmo em tarefas rotineiras?",
+            opcoes: ["Para garantir qualidade e segurança.", "Para ser mais rápido.", "Para evitar o uso de EPIs.", "Para economizar papel."],
+            resposta: "Para garantir qualidade e segurança."
+        },
+        {
+            pergunta: "O que deve ser registrado em uma inspeção?",
+            opcoes: ["Apenas o nome do técnico.", "Somente falhas graves.", "Valores, fotos, observações e falhas encontradas.", "Nada, só observar."],
+            resposta: "Valores, fotos, observações e falhas encontradas."
+        }
+    ];
+    let quizM3Index = 0;
+    let quizM3Acertos = 0;
+
+window.abrirQuizModulo = function(modulo) {
+    // Esconde todos os quizzes
+    for (let i = 1; i <= 12; i++) {
+        const quizDiv = document.getElementById(`quiz-modulo-${i}`);
+        if (quizDiv) quizDiv.style.display = 'none';
+    }
+    // Mostra o quiz do módulo selecionado
+    const quizAtual = document.getElementById(`quiz-modulo-${modulo}`);
+    if (quizAtual) quizAtual.style.display = 'block';
+    // Inicia o quiz do módulo
+    switch (modulo) {
+        case 1:
+            quizM1Index = 0; quizM1Acertos = 0; mostrarQuizM1Pergunta(); break;
+        case 2:
+            quizM2Index = 0; quizM2Acertos = 0; mostrarQuizM2Pergunta(); break;
+        case 3:
+            quizM3Index = 0; quizM3Acertos = 0; mostrarQuizM3Pergunta(); break;
+        case 4:
+            quizM4Index = 0; quizM4Acertos = 0; mostrarQuizM4Pergunta(); break;
+        case 5:
+            quizM5Index = 0; quizM5Acertos = 0; mostrarQuizM5Pergunta(); break;
+        case 6:
+            quizM6Index = 0; quizM6Acertos = 0; mostrarQuizM6Pergunta(); break;
+        case 7:
+            quizM7Index = 0; quizM7Acertos = 0; mostrarQuizM7Pergunta(); break;
+        case 8:
+            quizM8Index = 0; quizM8Acertos = 0; mostrarQuizM8Pergunta(); break;
+        case 9:
+            quizM9Index = 0; quizM9Acertos = 0; mostrarQuizM9Pergunta(); break;
+        case 10:
+            quizM10Index = 0; quizM10Acertos = 0; mostrarQuizM10Pergunta(); break;
+        case 11:
+            quizM11Index = 0; quizM11Acertos = 0; mostrarQuizM11Pergunta(); break;
+        case 12:
+            quizM12Index = 0; quizM12Acertos = 0; mostrarQuizM12Pergunta(); break;
+    }
+};
+
+    function mostrarQuizM3Pergunta() {
+        const p = quizM3[quizM3Index];
+        const perguntaEl = document.getElementById('quiz-m3-pergunta');
+        const opcoesEl = document.getElementById('quiz-m3-opcoes');
+        const feedbackEl = document.getElementById('quiz-m3-feedback');
+        const btnProxima = document.getElementById('quiz-m3-proxima');
+        perguntaEl.textContent = `Pergunta ${quizM3Index + 1} de ${quizM3.length}: ${p.pergunta}`;
+        opcoesEl.innerHTML = '';
+        feedbackEl.textContent = '';
+        btnProxima.style.display = 'none';
+        p.opcoes.forEach(opcao => {
+            const btn = document.createElement('button');
+            btn.textContent = opcao;
+            btn.onclick = () => quizM3Responder(btn, opcao, p.resposta);
+            opcoesEl.appendChild(btn);
+        });
+    }
+
+    function quizM3Responder(btn, selecionada, correta) {
+        const opcoesEl = document.getElementById('quiz-m3-opcoes');
+        const botoes = opcoesEl.querySelectorAll('button');
+        const feedbackEl = document.getElementById('quiz-m3-feedback');
+        const btnProxima = document.getElementById('quiz-m3-proxima');
+        let acertou = (selecionada === correta);
+        if (acertou) quizM3Acertos++;
+        botoes.forEach(b => {
+            b.disabled = true;
+            if (b.textContent === correta) b.classList.add('correta');
+            else if (b.textContent === selecionada) b.classList.add('incorreta');
+        });
+        feedbackEl.textContent = acertou ? '✅ Correto!' : '❌ Incorreto.';
+        btnProxima.style.display = 'inline-block';
+        btnProxima.onclick = quizM3ProximaPergunta;
+    }
+
+    function quizM3ProximaPergunta() {
+        quizM3Index++;
+        if (quizM3Index < quizM3.length) {
+            mostrarQuizM3Pergunta();
+        } else {
+            mostrarQuizM3Resultado();
+        }
+    }
+
+    function mostrarQuizM3Resultado() {
+        const perguntaEl = document.getElementById('quiz-m3-pergunta');
+        const opcoesEl = document.getElementById('quiz-m3-opcoes');
+        const feedbackEl = document.getElementById('quiz-m3-feedback');
+        const btnProxima = document.getElementById('quiz-m3-proxima');
+        perguntaEl.textContent = 'Quiz finalizado!';
+        opcoesEl.innerHTML = '';
+        feedbackEl.textContent = quizM3Acertos === quizM3.length ? 'Parabéns! Você acertou tudo!' : `Você acertou ${quizM3Acertos} de ${quizM3.length}. Tente novamente para gabaritar!`;
+        btnProxima.style.display = 'none';
+    }
+    // Funções de interação para botões do módulo 2
+    window.mostrarExemplo = function(id) {
+        if (id === 'exemplo1' || id === 'exemplo2') {
+            document.getElementById('exemplo1') && (document.getElementById('exemplo1').style.display = (id === 'exemplo1' ? 'block' : 'none'));
+            document.getElementById('exemplo2') && (document.getElementById('exemplo2').style.display = (id === 'exemplo2' ? 'block' : 'none'));
+            document.getElementById('dica1') && (document.getElementById('dica1').style.display = 'none');
+            document.getElementById('dica2') && (document.getElementById('dica2').style.display = 'none');
+            document.getElementById('resumo1') && (document.getElementById('resumo1').style.display = 'none');
+            document.getElementById('resumo2') && (document.getElementById('resumo2').style.display = 'none');
+        }
+    };
+    window.mostrarDica = function(id) {
+        if (id === 'dica1' || id === 'dica2') {
+            document.getElementById('exemplo1') && (document.getElementById('exemplo1').style.display = 'none');
+            document.getElementById('exemplo2') && (document.getElementById('exemplo2').style.display = 'none');
+            document.getElementById('dica1') && (document.getElementById('dica1').style.display = (id === 'dica1' ? 'block' : 'none'));
+            document.getElementById('dica2') && (document.getElementById('dica2').style.display = (id === 'dica2' ? 'block' : 'none'));
+            document.getElementById('resumo1') && (document.getElementById('resumo1').style.display = 'none');
+            document.getElementById('resumo2') && (document.getElementById('resumo2').style.display = 'none');
+        }
+    };
+    window.mostrarResumo = function(id) {
+        if (id === 'resumo1' || id === 'resumo2') {
+            document.getElementById('exemplo1') && (document.getElementById('exemplo1').style.display = 'none');
+            document.getElementById('exemplo2') && (document.getElementById('exemplo2').style.display = 'none');
+            document.getElementById('dica1') && (document.getElementById('dica1').style.display = 'none');
+            document.getElementById('dica2') && (document.getElementById('dica2').style.display = 'none');
+            document.getElementById('resumo1') && (document.getElementById('resumo1').style.display = (id === 'resumo1' ? 'block' : 'none'));
+            document.getElementById('resumo2') && (document.getElementById('resumo2').style.display = (id === 'resumo2' ? 'block' : 'none'));
+        }
+    };
+
+    // Quiz do Módulo 2
+    const quizM2 = [
+        {
+            pergunta: "Qual sentido é mais utilizado na inspeção sensitiva?",
+            opcoes: ["Olfato", "Tato", "Visão", "Paladar"],
+            resposta: "Visão"
+        },
+        {
+            pergunta: "O que o ultrassom industrial permite identificar?",
+            opcoes: ["Apenas temperatura", "Vazamentos e trincas internas", "Cor do óleo", "Ruídos audíveis"],
+            resposta: "Vazamentos e trincas internas"
+        },
+        {
+            pergunta: "Por que é importante registrar pequenos sinais, como cheiro de queimado?",
+            opcoes: ["Porque não tem importância", "Para evitar falhas maiores", "Para aumentar o tempo de inspeção", "Para dificultar o trabalho"],
+            resposta: "Para evitar falhas maiores"
+        }
+    ];
+    let quizM2Index = 0;
+    let quizM2Acertos = 0;
+
+    window.abrirQuizModulo = function(modulo) {
+        if (modulo === 1) {
+            document.getElementById('quiz-modulo-1').style.display = 'block';
+            quizM1Index = 0;
+            quizM1Acertos = 0;
+            mostrarQuizM1Pergunta();
+        } else if (modulo === 2) {
+            document.getElementById('quiz-modulo-2').style.display = 'block';
+            quizM2Index = 0;
+            quizM2Acertos = 0;
+            mostrarQuizM2Pergunta();
+        }
+    };
+
+    function mostrarQuizM2Pergunta() {
+        const p = quizM2[quizM2Index];
+        const perguntaEl = document.getElementById('quiz-m2-pergunta');
+        const opcoesEl = document.getElementById('quiz-m2-opcoes');
+        const feedbackEl = document.getElementById('quiz-m2-feedback');
+        const btnProxima = document.getElementById('quiz-m2-proxima');
+        perguntaEl.textContent = `Pergunta ${quizM2Index + 1} de ${quizM2.length}: ${p.pergunta}`;
+        opcoesEl.innerHTML = '';
+        feedbackEl.textContent = '';
+        btnProxima.style.display = 'none';
+        p.opcoes.forEach(opcao => {
+            const btn = document.createElement('button');
+            btn.textContent = opcao;
+            btn.onclick = () => quizM2Responder(btn, opcao, p.resposta);
+            opcoesEl.appendChild(btn);
+        });
+    }
+
+    function quizM2Responder(btn, selecionada, correta) {
+        const opcoesEl = document.getElementById('quiz-m2-opcoes');
+        const botoes = opcoesEl.querySelectorAll('button');
+        const feedbackEl = document.getElementById('quiz-m2-feedback');
+        const btnProxima = document.getElementById('quiz-m2-proxima');
+        let acertou = (selecionada === correta);
+        if (acertou) quizM2Acertos++;
+        botoes.forEach(b => {
+            b.disabled = true;
+            if (b.textContent === correta) b.classList.add('correta');
+            else if (b.textContent === selecionada) b.classList.add('incorreta');
+        });
+        feedbackEl.textContent = acertou ? '✅ Correto!' : '❌ Incorreto.';
+        btnProxima.style.display = 'inline-block';
+        btnProxima.onclick = quizM2ProximaPergunta;
+    }
+
+    function quizM2ProximaPergunta() {
+        quizM2Index++;
+        if (quizM2Index < quizM2.length) {
+            mostrarQuizM2Pergunta();
+        } else {
+            mostrarQuizM2Resultado();
+        }
+    }
+
+    function mostrarQuizM2Resultado() {
+        const perguntaEl = document.getElementById('quiz-m2-pergunta');
+        const opcoesEl = document.getElementById('quiz-m2-opcoes');
+        const feedbackEl = document.getElementById('quiz-m2-feedback');
+        const btnProxima = document.getElementById('quiz-m2-proxima');
+        perguntaEl.textContent = 'Quiz finalizado!';
+        opcoesEl.innerHTML = '';
+        feedbackEl.textContent = quizM2Acertos === quizM2.length ? 'Parabéns! Você acertou tudo!' : `Você acertou ${quizM2Acertos} de ${quizM2.length}. Tente novamente para gabaritar!`;
+        btnProxima.style.display = 'none';
+    }
 document.addEventListener('DOMContentLoaded', () => {
 
     const { jsPDF } = window.jspdf;
@@ -323,6 +761,109 @@ document.addEventListener('DOMContentLoaded', () => {
 
     } else {
         console.error('Algum elemento do formulário de documento (país, label ou input) não foi encontrado.');
+    }
+
+
+    // Funções de interação para botões do módulo 1
+    window.mostrarExemplo = function(id) {
+        document.getElementById('exemplo1').style.display = 'block';
+        document.getElementById('dica1').style.display = 'none';
+        document.getElementById('resumo1').style.display = 'none';
+    };
+    window.mostrarDica = function(id) {
+        document.getElementById('exemplo1').style.display = 'none';
+        document.getElementById('dica1').style.display = 'block';
+        document.getElementById('resumo1').style.display = 'none';
+    };
+    window.mostrarResumo = function(id) {
+        document.getElementById('exemplo1').style.display = 'none';
+        document.getElementById('dica1').style.display = 'none';
+        document.getElementById('resumo1').style.display = 'block';
+    };
+
+    // Quiz do Módulo 1
+    const quizM1 = [
+        {
+            pergunta: "Qual o principal objetivo da inspeção preventiva?",
+            opcoes: ["Corrigir falhas já existentes.", "Prever falhas usando sensores.", "Realizar verificações programadas para evitar falhas.", "Aumentar o custo da manutenção."],
+            resposta: "Realizar verificações programadas para evitar falhas."
+        },
+        {
+            pergunta: "O que caracteriza a inspeção corretiva?",
+            opcoes: ["É feita antes de qualquer falha.", "É realizada após o surgimento de um problema.", "Usa apenas instrumentos digitais.", "É sempre a mais barata."],
+            resposta: "É realizada após o surgimento de um problema."
+        },
+        {
+            pergunta: "Por que registrar pequenas anomalias?",
+            opcoes: ["Porque não faz diferença.", "Para evitar que pequenos problemas virem grandes falhas.", "Para aumentar o trabalho do inspetor.", "Para reduzir o tempo de inspeção."],
+            resposta: "Para evitar que pequenos problemas virem grandes falhas."
+        }
+    ];
+    let quizM1Index = 0;
+    let quizM1Acertos = 0;
+
+    window.abrirQuizModulo = function(modulo) {
+        if (modulo === 1) {
+            document.getElementById('quiz-modulo-1').style.display = 'block';
+            quizM1Index = 0;
+            quizM1Acertos = 0;
+            mostrarQuizM1Pergunta();
+        }
+    };
+
+    function mostrarQuizM1Pergunta() {
+        const p = quizM1[quizM1Index];
+        const perguntaEl = document.getElementById('quiz-m1-pergunta');
+        const opcoesEl = document.getElementById('quiz-m1-opcoes');
+        const feedbackEl = document.getElementById('quiz-m1-feedback');
+        const btnProxima = document.getElementById('quiz-m1-proxima');
+        perguntaEl.textContent = `Pergunta ${quizM1Index + 1} de ${quizM1.length}: ${p.pergunta}`;
+        opcoesEl.innerHTML = '';
+        feedbackEl.textContent = '';
+        btnProxima.style.display = 'none';
+        p.opcoes.forEach(opcao => {
+            const btn = document.createElement('button');
+            btn.textContent = opcao;
+            btn.onclick = () => quizM1Responder(btn, opcao, p.resposta);
+            opcoesEl.appendChild(btn);
+        });
+    }
+
+    function quizM1Responder(btn, selecionada, correta) {
+        const opcoesEl = document.getElementById('quiz-m1-opcoes');
+        const botoes = opcoesEl.querySelectorAll('button');
+        const feedbackEl = document.getElementById('quiz-m1-feedback');
+        const btnProxima = document.getElementById('quiz-m1-proxima');
+        let acertou = (selecionada === correta);
+        if (acertou) quizM1Acertos++;
+        botoes.forEach(b => {
+            b.disabled = true;
+            if (b.textContent === correta) b.classList.add('correta');
+            else if (b.textContent === selecionada) b.classList.add('incorreta');
+        });
+        feedbackEl.textContent = acertou ? '✅ Correto!' : '❌ Incorreto.';
+        btnProxima.style.display = 'inline-block';
+        btnProxima.onclick = quizM1ProximaPergunta;
+    }
+
+    function quizM1ProximaPergunta() {
+        quizM1Index++;
+        if (quizM1Index < quizM1.length) {
+            mostrarQuizM1Pergunta();
+        } else {
+            mostrarQuizM1Resultado();
+        }
+    }
+
+    function mostrarQuizM1Resultado() {
+        const perguntaEl = document.getElementById('quiz-m1-pergunta');
+        const opcoesEl = document.getElementById('quiz-m1-opcoes');
+        const feedbackEl = document.getElementById('quiz-m1-feedback');
+        const btnProxima = document.getElementById('quiz-m1-proxima');
+        perguntaEl.textContent = 'Quiz finalizado!';
+        opcoesEl.innerHTML = '';
+        feedbackEl.textContent = quizM1Acertos === quizM1.length ? 'Parabéns! Você acertou tudo!' : `Você acertou ${quizM1Acertos} de ${quizM1.length}. Tente novamente para gabaritar!`;
+        btnProxima.style.display = 'none';
     }
 
     // --- INICIALIZAÇÃO ---

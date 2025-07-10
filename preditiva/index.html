@@ -19,176 +19,382 @@
             
             <section id="module-1" class="module">
                 <h2>Módulo 1 — Introdução</h2>
-                <p>Inspecionar uma máquina não é só dar uma olhada rápida e seguir em frente. <br>É sobre entender que cada peça, cada ruído estranho, cada gota de óleo fora do lugar pode ser um sinal de algo maior — uma falha prestes a acontecer.
-                <br>Em um ambiente industrial, as máquinas trabalham duro. <br>Algumas ficam horas, dias ou até semanas em funcionamento contínuo. <br>E como tudo que é submetido a esforço constante, elas se desgastam. <br>A inspeção existe pra isso: detectar sinais de falhas antes que elas causem paradas inesperadas, acidentes ou prejuízo financeiro.
-                </p>
-                <h3>Os três pilares na inspeção</h3>
-                <p>Existem três pilares na inspeção que vale a pena entender desde o começo:</p>
+                <p>Inspecionar uma máquina não é só dar uma olhada rápida e seguir em frente. É sobre entender que cada peça, cada ruído estranho, cada gota de óleo fora do lugar pode ser um sinal de algo maior — uma falha prestes a acontecer.</p>
+                <p><b>Por que inspecionar?</b> Em ambientes industriais, máquinas trabalham sob esforço constante. O desgaste é inevitável, mas a inspeção permite identificar sinais de falha antes que causem paradas, acidentes ou prejuízos. Inspeção é prevenção, economia e segurança.</p>
+                <h3>Os três pilares da inspeção</h3>
                 <ul>
-                    <li><strong>Inspeção Preventiva:</strong> É feita de forma programada, independente do estado do equipamento. Ou seja, mesmo que esteja tudo “aparentemente bem”, o técnico vai até lá, verifica pontos específicos, aplica lubrificante, limpa, mede — porque o cronograma manda. É tipo uma revisão de carro aos 10.000 km: pode não ter nada errado, mas você faz por segurança.</li>
-                    <li><strong>Inspeção Preditiva:</strong> Aqui a parada fica mais tecnológica. A ideia é usar dados reais, coletados com instrumentos como sensores de vibração, termografia ou análise de óleo, pra prever falhas futuras. Se um motor começa a vibrar mais do que o normal, mesmo que ainda esteja funcionando, isso pode indicar que algo ali dentro está se desgastando.</li>
-                    <li><strong>Inspeção Corretiva:</strong> Essa entra em ação quando o problema já apareceu — a máquina já tá com defeito. O técnico faz a inspeção pra entender o que quebrou, por que aconteceu e como corrigir. Apesar de necessária em muitas situações, ela é a mais “cara”, porque envolve tempo parado, troca urgente de peças e, às vezes, prejuízo no processo produtivo.</li>
+                    <li><strong>Inspeção Preventiva:</strong> Programada, feita mesmo sem sinais de falha. Exemplo: revisão de carro aos 10.000 km.</li>
+                    <li><strong>Inspeção Preditiva:</strong> Baseada em dados e instrumentos (vibração, termografia, análise de óleo) para prever falhas futuras.</li>
+                    <li><strong>Inspeção Corretiva:</strong> Quando o problema já ocorreu. Mais cara, envolve troca urgente de peças e paradas não planejadas.</li>
                 </ul>
+                <button class="btn-interativo" onclick="mostrarExemplo('exemplo1')">Ver Exemplo Prático</button>
+                <button class="btn-interativo" onclick="mostrarDica('dica1')">Dica Rápida</button>
+                <button class="btn-interativo" onclick="mostrarResumo('resumo1')">Mostrar Resumo</button>
+                <button class="btn-interativo" onclick="abrirQuizModulo(1)">Quiz do Módulo</button>
+                <div id="exemplo1" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Exemplo:</b> Um operador percebe um leve ruído diferente em um motor. Ele registra a observação e solicita uma análise de vibração. O diagnóstico precoce evita a quebra do equipamento e uma parada de produção.
+                </div>
+                <div id="dica1" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Dica:</b> Sempre registre qualquer anomalia, mesmo que pareça pequena. Pequenos sinais podem indicar grandes problemas no futuro.
+                </div>
+                <div id="resumo1" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Resumo:</b> Inspeção é o ato de observar, analisar e registrar o estado dos equipamentos para garantir segurança, eficiência e economia na indústria.
+                </div>
+                <div id="quiz-modulo-1" class="quiz-modulo" style="display:none;margin-top:1.5rem;">
+                    <h4>Quiz do Módulo 1</h4>
+                    <div id="quiz-m1-pergunta"></div>
+                    <div id="quiz-m1-opcoes"></div>
+                    <div id="quiz-m1-feedback"></div>
+                    <button id="quiz-m1-proxima" style="display:none;margin-top:1rem;">Próxima Pergunta</button>
+                </div>
             </section>
 
             <section id="module-2" class="module">
                 <h2>Módulo 2 — Tipos de Inspeção</h2>
-                <p>Existem várias formas de inspecionar uma máquina, e cada uma tem seu momento certo. Algumas são simples, outras requerem instrumentos avançados. O importante é saber quando usar o quê pra garantir segurança e eficiência.</p>
+                <p>Existem diversas formas de inspecionar uma máquina industrial, cada uma adequada para diferentes situações e objetivos. O segredo de uma manutenção eficiente está em saber escolher o tipo de inspeção certo para cada contexto, combinando métodos tradicionais com tecnologia de ponta.</p>
+                <p><b>Inspeção Sensitiva:</b> É a base de toda inspeção, utilizando os sentidos humanos para identificar anomalias. O inspetor experiente consegue perceber ruídos, cheiros, vibrações e até pequenas alterações visuais que indicam problemas iminentes. A sensibilidade e o "feeling" do profissional são fundamentais para detectar falhas que ainda não se manifestaram de forma evidente.</p>
                 <h3>Inspeções Sensitivas - Os 5 Sentidos Humanos:</h3>
                 <ul>
-                    <li><strong>Visão:</strong> O mais utilizado. Permite detectar: Vazamentos visíveis (óleo, fluido, graxa); Trincas, corrosão ou deformações em peças; Indicadores visuais (luzes de alarme, manômetros, etiquetas de segurança); Mudança de cor em componentes (por exemplo, escurecimento de isolantes). Exemplo real: um retentor mal encaixado começa a “suar” óleo visivelmente antes de vazar de vez. Um olhar atento evita a parada.</li>
-                    <li><strong>Audição:</strong> Barulhos estranhos indicam que algo não está certo: Batidas metálicas incomuns; Ruído de cavitação em bombas; Assobios de vazamentos de ar comprimido; Vibração perceptível ao ouvido em rolamentos. O técnico experiente “escuta” a máquina e percebe quando ela está fora do tom habitual.</li>
-                    <li><strong>Tato:</strong> Ao tocar com segurança (com EPI e permissão), é possível sentir: Excesso de calor em mancais e motores; Vibrações fora do padrão; Folgas ou desalinhamentos em acoplamentos. Um motor excessivamente quente ao toque pode indicar sobrecarga ou falha de ventilação.</li>
-                    <li><strong>Olfato:</strong> O cheiro é poderoso na detecção precoce: Odor de queimado = sobrecarga elétrica ou atrito; Cheiro de óleo queimado = problema em redutores; Gás ou vapores = vazamentos perigosos (atenção redobrada). Um leve cheiro de borracha pode indicar correias derretendo no início de uma falha.</li>
-                    <li><strong>Sexto Sentido — Amor pelo que se faz:</strong> Mais do que olhos atentos, ouvidos treinados e mãos experientes, o que realmente transforma uma inspeção em algo eficiente é o amor pela profissão. Esse sexto sentido é invisível, mas perceptível: O técnico que se importa percebe o que os sensores ainda não captaram; Ele não inspeciona por obrigação, mas por compromisso; Tem orgulho em prevenir o problema antes mesmo que ele exista; Conhece as máquinas como se fossem parte do time. “Faz anos que inspeciono esse equipamento. Hoje ele não está se comportando como deveria.” Essa percepção não está nos manuais. Ela vem de quem veste o uniforme com propósito, respeita o que faz e quer ver tudo funcionando bem — não por protocolo, mas por vocação. "O melhor inspetor é aquele que se importa com o que protege."</li>
+                    <li><strong>Visão:</strong> Detecta vazamentos, trincas, corrosão, deformações, mudanças de cor, luzes de alarme, manômetros fora do padrão, etiquetas de segurança violadas, entre outros. <br><i>Exemplo:</i> Um retentor mal encaixado começa a “suar” óleo antes de vazar de vez. Um olhar atento evita a parada.</li>
+                    <li><strong>Audição:</strong> Barulhos incomuns, batidas metálicas, ruído de cavitação em bombas, assobios de vazamentos de ar comprimido, vibração perceptível ao ouvido em rolamentos. <br><i>Exemplo:</i> O técnico experiente percebe quando a máquina "sai do tom" habitual.</li>
+                    <li><strong>Tato:</strong> Ao tocar (com EPI e permissão), sente-se calor excessivo em mancais e motores, vibrações fora do padrão, folgas ou desalinhamentos em acoplamentos. <br><i>Exemplo:</i> Um motor muito quente ao toque pode indicar sobrecarga ou falha de ventilação.</li>
+                    <li><strong>Olfato:</strong> Cheiro de queimado (sobrecarga elétrica ou atrito), óleo queimado (problema em redutores), gás ou vapores (vazamentos perigosos), cheiro de borracha (correias derretendo). <br><i>Exemplo:</i> Um leve cheiro de borracha pode indicar início de falha em correias.</li>
+                    <li><strong>Sexto Sentido — Amor pelo que se faz:</strong> O melhor inspetor é aquele que se importa com o que protege. O "sexto sentido" é a experiência e o compromisso, percebendo detalhes que passam despercebidos por sensores e instrumentos.</li>
                 </ul>
+                <button class="btn-interativo" onclick="mostrarExemplo('exemplo2')">Ver Exemplo Prático</button>
+                <button class="btn-interativo" onclick="mostrarDica('dica2')">Dica Rápida</button>
+                <button class="btn-interativo" onclick="mostrarResumo('resumo2')">Mostrar Resumo</button>
+                <button class="btn-interativo" onclick="abrirQuizModulo(2)">Quiz do Módulo</button>
+                <div id="exemplo2" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Exemplo:</b> Durante uma ronda, o inspetor sente um leve cheiro de óleo queimado próximo a um redutor. Ao investigar, descobre um início de vazamento e evita uma falha maior, programando a manutenção antes do agravamento do problema.
+                </div>
+                <div id="dica2" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Dica:</b> Nunca subestime pequenos sinais. O acúmulo de pequenas anomalias pode indicar uma grande falha em formação. Registre tudo e comunique à equipe.</div>
+                <div id="resumo2" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Resumo:</b> A inspeção sensitiva é o primeiro passo para identificar problemas. Use todos os sentidos e confie na sua experiência para antecipar falhas.</div>
+                <div id="quiz-modulo-2" class="quiz-modulo" style="display:none;margin-top:1.5rem;">
+                    <h4>Quiz do Módulo 2</h4>
+                    <div id="quiz-m2-pergunta"></div>
+                    <div id="quiz-m2-opcoes"></div>
+                    <div id="quiz-m2-feedback"></div>
+                    <button id="quiz-m2-proxima" style="display:none;margin-top:1rem;">Próxima Pergunta</button>
+                </div>
                 <h3>Inspeções Instrumentadas</h3>
                 <ul>
-                    <li><strong>Inspeção Termográfica:</strong> Com uma câmera infravermelha, dá pra ver os “pontos quentes” — áreas onde a temperatura está anormalmente alta. Isso pode indicar atrito excessivo, sobrecarga elétrica ou rolamentos prestes a travar.</li>
-                    <li><strong>Inspeção por Ultrassom:</strong> Quando tem algo vazando (ar comprimido, vapor, óleo), o ultrassom escuta aquilo que o ouvido humano não capta. Também é usado pra identificar trincas internas em estruturas metálicas.</li>
-                    <li><strong>Análise de Vibração:</strong> Motores, bombas e redutores têm um padrão de vibração “normal”. Se alguma peça desbalancear, desgastar ou afrouxar, esse padrão muda — e o sensor capta rapidinho.</li>
-                    <li><strong>Análise de óleo:</strong> Verifica contaminação e desgaste interno. Medidas dimensionais: usa paquímetro, relógio comparador etc. Teste elétrico: pra isolação, continuidade, resistência e mais.</li>
+                    <li><strong>Inspeção Termográfica:</strong> Utiliza câmeras infravermelhas para identificar pontos quentes, indicando atrito excessivo, sobrecarga elétrica ou rolamentos prestes a travar. Permite inspeção sem contato e sem necessidade de parar o equipamento.</li>
+                    <li><strong>Inspeção por Ultrassom:</strong> Detecta vazamentos de ar, vapor ou óleo e identifica trincas internas em estruturas metálicas. O ultrassom "ouve" o que o ouvido humano não capta, sendo essencial para manutenção preditiva.</li>
+                    <li><strong>Análise de Vibração:</strong> Monitora o padrão de vibração de motores, bombas e redutores. Mudanças no padrão indicam desbalanceamento, desgaste ou folgas. É uma das técnicas mais eficazes para prever falhas mecânicas.</li>
+                    <li><strong>Análise de Óleo:</strong> Avalia a contaminação e o desgaste interno de componentes. A análise periódica do óleo revela partículas metálicas, água ou degradação do lubrificante, antecipando falhas graves.</li>
+                    <li><strong>Medidas Dimensionais e Testes Elétricos:</strong> Uso de paquímetro, relógio comparador, multímetro, megômetro, entre outros, para garantir que componentes estejam dentro das tolerâncias e que circuitos estejam seguros.</li>
                 </ul>
             </section>
             
             <section id="module-3" class="module">
                 <h2>Módulo 3 — Procedimentos Padrão</h2>
                 <p>Inspecionar não é só ter boa vontade — tem método, tem sequência, e acima de tudo, tem responsabilidade. Um procedimento bem estruturado garante que nada escape do olhar técnico e, melhor ainda, que a inspeção seja padronizada para qualquer operador ou técnico que assumir.</p>
+                <p><b>Por que padronizar?</b> A padronização evita esquecimentos, reduz erros e facilita o treinamento de novos profissionais. Um procedimento bem definido permite que qualquer pessoa siga os mesmos passos e obtenha resultados consistentes.</p>
                 <h3>O que é um Procedimento Padrão?</h3>
-                <p>É um passo a passo claro, objetivo e reproduzível que orienta como uma inspeção deve ser realizada. Isso inclui: O que inspecionar (componente, equipamento ou área); Com que frequência (diária, semanal, mensal…); Como fazer (instrumentos utilizados, critérios de aceitação); O que registrar (valores, fotos, observações, falhas encontradas).</p>
+                <p>É um passo a passo claro, objetivo e reproduzível que orienta como uma inspeção deve ser realizada. Isso inclui:</p>
                 <ul>
-                    <li><strong>Checklist: o aliado da memória -</strong> Na correria do dia a dia, a memória pode falhar. É por isso que o **checklist é rei:** ele garante que nenhum ponto fique de fora, mesmo nas tarefas mais rotineiras. Um bom checklist inclui: Nome da máquina e localização; Itens a serem verificados; Situação de cada item (ok, alerta, falha); Campo para observações e assinatura.</li>
-                    <li><strong>Ferramentas e equipamentos certos -</strong> Cada tipo de inspeção exige instrumentos adequados. Não adianta fazer inspeção de vibração com a mão ou termografia sem câmera. É como tentar medir pressão com régua.</li>
-                    <li><strong>Segurança em primeiro lugar -</strong> Não dá pra fazer uma boa inspeção se o técnico tá correndo risco. Usar os EPIs corretos e isolar a área quando necessário é parte do procedimento padrão — inspeção segura é inspeção eficiente.</li>
+                    <li><strong>O que inspecionar:</strong> Componente, equipamento ou área específica.</li>
+                    <li><strong>Com que frequência:</strong> Diária, semanal, mensal, trimestral, anual.</li>
+                    <li><strong>Como fazer:</strong> Instrumentos utilizados, critérios de aceitação, sequência de verificação.</li>
+                    <li><strong>O que registrar:</strong> Valores, fotos, observações, falhas encontradas, ações recomendadas.</li>
                 </ul>
+                <ul>
+                    <li><strong>Checklist: o aliado da memória</strong> — Um bom checklist inclui: Nome da máquina e localização; Itens a serem verificados; Situação de cada item (ok, alerta, falha); Campo para observações e assinatura.</li>
+                    <li><strong>Ferramentas e equipamentos certos</strong> — Cada tipo de inspeção exige instrumentos adequados. Não adianta fazer inspeção de vibração com a mão ou termografia sem câmera. É como tentar medir pressão com régua.</li>
+                    <li><strong>Segurança em primeiro lugar</strong> — Usar os EPIs corretos e isolar a área quando necessário é parte do procedimento padrão — inspeção segura é inspeção eficiente.</li>
+                </ul>
+                <button class="btn-interativo" onclick="mostrarExemplo('exemplo3')">Ver Exemplo Prático</button>
+                <button class="btn-interativo" onclick="mostrarDica('dica3')">Dica Rápida</button>
+                <button class="btn-interativo" onclick="mostrarResumo('resumo3')">Mostrar Resumo</button>
+                <button class="btn-interativo" onclick="abrirQuizModulo(3)">Quiz do Módulo</button>
+                <div id="exemplo3" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Exemplo:</b> Um checklist bem feito evita que o técnico esqueça de verificar o nível de óleo de um redutor, prevenindo uma falha futura por falta de lubrificação.</div>
+                <div id="dica3" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Dica:</b> Sempre siga o procedimento padrão, mesmo que pareça repetitivo. Isso garante qualidade e segurança para todos.</div>
+                <div id="resumo3" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Resumo:</b> Procedimentos padronizados garantem inspeções completas, seguras e facilitam o treinamento de novos profissionais.</div>
+                <div id="quiz-modulo-3" class="quiz-modulo" style="display:none;margin-top:1.5rem;">
+                    <h4>Quiz do Módulo 3</h4>
+                    <div id="quiz-m3-pergunta"></div>
+                    <div id="quiz-m3-opcoes"></div>
+                    <div id="quiz-m3-feedback"></div>
+                    <button id="quiz-m3-proxima" style="display:none;margin-top:1rem;">Próxima Pergunta</button>
+                </div>
             </section>
 
             <section id="module-4" class="module">
                 <h2>Módulo 4 — Registro e Análise de Dados</h2>
-                <p>Não adianta fazer uma inspeção caprichada se ninguém souber o que foi encontrado. Registrar bem é o que transforma uma observação de momento em informação estratégica pro time de manutenção e pra gestão.</p>
-                <h3>Por que registrar?</h3>
-                <p>Simples: o que não é registrado, se perde. As máquinas não falam por conta própria (ainda), então cabe ao inspetor contar essa história. Moral da história: um registro bem-feito pode evitar um prejuízo gigante.</p>
+                <p>Registrar corretamente as inspeções é o que transforma uma simples observação em informação estratégica para a manutenção e a gestão industrial. O registro é a memória da máquina e da equipe.</p>
+                <p><b>Por que registrar?</b> O que não é registrado se perde. O histórico de inspeções permite identificar padrões, antecipar falhas e comprovar ações preventivas.</p>
                 <ul>
-                    <li><strong>O que registrar?</strong> O ideal é que cada inspeção gere um pequeno relatório ou apontamento digital contendo: Data e hora da inspeção; Nome do técnico; Equipamento inspecionado; Itens observados (checklist preenchido); Condições encontradas (ex: ruído anormal, aquecimento, vibração); Fotos ou vídeos (se possível); Ações recomendadas (lubrificar, trocar, monitorar).</li>
-                    <li><strong>Registro manual x digital:</strong> Você pode usar desde um formulário simples impresso até sistemas mais modernos como: Aplicativos móveis de inspeção; Planilhas inteligentes no Excel ou Google Sheets com macros; CMMS (Computerized Maintenance Management System); QR Codes afixados nas máquinas para acesso rápido ao histórico; Tablets no chão de fábrica com acesso à nuvem.</li>
-                    <li><strong>Análise de tendências: o ouro escondido nos dados.</strong> Um registro isolado vale pouco. Mas quando você compara dados de semanas ou meses, começa a enxergar padrões: Motor que esquenta cada vez mais; Vazamento que aumenta de frequência; Vibração que cresce gradualmente. Essas tendências permitem que a equipe aja antes que o problema se agrave.</li>
-                    <li><strong>Qualidade no registro é compromisso coletivo:</strong> Registrar por registrar não basta. Um campo em branco, um “ok” mal explicado ou um dado errado pode custar caro lá na frente. Por isso, é importante treinar a equipe para: Escrever de forma clara e objetiva; Priorizar fatos, não opiniões; Reportar imediatamente falhas críticas; Tratar o dado como ativo estratégico da empresa.</li>
+                    <li><strong>O que registrar:</strong> Data e hora, nome do técnico, equipamento inspecionado, itens observados, condições encontradas, fotos/vídeos, ações recomendadas.</li>
+                    <li><strong>Registro manual x digital:</strong> Desde formulários impressos até aplicativos móveis, planilhas inteligentes, CMMS, QR Codes e tablets no chão de fábrica.</li>
+                    <li><strong>Análise de tendências:</strong> Comparar dados de semanas ou meses revela padrões: aumento de temperatura, vazamentos recorrentes, vibração crescente, etc.</li>
+                    <li><strong>Qualidade no registro:</strong> Escrever de forma clara e objetiva, priorizar fatos, reportar falhas críticas imediatamente, tratar o dado como ativo estratégico.</li>
                 </ul>
+                <button class="btn-interativo" onclick="mostrarExemplo('exemplo4')">Ver Exemplo Prático</button>
+                <button class="btn-interativo" onclick="mostrarDica('dica4')">Dica Rápida</button>
+                <button class="btn-interativo" onclick="mostrarResumo('resumo4')">Mostrar Resumo</button>
+                <button class="btn-interativo" onclick="abrirQuizModulo(4)">Quiz do Módulo</button>
+                <div id="exemplo4" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Exemplo:</b> Ao registrar a temperatura de um motor semanalmente, a equipe percebeu um aumento gradual. A análise do histórico permitiu agir antes da falha.</div>
+                <div id="dica4" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Dica:</b> Use fotos e vídeos para complementar o registro. Imagens facilitam a comunicação e a tomada de decisão.</div>
+                <div id="resumo4" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Resumo:</b> O registro de dados é fundamental para a manutenção preditiva e para a melhoria contínua dos processos industriais.</div>
+                <div id="quiz-modulo-4" class="quiz-modulo" style="display:none;margin-top:1.5rem;">
+                    <h4>Quiz do Módulo 4</h4>
+                    <div id="quiz-m4-pergunta"></div>
+                    <div id="quiz-m4-opcoes"></div>
+                    <div id="quiz-m4-feedback"></div>
+                    <button id="quiz-m4-proxima" style="display:none;margin-top:1rem;">Próxima Pergunta</button>
+                </div>
             </section>
 
             <section id="module-5" class="module">
                 <h2>Módulo 5 — Estudo de Casos</h2>
-                <p>Agora que você já sabe os tipos de inspeção, como padronizá-las e como registrar tudo direitinho, é hora de colocar a mão na massa — ou melhor, no cérebro. Vamos trabalhar alguns casos práticos, como se você estivesse vivendo a situação na fábrica. Cada cenário a seguir representa algo que realmente pode acontecer (ou já aconteceu) em ambientes industriais. A ideia é estimular a análise crítica e mostrar como os conhecimentos de inspeção fazem diferença real na manutenção.</p>
+                <p>Agora é hora de colocar o conhecimento em prática! Vamos analisar situações reais que acontecem na indústria e discutir as melhores decisões para cada caso. O estudo de casos desenvolve o raciocínio crítico e prepara o profissional para agir com segurança e eficiência.</p>
                 <ul>
-                    <li><strong>Caso 1: Vibração fora do normal -</strong> Você está numa inspeção semanal de rotina e, ao encostar no motor de um exaustor industrial, percebe uma leve vibração diferente do comum. Nada gritante, mas parece “fora do padrão”.
-                      <br><strong>Você tem três opções:</strong> Ignorar, já que o motor está funcionando normalmente; Registrar como observação e manter o monitoramento nas próximas inspeções; Acionar análise de vibração com equipamento portátil no mesmo dia.
-                      <br><strong>Resposta recomendada:</strong> Acionar análise de vibração.
-                    </li>
-                    <li><strong>Caso 2: Cheiro de queimado em painel elétrico -</strong> Durante uma inspeção visual, ao passar por um painel elétrico, você sente um cheiro de “plástico queimando”. Visualmente, tudo parece normal. Nenhum disjuntor caiu, e os cabos estão aparentemente íntegros.
-                      <br><strong>O que fazer?</strong> Abrir o painel imediatamente para ver o que está acontecendo; Ignorar e só anotar como "possível cheiro suspeito"; Solicitar inspeção termográfica imediatamente com profissional autorizado.
-                      <br><strong>Resposta ideal:</strong> Solicitar inspeção termográfica imediatamente com profissional autorizado.
-                    </li>
-                    <li><strong>Caso 3: Vazamento intermitente de óleo hidráulico -</strong> Uma prensa hidráulica apresenta vazamento leve de óleo, mas só quando está sob carga máxima. Em repouso, nada vaza.
-                      <br><strong>Como agir?</strong> Marcar troca do selo apenas na próxima parada geral; Acompanhar visualmente nas próximas semanas; Programar manutenção corretiva agendada fora do turno de produção.
-                      <br><strong>Caminho ideal:</strong> Programar manutenção corretiva agendada fora do turno de produção.
-                    </li>
+                    <li><strong>Caso 1: Vibração fora do normal</strong> — Durante uma inspeção semanal, o inspetor percebe uma leve vibração diferente no motor de um exaustor. <br><i>O que fazer?</i> Ignorar, registrar e monitorar, ou acionar análise de vibração? <br><b>Resposta recomendada:</b> Acionar análise de vibração imediatamente.</li>
+                    <li><strong>Caso 2: Cheiro de queimado em painel elétrico</strong> — Ao passar por um painel, sente-se cheiro de plástico queimando, mas visualmente está tudo normal. <br><i>O que fazer?</i> Abrir o painel, ignorar, ou solicitar inspeção termográfica? <br><b>Resposta ideal:</b> Solicitar inspeção termográfica imediatamente com profissional autorizado.</li>
+                    <li><strong>Caso 3: Vazamento intermitente de óleo hidráulico</strong> — Uma prensa apresenta vazamento leve de óleo apenas sob carga máxima. <br><i>O que fazer?</i> Trocar o selo na próxima parada, monitorar, ou programar manutenção corretiva? <br><b>Caminho ideal:</b> Programar manutenção corretiva agendada fora do turno de produção.</li>
                 </ul>
+                <button class="btn-interativo" onclick="mostrarExemplo('exemplo5')">Ver Exemplo Prático</button>
+                <button class="btn-interativo" onclick="mostrarDica('dica5')">Dica Rápida</button>
+                <button class="btn-interativo" onclick="mostrarResumo('resumo5')">Mostrar Resumo</button>
+                <button class="btn-interativo" onclick="abrirQuizModulo(5)">Quiz do Módulo</button>
+                <div id="exemplo5" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Exemplo:</b> Em um caso real, a análise de vibração detectou um rolamento prestes a travar, evitando uma parada de produção e prejuízo financeiro.</div>
+                <div id="dica5" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Dica:</b> Sempre comunique imediatamente qualquer situação fora do padrão. A ação rápida pode evitar acidentes e prejuízos.</div>
+                <div id="resumo5" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Resumo:</b> O estudo de casos prepara o profissional para agir corretamente diante de situações inesperadas na indústria.</div>
+                <div id="quiz-modulo-5" class="quiz-modulo" style="display:none;margin-top:1.5rem;">
+                    <h4>Quiz do Módulo 5</h4>
+                    <div id="quiz-m5-pergunta"></div>
+                    <div id="quiz-m5-opcoes"></div>
+                    <div id="quiz-m5-feedback"></div>
+                    <button id="quiz-m5-proxima" style="display:none;margin-top:1rem;">Próxima Pergunta</button>
+                </div>
             </section>
             
             <section id="module-6" class="module">
                 <h2>Módulo 6 — Principais Falhas Mecânicas</h2>
                 <p>Compreender as principais falhas mecânicas é essencial para profissionais que atuam na manutenção, operação e inspeção de máquinas industriais. Nenhuma falha surge do nada. Toda falha apresenta sinais, e o bom inspetor é aquele que sabe reconhecer esses sinais antes que se tornem uma parada de produção ou um acidente.</p>
+                <p><b>Por que estudar falhas mecânicas?</b> Conhecer as causas e sintomas das falhas permite agir preventivamente, reduzindo custos e aumentando a disponibilidade dos equipamentos.</p>
                 <h3>Principais Componentes Mecânicos e Suas Falhas Comuns</h3>
                 <ul>
-                    <li><strong>Rolamentos:</strong> Causas comuns: Falta ou excesso de lubrificação; Contaminação (poeira, água, partículas metálicas); Desalinhamento de eixos; Sobrecarga além do especificado; Montagem incorreta; Fadiga natural. Efeitos: Aumento de vibração; Ruídos anormais; Aquecimento elevado nos mancais; Travamento ou destruição do rolamento.</li>
-                    <li><strong>Acoplamentos:</strong> Causas comuns: Desalinhamento entre motor e equipamento acionado; Folgas excessivas; Desgaste dos elementos elásticos ou metálicos; Ressecamento de materiais; Instalação inadequada; Sobrecarga mecânica. Efeitos: Vibração excessiva; Ruído metálico intermitente; Desgaste acelerado dos eixos e dos rolamentos; Rompimento dos elementos flexíveis.</li>
-                    <li><strong>Redutores:</strong> Causas comuns: Nível de óleo insuficiente ou lubrificante incorreto; Contaminação do óleo; Desgaste ou quebra de dentes das engrenagens; Sobrecarga operacional; Desalinhamento entre motor e redutor. Efeitos: Aquecimento elevado; Ruídos anormais; Vazamento de óleo; Quebra de engrenagens internas.</li>
-                    <li><strong>Bombas:</strong> Causas comuns: Cavitação; Desgaste do rotor, das palhetas ou do selo mecânico; Obstrução parcial na linha de sucção ou descarga; Desbalanceamento do rotor; Mancais desgastados. Efeitos: Perda de vazão; Ruídos semelhantes a estalos, areia ou brita; Aquecimento nos mancais; Vibração elevada; Vazamentos no selo mecânico.</li>
-                    <li><strong>Compressores:</strong> Causas comuns: Sobrecarga por filtros entupidos; Vazamentos de óleo ou ar comprimido; Desgaste de anéis, pistões e válvulas; Desgaste ou falha nos mancais; Desbalanceamento ou desalinhamento dos componentes internos. Efeitos: Perda de eficiência; Consumo elevado de energia elétrica; Aquecimento dos cabeçotes e carcaça; Vibração elevada; Ruídos anormais.</li>
+                    <li><strong>Rolamentos:</strong> Falta/excesso de lubrificação, contaminação, desalinhamento, sobrecarga, montagem incorreta, fadiga. <b>Sintomas:</b> Vibração, ruído, aquecimento, travamento.</li>
+                    <li><strong>Acoplamentos:</strong> Desalinhamento, folgas, desgaste, ressecamento, instalação inadequada, sobrecarga. <b>Sintomas:</b> Vibração, ruído metálico, desgaste acelerado, rompimento.</li>
+                    <li><strong>Redutores:</strong> Óleo insuficiente/incorreto, contaminação, desgaste de engrenagens, sobrecarga, desalinhamento. <b>Sintomas:</b> Aquecimento, ruído, vazamento, quebra de engrenagens.</li>
+                    <li><strong>Bombas:</strong> Cavitação, desgaste de rotor/palhetas/selo, obstrução, desbalanceamento, mancais desgastados. <b>Sintomas:</b> Perda de vazão, ruído, aquecimento, vibração, vazamento.</li>
+                    <li><strong>Compressores:</strong> Filtros entupidos, vazamentos, desgaste de anéis/pistões/válvulas, mancais, desbalanceamento. <b>Sintomas:</b> Perda de eficiência, consumo elevado, aquecimento, vibração, ruído.</li>
                 </ul>
+                <button class="btn-interativo" onclick="mostrarExemplo('exemplo6')">Ver Exemplo Prático</button>
+                <button class="btn-interativo" onclick="mostrarDica('dica6')">Dica Rápida</button>
+                <button class="btn-interativo" onclick="mostrarResumo('resumo6')">Mostrar Resumo</button>
+                <button class="btn-interativo" onclick="abrirQuizModulo(6)">Quiz do Módulo</button>
+                <div id="exemplo6" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Exemplo:</b> Um ruído anormal em um rolamento foi identificado durante inspeção. A troca preventiva evitou a quebra do equipamento e uma parada não planejada.</div>
+                <div id="dica6" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Dica:</b> Sempre investigue a causa do sintoma, não apenas o sintoma em si. Trocar o componente sem eliminar a causa pode gerar nova falha.</div>
+                <div id="resumo6" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Resumo:</b> Conhecer as principais falhas mecânicas e seus sintomas é fundamental para a manutenção preditiva e corretiva eficiente.</div>
+                <div id="quiz-modulo-6" class="quiz-modulo" style="display:none;margin-top:1.5rem;">
+                    <h4>Quiz do Módulo 6</h4>
+                    <div id="quiz-m6-pergunta"></div>
+                    <div id="quiz-m6-opcoes"></div>
+                    <div id="quiz-m6-feedback"></div>
+                    <button id="quiz-m6-proxima" style="display:none;margin-top:1rem;">Próxima Pergunta</button>
+                </div>
             </section>
 
             <section id="module-7" class="module">
                 <h2>Módulo 7 — Principais Falhas Elétricas</h2>
-                <p>As falhas elétricas estão entre as principais causas de paradas não programadas, queima de equipamentos, incêndios e acidentes graves na indústria. Este módulo aborda como identificar os principais sinais de falhas elétricas, tanto em painéis quanto em motores, inversores e disjuntores.</p>
+                <p>As falhas elétricas estão entre as principais causas de paradas não programadas, queima de equipamentos, incêndios e acidentes graves na indústria. Saber identificar os sinais de falhas elétricas é fundamental para evitar acidentes e prejuízos.</p>
+                <p><b>Por que estudar falhas elétricas?</b> A detecção precoce de problemas elétricos evita incêndios, queima de equipamentos e paradas inesperadas.</p>
                 <h3>Sinais de Alerta em Painéis Elétricos</h3>
                 <ul>
-                    <li><strong>Sobreaquecimento de Painéis:</strong> Causas comuns: Conexões frouxas ou oxidadas; Sobrecarga dos circuitos; Disjuntores, contatores ou relés defeituosos; Mal dimensionamento de componentes; Acúmulo de poeira; Defeitos em ventiladores internos. Efeitos: Aumento da resistência elétrica; Queima de barramentos, terminais ou cabos; Geração de faíscas e risco de incêndio; Desarme frequente de disjuntores; Queima de componentes eletrônicos.</li>
-                    <li><strong>Isolamento Danificado e Conexões Frouxas:</strong> Causas comuns: Vibração que afrouxa conexões; Envelhecimento do isolamento dos cabos; Montagem sem torque adequado; Danificação mecânica dos cabos; Sobretensões e sobrecorrentes frequentes. Efeitos: Aumento de resistência elétrica e calor; Perda de isolação e fuga de corrente; Possível curto-circuito; Desarme de proteção diferencial; Danos aos equipamentos e risco de choque elétrico.</li>
-                    <li><strong>Ruídos, Cheiros e Outros Sinais Elétricos:</strong> Sinais claros: Estalos de contatores, disjuntores ou relés; Chiado agudo constante em inversores; Cheiro de plástico, borracha ou verniz queimando; Zumbido forte em transformadores, reatores ou motores; Fumaça leve ou cheiro de queimado.</li>
+                    <li><strong>Sobreaquecimento de Painéis:</strong> Conexões frouxas, sobrecarga, defeitos em componentes, acúmulo de poeira. <b>Sintomas:</b> Aumento de resistência, queima de cabos, faíscas, desarme de disjuntores.</li>
+                    <li><strong>Isolamento Danificado e Conexões Frouxas:</strong> Vibração, envelhecimento, montagem inadequada, sobretensões. <b>Sintomas:</b> Calor, perda de isolação, curto-circuito, desarme de proteção, risco de choque.</li>
+                    <li><strong>Ruídos, Cheiros e Outros Sinais:</strong> Estalos, chiados, cheiro de queimado, fumaça, zumbido forte.</li>
                 </ul>
                 <h3>Interpretação de Sinais em Motores, Inversores e Disjuntores</h3>
                 <ul>
-                    <li><strong>Motores Elétricos:</strong> Sinais de falha: Aquecimento excessivo; Odor de verniz queimado; Desbalanceamento elétrico entre fases; Ruídos anormais; Corrente elevada em uma ou mais fases.</li>
-                    <li><strong>Inversores de Frequência:</strong> Sinais de falha: Alarmes de sobrecorrente, sobretensão ou sobretemperatura; Ruído agudo; Aquecimento no dissipador de calor; Desarme aleatório; Cheiro de placa eletrônica aquecida.</li>
-                    <li><strong>Disjuntores e Painéis:</strong> Sinais de falha: Aquecimento nos bornes; Desarmes frequentes; Estalos ou faíscas; Queima ou escurecimento do isolante dos cabos.</li>
+                    <li><strong>Motores Elétricos:</strong> Aquecimento, odor de verniz queimado, desbalanceamento, ruídos, corrente elevada.</li>
+                    <li><strong>Inversores de Frequência:</strong> Alarmes, ruído agudo, aquecimento, desarme, cheiro de placa aquecida.</li>
+                    <li><strong>Disjuntores e Painéis:</strong> Aquecimento nos bornes, desarmes, estalos, queima do isolante.</li>
                 </ul>
-                <p>Uma inspeção elétrica eficiente depende da observação, da escuta, do olfato e do uso adequado de ferramentas. Perceber ruídos, odores, sinais visuais e pequenas variações pode antecipar falhas que, se não tratadas, causariam grandes prejuízos, riscos e paradas operacionais.</p>
+                <button class="btn-interativo" onclick="mostrarExemplo('exemplo7')">Ver Exemplo Prático</button>
+                <button class="btn-interativo" onclick="mostrarDica('dica7')">Dica Rápida</button>
+                <button class="btn-interativo" onclick="mostrarResumo('resumo7')">Mostrar Resumo</button>
+                <button class="btn-interativo" onclick="abrirQuizModulo(7)">Quiz do Módulo</button>
+                <div id="exemplo7" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Exemplo:</b> Um cheiro de queimado em um painel foi rapidamente identificado como conexão frouxa, evitando incêndio e parada de produção.</div>
+                <div id="dica7" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Dica:</b> Nunca ignore ruídos ou cheiros estranhos em painéis elétricos. Eles são sinais de alerta importantes.</div>
+                <div id="resumo7" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Resumo:</b> A inspeção elétrica eficiente depende da observação, escuta, olfato e uso de ferramentas adequadas.</div>
+                <div id="quiz-modulo-7" class="quiz-modulo" style="display:none;margin-top:1.5rem;">
+                    <h4>Quiz do Módulo 7</h4>
+                    <div id="quiz-m7-pergunta"></div>
+                    <div id="quiz-m7-opcoes"></div>
+                    <div id="quiz-m7-feedback"></div>
+                    <button id="quiz-m7-proxima" style="display:none;margin-top:1rem;">Próxima Pergunta</button>
+                </div>
             </section>
 
             <section id="module-8" class="module">
                 <h2>Módulo 8 — Ferramentas Avançadas de Inspeção</h2>
-                <p>Em muitos casos, a inspeção sensorial não é suficiente para identificar falhas ocultas. Para aumentar a precisão e garantir maior segurança e confiabilidade, são utilizadas ferramentas avançadas de diagnóstico.</p>
+                <p>Em muitos casos, a inspeção sensorial não é suficiente para identificar falhas ocultas. Ferramentas avançadas aumentam a precisão, a segurança e a confiabilidade das inspeções industriais.</p>
+                <p><b>Por que usar ferramentas avançadas?</b> Elas permitem detectar falhas invisíveis aos sentidos humanos, antecipando problemas e reduzindo custos de manutenção.</p>
                 <h3>Principais Ferramentas de Inspeção</h3>
                 <ul>
-                    <li><strong>Termografia:</strong> Detecta variações de temperatura, identificando pontos de aquecimento anormal. Aplicações: Painéis elétricos, motores, rolamentos, redutores, transformadores, inversores. Benefícios: Inspeção sem desligamento, detecção rápida e precisa, prevenção de incêndios.</li>
-                    <li><strong>Analisador de Vibração:</strong> Mede e interpreta vibrações, identificando desbalanceamento, desalinhamento, folgas, defeitos em rolamentos e engrenagens. Aplicações: Motores, bombas, redutores, compressores e ventiladores. Benefícios: Diagnóstico detalhado, redução de paradas, aumento da vida útil.</li>
-                    <li><strong>Ultrassom Industrial:</strong> Capta sons de alta frequência que indicam vazamentos, trincas ou falhas internas. Aplicações: Detecção de vazamentos em sistemas pneumáticos, hidráulicos, vapor e gases; Inspeção de rolamentos, válvulas e purgadores; Identificação de descargas parciais. Benefícios: Localização exata de vazamentos, inspeção eficiente e não invasiva, redução de perdas de energia.</li>
-                    <li><strong>Boroscópio (Câmera de Inspeção):</strong> Permite visualização interna de máquinas, motores, redutores, tubulações e outros componentes, sem desmontagem. Aplicações: Inspeção interna de engrenagens, mancais, motores, tanques e tubulações; Detecção de trincas, corrosão, desgaste; Avaliação de componentes em locais confinados. Benefícios: Redução de tempo e custo, diagnóstico visual preciso, maior assertividade.</li>
-                    <li><strong>Medidor de Espessura Ultrassônico:</strong> Mede a espessura de chapas, tubulações e estruturas metálicas, identificando corrosão interna ou desgaste. Aplicações: Vasos de pressão, tubulações, tanques e estruturas metálicas; Monitoramento de corrosão interna; Avaliação de perda de material. Benefícios: Inspeção sem acesso interno, identificação de redução de espessura, prevenção de falhas catastróficas.</li>
-                    <li><strong>Monitoramento Online (Sensores IoT):</strong> Sensores inteligentes monitoram parâmetros como vibração, temperatura e corrente elétrica, em tempo real. Aplicações: Motores, bombas, redutores, compressores e ventiladores; Monitoramento online da saúde dos ativos; Integração com sistemas de manutenção. Benefícios: Detecção de falhas em tempo real, alertas automáticos, aumento da disponibilidade.</li>
+                    <li><strong>Termografia:</strong> Detecta variações de temperatura, identificando pontos de aquecimento anormal. <b>Aplicações:</b> Painéis, motores, rolamentos, redutores, transformadores, inversores.</li>
+                    <li><strong>Analisador de Vibração:</strong> Mede e interpreta vibrações, identificando desbalanceamento, desalinhamento, folgas, defeitos em rolamentos e engrenagens.</li>
+                    <li><strong>Ultrassom Industrial:</strong> Capta sons de alta frequência que indicam vazamentos, trincas ou falhas internas. <b>Aplicações:</b> Sistemas pneumáticos, hidráulicos, vapor, rolamentos, válvulas.</li>
+                    <li><strong>Boroscópio (Câmera de Inspeção):</strong> Permite visualização interna de máquinas e tubulações sem desmontagem. <b>Aplicações:</b> Engrenagens, mancais, motores, tanques, tubulações.</li>
+                    <li><strong>Medidor de Espessura Ultrassônico:</strong> Mede a espessura de chapas, tubulações e estruturas metálicas, identificando corrosão interna ou desgaste.</li>
+                    <li><strong>Monitoramento Online (Sensores IoT):</strong> Sensores inteligentes monitoram parâmetros em tempo real, permitindo detecção de falhas e alertas automáticos.</li>
                 </ul>
-                <p>O uso de ferramentas avançadas de inspeção não substitui a percepção humana, mas complementa e potencia o trabalho dos inspetores.</p>
+                <button class="btn-interativo" onclick="mostrarExemplo('exemplo8')">Ver Exemplo Prático</button>
+                <button class="btn-interativo" onclick="mostrarDica('dica8')">Dica Rápida</button>
+                <button class="btn-interativo" onclick="mostrarResumo('resumo8')">Mostrar Resumo</button>
+                <button class="btn-interativo" onclick="abrirQuizModulo(8)">Quiz do Módulo</button>
+                <div id="exemplo8" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Exemplo:</b> O uso de termografia em um painel elétrico identificou um ponto quente, evitando incêndio e parada de produção.</div>
+                <div id="dica8" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Dica:</b> Combine ferramentas avançadas com a inspeção sensitiva para obter diagnósticos mais precisos.</div>
+                <div id="resumo8" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Resumo:</b> Ferramentas avançadas potencializam a inspeção, mas não substituem a experiência e a percepção do inspetor.</div>
+                <div id="quiz-modulo-8" class="quiz-modulo" style="display:none;margin-top:1.5rem;">
+                    <h4>Quiz do Módulo 8</h4>
+                    <div id="quiz-m8-pergunta"></div>
+                    <div id="quiz-m8-opcoes"></div>
+                    <div id="quiz-m8-feedback"></div>
+                    <button id="quiz-m8-proxima" style="display:none;margin-top:1rem;">Próxima Pergunta</button>
+                </div>
             </section>
 
             <section id="module-9" class="module">
                 <h2>Módulo 9 — Desgaste, Lubrificação e Vida Útil de Componentes</h2>
                 <p>Todo componente mecânico possui um ciclo de vida. Entender como ocorre o desgaste, a importância da lubrificação e os fatores que afetam a vida útil é fundamental para quem trabalha com inspeção, manutenção e operação de máquinas industriais.</p>
+                <p><b>Por que estudar desgaste e lubrificação?</b> O desgaste é inevitável, mas pode ser controlado e retardado com práticas corretas de inspeção, lubrificação e manutenção.</p>
                 <ul>
-                    <li><strong>Como o Desgaste Acontece:</strong> O desgaste é um processo natural que ocorre sempre que há contato entre superfícies em movimento ou sob carga. Principais tipos: abrasivo, adesivo, por fadiga, corrosivo, erosivo.</li>
-                    <li><strong>Sinais Visíveis de Desgaste:</strong> Na inspeção, alguns sinais indicam desgaste: Superfícies riscadas; Mudança na coloração; Formação de cavidades; Aumento de folgas; Vibração e ruído anormal; Aquecimento excessivo.</li>
-                    <li><strong>Lubrificação — A Principal Defesa Contra o Desgaste:</strong> A lubrificação correta é a principal barreira para reduzir o atrito, minimizar o desgaste e controlar a temperatura. Funções: Reduzir atrito; Minimizar desgaste; Dissipar calor; Proteger contra corrosão; Selar contra contaminantes. Consequências da lubrificação inadequada: Desgaste acelerado; Aumento da temperatura; Formação de cavacos; Travamento de componentes; Quebra prematura.</li>
-                    <li><strong>Tipos de Lubrificação:</strong> Por graxa (rolamentos, mancais); Por óleo (redutores, motores); Automática; Manual.</li>
-                    <li><strong>Análise de Lubrificação — Identificando Problemas:</strong> A inspeção do lubrificante fornece informações valiosas sobre o desgaste interno. Sinais de problema: Partículas metálicas; Cor escura, cheiro forte ou queimado; Espuma no óleo; Alteração na viscosidade; Presença de água; Acúmulo de borras.</li>
-                    <li><strong>Vida Útil dos Componentes — Fatores que Influenciam:</strong> Qualidade da lubrificação; Condições operacionais; Contaminação; Alinhamento correto; Velocidade de operação; Qualidade dos materiais e fabricação.</li>
+                    <li><strong>Como o Desgaste Acontece:</strong> Contato entre superfícies em movimento ou sob carga. Tipos: abrasivo, adesivo, fadiga, corrosivo, erosivo.</li>
+                    <li><strong>Sinais Visíveis de Desgaste:</strong> Superfícies riscadas, mudança de cor, cavidades, folgas, vibração, ruído, aquecimento.</li>
+                    <li><strong>Lubrificação — A Principal Defesa:</strong> Reduz atrito, minimiza desgaste, dissipa calor, protege contra corrosão, sela contra contaminantes.</li>
+                    <li><strong>Tipos de Lubrificação:</strong> Graxa, óleo, automática, manual.</li>
+                    <li><strong>Análise de Lubrificação:</strong> Partículas metálicas, cor escura, cheiro forte, espuma, alteração de viscosidade, presença de água, borras.</li>
+                    <li><strong>Vida Útil dos Componentes:</strong> Influenciada por lubrificação, condições operacionais, contaminação, alinhamento, velocidade, qualidade dos materiais.</li>
                 </ul>
-                <p>O desgaste é inevitável, mas pode ser controlado e retardado com práticas corretas de inspeção, lubrificação e manutenção. A lubrificação é o maior aliado da manutenção preditiva e da longevidade dos ativos industriais.</p>
+                <button class="btn-interativo" onclick="mostrarExemplo('exemplo9')">Ver Exemplo Prático</button>
+                <button class="btn-interativo" onclick="mostrarDica('dica9')">Dica Rápida</button>
+                <button class="btn-interativo" onclick="mostrarResumo('resumo9')">Mostrar Resumo</button>
+                <button class="btn-interativo" onclick="abrirQuizModulo(9)">Quiz do Módulo</button>
+                <div id="exemplo9" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Exemplo:</b> A análise do óleo de um redutor revelou partículas metálicas, indicando desgaste interno e permitindo a troca antes da falha.</div>
+                <div id="dica9" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Dica:</b> Siga sempre o plano de lubrificação e utilize o lubrificante correto para cada aplicação.</div>
+                <div id="resumo9" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Resumo:</b> Lubrificação adequada e inspeção frequente aumentam a vida útil dos componentes e reduzem custos de manutenção.</div>
+                <div id="quiz-modulo-9" class="quiz-modulo" style="display:none;margin-top:1.5rem;">
+                    <h4>Quiz do Módulo 9</h4>
+                    <div id="quiz-m9-pergunta"></div>
+                    <div id="quiz-m9-opcoes"></div>
+                    <div id="quiz-m9-feedback"></div>
+                    <button id="quiz-m9-proxima" style="display:none;margin-top:1rem;">Próxima Pergunta</button>
+                </div>
             </section>
 
             <section id="module-10" class="module">
                 <h2>Módulo 10 — Inspeção em Sistemas Pneumáticos e Hidráulicos</h2>
-                <p>Sistemas pneumáticos e hidráulicos estão presentes em grande parte dos processos industriais. Ambos compartilham a necessidade de inspeção constante, pois pequenas falhas podem gerar perdas de eficiência, paradas e acidentes.</p>
+                <p>Sistemas pneumáticos e hidráulicos são fundamentais na indústria. Ambos exigem inspeção constante, pois pequenas falhas podem gerar perdas de eficiência, paradas e acidentes.</p>
+                <p><b>Por que inspecionar esses sistemas?</b> Vazamentos, contaminação e desgaste podem causar grandes prejuízos e riscos à segurança.</p>
                 <ul>
-                    <li><strong>Diferença Entre Sistemas Pneumáticos e Hidráulicos:</strong> Pneumática (ar comprimido, baixa pressão); Hidráulica (óleo pressurizado, alta força).</li>
-                    <li><strong>Inspeção em Sistemas Pneumáticos:</strong> Itens: Compressores, reservatórios, filtros, válvulas, cilindros, conexões. Falhas: Vazamentos, filtros saturados, reguladores desajustados, cilindros com vedação desgastada, acúmulo de água, ruído anormal. Identificação: Audição (vazamentos audíveis), Visão (rachaduras, tubos tortos), Toque (mangueiras ressecadas), Teste funcional. Impactos dos Vazamentos: Perda de eficiência, aumento do consumo de energia, redução da força, desgaste acelerado.</li>
-                    <li><strong>Inspeção em Sistemas Hidráulicos:</strong> Itens: Bombas, válvulas, cilindros, mangueiras, reservatório, filtros. Falhas: Vazamento de óleo, contaminação do óleo, superaquecimento, pressão abaixo, golpes hidráulicos, cilindros travando, ruídos anormais. Identificação: Visão (óleo pingando, manchas, bolhas), Audição (cavitação, batidas), Toque (mangueiras quentes), Termografia (pontos quentes), Análise do óleo. Efeitos da Contaminação: Perda de eficiência, desgaste acelerado, aumento da temperatura, travamentos, risco ambiental.</li>
+                    <li><strong>Diferença:</strong> Pneumática usa ar comprimido (baixa pressão), hidráulica usa óleo pressurizado (alta força).</li>
+                    <li><strong>Inspeção em Sistemas Pneumáticos:</strong> Compressores, reservatórios, filtros, válvulas, cilindros, conexões. Falhas: Vazamentos, filtros saturados, reguladores desajustados, cilindros desgastados, acúmulo de água, ruído. <b>Impactos:</b> Perda de eficiência, aumento do consumo, redução de força, desgaste acelerado.</li>
+                    <li><strong>Inspeção em Sistemas Hidráulicos:</strong> Bombas, válvulas, cilindros, mangueiras, reservatório, filtros. Falhas: Vazamento de óleo, contaminação, superaquecimento, pressão baixa, golpes hidráulicos, cilindros travando, ruídos. <b>Impactos:</b> Perda de eficiência, desgaste, aumento de temperatura, travamentos, risco ambiental.</li>
                 </ul>
+                <button class="btn-interativo" onclick="mostrarExemplo('exemplo10')">Ver Exemplo Prático</button>
+                <button class="btn-interativo" onclick="mostrarDica('dica10')">Dica Rápida</button>
+                <button class="btn-interativo" onclick="mostrarResumo('resumo10')">Mostrar Resumo</button>
+                <button class="btn-interativo" onclick="abrirQuizModulo(10)">Quiz do Módulo</button>
+                <div id="exemplo10" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Exemplo:</b> Um vazamento de ar comprimido não identificado aumentou o consumo de energia do compressor em 20%.</div>
+                <div id="dica10" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Dica:</b> Use água com sabão para identificar vazamentos em conexões pneumáticas.</div>
+                <div id="resumo10" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Resumo:</b> Inspeção frequente em sistemas pneumáticos e hidráulicos evita perdas, acidentes e reduz custos de manutenção.</div>
+                <div id="quiz-modulo-10" class="quiz-modulo" style="display:none;margin-top:1.5rem;">
+                    <h4>Quiz do Módulo 10</h4>
+                    <div id="quiz-m10-pergunta"></div>
+                    <div id="quiz-m10-opcoes"></div>
+                    <div id="quiz-m10-feedback"></div>
+                    <button id="quiz-m10-proxima" style="display:none;margin-top:1rem;">Próxima Pergunta</button>
+                </div>
             </section>
 
             <section id="module-11" class="module">
                 <h2>Módulo 11 — Inspeção Estrutural e de Segurança</h2>
-                <p>A inspeção estrutural e de segurança é fundamental em qualquer ambiente industrial. Garante a integridade física de equipamentos e instalações, protege a vida dos trabalhadores e evita acidentes.</p>
+                <p>A inspeção estrutural e de segurança é fundamental em qualquer ambiente industrial. Garante a integridade física de equipamentos e instalações, protege a vida dos trabalhadores e evita acidentes. Uma inspeção eficiente vai além do visual: envolve análise detalhada, uso de instrumentos e conhecimento das normas técnicas.</p>
                 <ul>
-                    <li><strong>Itens Críticos na Inspeção Estrutural:</strong> Estruturas Metálicas e Suportes (colunas, vigas, plataformas). Principais falhas: Trincas, deformações, corrosão, parafusos frouxos. Sinais de alerta: Manchas de ferrugem, soldas com fissuras, estruturas vibrando.</li>
-                    <li><strong>Bases de Máquinas e Fundações:</strong> Itens: Bases metálicas, sapatas de concreto, blocos de fixação. Principais falhas: Trincas no concreto, desgaste por vibração, corrosão, deslocamento da máquina. Sinais de alerta: Vibração anormal, fissuras no concreto, parafusos com folga.</li>
-                    <li><strong>Tubulações, Tanques e Reservatórios:</strong> Itens: Tubulações de ar, vapor, água, óleo; Tanques de armazenamento, vasos de pressão. Principais falhas: Corrosão, vazamentos, trincas, deformações, afundamentos, suportes rompidos. Sinais de alerta: Vazamentos visíveis, superfícies enferrujadas, vibração excessiva.</li>
-                    <li><strong>Inspeção de Itens de Segurança:</strong> Proteções de Máquinas (grades, barreiras, sensores). Sinalização de Segurança (placas, faixas). Equipamentos de Proteção Coletiva (corrimãos, exaustores).</li>
+                    <li><strong>Itens Críticos na Inspeção Estrutural:</strong> Estruturas Metálicas e Suportes (colunas, vigas, plataformas). Principais falhas: Trincas, deformações, corrosão, parafusos frouxos. Sinais de alerta: Manchas de ferrugem, soldas com fissuras, estruturas vibrando. <br><i>Exemplo:</i> Uma viga com corrosão avançada pode perder sua capacidade de carga e causar colapso parcial da estrutura.</li>
+                    <li><strong>Bases de Máquinas e Fundações:</strong> Itens: Bases metálicas, sapatas de concreto, blocos de fixação. Principais falhas: Trincas no concreto, desgaste por vibração, corrosão, deslocamento da máquina. Sinais de alerta: Vibração anormal, fissuras no concreto, parafusos com folga. <br><i>Exemplo:</i> Uma base de motor com parafusos frouxos pode gerar vibração excessiva e acelerar o desgaste dos componentes.</li>
+                    <li><strong>Tubulações, Tanques e Reservatórios:</strong> Itens: Tubulações de ar, vapor, água, óleo; Tanques de armazenamento, vasos de pressão. Principais falhas: Corrosão, vazamentos, trincas, deformações, afundamentos, suportes rompidos. Sinais de alerta: Vazamentos visíveis, superfícies enferrujadas, vibração excessiva. <br><i>Exemplo:</i> Um pequeno vazamento em vaso de pressão pode indicar corrosão interna grave.</li>
+                    <li><strong>Inspeção de Itens de Segurança:</strong> Proteções de Máquinas (grades, barreiras, sensores). Sinalização de Segurança (placas, faixas). Equipamentos de Proteção Coletiva (corrimãos, exaustores). <br><i>Exemplo:</i> Uma grade de proteção ausente pode expor operadores a partes móveis perigosas.</li>
                 </ul>
-                <p>A inspeção estrutural e de segurança não é apenas uma exigência normativa, mas uma responsabilidade que garante a integridade das instalações, dos equipamentos e das pessoas.</p>
+                <button class="btn-interativo" onclick="mostrarExemplo('exemplo11')">Ver Exemplo Prático</button>
+                <button class="btn-interativo" onclick="mostrarDica('dica11')">Dica Rápida</button>
+                <button class="btn-interativo" onclick="mostrarResumo('resumo11')">Mostrar Resumo</button>
+                <button class="btn-interativo" onclick="abrirQuizModulo(11)">Quiz do Módulo</button>
+                <div id="exemplo11" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Exemplo:</b> Durante uma inspeção, o técnico percebe uma fissura em uma solda estrutural de uma plataforma elevada. A área é isolada imediatamente e a manutenção corretiva é programada, evitando risco de acidente grave.
+                </div>
+                <div id="dica11" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Dica:</b> Sempre utilize instrumentos de medição (trena, paquímetro, medidor de espessura) para avaliar deformações e corrosão. Não confie apenas no visual.</div>
+                <div id="resumo11" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Resumo:</b> A inspeção estrutural e de segurança previne acidentes, garante a integridade das instalações e protege vidas. Atenção aos detalhes e registros completos são essenciais.</div>
+                <div id="quiz-modulo-11" class="quiz-modulo" style="display:none;margin-top:1.5rem;">
+                    <h4>Quiz do Módulo 11</h4>
+                    <div id="quiz-m11-pergunta"></div>
+                    <div id="quiz-m11-opcoes"></div>
+                    <div id="quiz-m11-feedback"></div>
+                    <button id="quiz-m11-proxima" style="display:none;margin-top:1rem;">Próxima Pergunta</button>
+                </div>
             </section>
 
             <section id="module-12" class="module">
                 <h2>Módulo 12 — Plano de Inspeção e Melhoria Contínua</h2>
-                <p>A inspeção eficiente deve ser parte de um plano bem estruturado e contínuo. Ter um cronograma, procedimentos definidos e indicadores claros permite que a manutenção seja mais preventiva, preditiva e estratégica.</p>
+                <p>A inspeção eficiente deve ser parte de um plano bem estruturado e contínuo. Ter um cronograma, procedimentos definidos e indicadores claros permite que a manutenção seja mais preventiva, preditiva e estratégica. O plano de inspeção é um documento vivo, que deve ser revisado e aprimorado constantemente.</p>
                 <ul>
-                    <li><strong>O Que é um Plano de Inspeção:</strong> Documento estruturado que define: O que, com que frequência, quem é o responsável, quais critérios, quais ferramentas, padrões de aceitação/rejeição.</li>
-                    <li><strong>Como Montar um Plano de Inspeção:</strong> 1. Levantamento dos Ativos; 2. Definição dos Itens a Inspecionar (mecânicos, elétricos, auxiliares); 3. Frequência das Inspeções (Diária, Semanal, Mensal, Trimestral/Anual); 4. Criação de Checklists; 5. Definição dos Responsáveis; 6. Ferramentas e Recursos.</li>
-                    <li><strong>Registro e Documentação:</strong> Importância: Histórico, tomada de decisões, detecção de tendências. Formas: Fichas manuais, planilhas digitais, softwares. O que registrar: Data, inspetor, itens, condição, ações.</li>
-                    <li><strong>Indicadores de Desempenho da Inspeção:</strong> Número de falhas detectadas, MTBF, MTTR, cumprimento do plano, evolução da condição dos ativos.</li>
-                    <li><strong>Melhoria Contínua na Inspeção:</strong> Como aplicar: Revisar planos, incluir novos pontos, aperfeiçoar checklists, usar dados para eliminar causas, capacitar equipe. Ferramentas: Análise de falha (RCA), PDCA, Kaizen, 5W2H.</li>
-                    <li><strong>Cultura da Inspeção:</strong> Não apenas responsabilidade da manutenção. Operadores treinados. Zelo, cuidado e compromisso com a segurança.</li>
+                    <li><strong>O Que é um Plano de Inspeção:</strong> Documento estruturado que define: O que, com que frequência, quem é o responsável, quais critérios, quais ferramentas, padrões de aceitação/rejeição. <br><i>Exemplo:</i> Plano mensal de inspeção de motores elétricos, com checklist detalhado e responsáveis definidos.</li>
+                    <li><strong>Como Montar um Plano de Inspeção:</strong> 1. Levantamento dos Ativos; 2. Definição dos Itens a Inspecionar (mecânicos, elétricos, auxiliares); 3. Frequência das Inspeções (Diária, Semanal, Mensal, Trimestral/Anual); 4. Criação de Checklists; 5. Definição dos Responsáveis; 6. Ferramentas e Recursos. <br><i>Exemplo:</i> Checklist digital para inspeção semanal de compressores, com fotos e campos obrigatórios.</li>
+                    <li><strong>Registro e Documentação:</strong> Importância: Histórico, tomada de decisões, detecção de tendências. Formas: Fichas manuais, planilhas digitais, softwares. O que registrar: Data, inspetor, itens, condição, ações. <br><i>Exemplo:</i> Uso de QR Code nas máquinas para acesso rápido ao histórico de inspeções.</li>
+                    <li><strong>Indicadores de Desempenho da Inspeção:</strong> Número de falhas detectadas, MTBF, MTTR, cumprimento do plano, evolução da condição dos ativos. <br><i>Exemplo:</i> Gráfico de falhas detectadas por mês, mostrando a evolução da confiabilidade dos equipamentos.</li>
+                    <li><strong>Melhoria Contínua na Inspeção:</strong> Como aplicar: Revisar planos, incluir novos pontos, aperfeiçoar checklists, usar dados para eliminar causas, capacitar equipe. Ferramentas: Análise de falha (RCA), PDCA, Kaizen, 5W2H. <br><i>Exemplo:</i> Após análise de falha recorrente, o checklist é atualizado para incluir novo item de verificação.</li>
+                    <li><strong>Cultura da Inspeção:</strong> Não apenas responsabilidade da manutenção. Operadores treinados. Zelo, cuidado e compromisso com a segurança. <br><i>Exemplo:</i> Programa de treinamento contínuo para operadores e técnicos sobre inspeção e segurança.</li>
                 </ul>
-                <p>Ter um plano de inspeção estruturado é essencial para garantir a confiabilidade dos ativos e aumentar a disponibilidade operacional.</p>
+                <button class="btn-interativo" onclick="mostrarExemplo('exemplo12')">Ver Exemplo Prático</button>
+                <button class="btn-interativo" onclick="mostrarDica('dica12')">Dica Rápida</button>
+                <button class="btn-interativo" onclick="mostrarResumo('resumo12')">Mostrar Resumo</button>
+                <button class="btn-interativo" onclick="abrirQuizModulo(12)">Quiz do Módulo</button>
+                <div id="exemplo12" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Exemplo:</b> Uma empresa implementa um plano de inspeção digital, com checklist em tablets. O número de falhas não detectadas cai drasticamente e a disponibilidade dos equipamentos aumenta.</div>
+                <div id="dica12" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Dica:</b> Revise periodicamente o plano de inspeção. Sempre que uma falha não prevista ocorrer, atualize o checklist e compartilhe o aprendizado com a equipe.</div>
+                <div id="resumo12" class="box-interativo" style="display:none;margin-top:1rem;">
+                    <b>Resumo:</b> O plano de inspeção é a base da confiabilidade industrial. Melhoria contínua, registro detalhado e cultura de inspeção garantem ativos mais seguros e produtivos.</div>
+                <div id="quiz-modulo-12" class="quiz-modulo" style="display:none;margin-top:1.5rem;">
+                    <h4>Quiz do Módulo 12</h4>
+                    <div id="quiz-m12-pergunta"></div>
+                    <div id="quiz-m12-opcoes"></div>
+                    <div id="quiz-m12-feedback"></div>
+                    <button id="quiz-m12-proxima" style="display:none;margin-top:1rem;">Próxima Pergunta</button>
+                </div>
             </section>
             
             <section id="module-13" class="module">
