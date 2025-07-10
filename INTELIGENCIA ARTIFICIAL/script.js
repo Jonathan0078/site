@@ -294,7 +294,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- Configuração Dinâmica da URL do Backend ---
     const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-    const BACKEND_URL = isLocal ? "http://127.0.0.1:5000" : "https://aemi.onrender.com";
+    const isReplit = window.location.hostname.includes("replit");
+    const isRender = window.location.hostname.includes("onrender.com");
+    
+    let BACKEND_URL;
+    if (isLocal) {
+        BACKEND_URL = "http://127.0.0.1:5000";
+    } else if (isReplit) {
+        BACKEND_URL = window.location.origin;
+    } else if (isRender) {
+        BACKEND_URL = window.location.origin;
+    } else {
+        // Para GitHub Pages ou outros
+        BACKEND_URL = "https://aemi.onrender.com";
+    }
+    
     const API_URL_CHAT = `${BACKEND_URL}/chat`;
     const API_URL_CLEAR = `${BACKEND_URL}/clear-session`;
     const API_URL_UPLOAD = `${BACKEND_URL}/upload-file`;
