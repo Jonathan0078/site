@@ -1,12 +1,7 @@
 Flask
 Flask-Cors
 requests
-duckduckgo_search
 python-dotenv
-PyPDF2
-python-docx
-Pillow
-beautifulsoup4
 huggingface-hub
 transformers
 torch
@@ -33,6 +28,4 @@ charset-normalizer
 idna
 urllib3
 certifi
-# Novos para OCR e PDF avançado
-pdfplumber
-pytesseract
+# Dependências removidas: duckduckgo_search, PyPDF2, python-docx, Pillow, beautifulsoup4, pdfplumber, pytesseract
