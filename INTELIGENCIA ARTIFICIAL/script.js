@@ -219,9 +219,215 @@ document.querySelectorAll('.suggestion-btn').forEach(btn => {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    // ==================================================
-    // INÍCIO: MENU LATERAL (SIDEBAR) - BOTÃO SEMPRE AO LADO DO MODO NOTURNO
-    // ==================================================
+    // ===================
+    // PRÉVIA DE IMAGEM E ENVIO DE ARQUIVO COM TEXTO
+    // ===================
+    // Elementos extras para prévia e texto do arquivo
+    const chatInput = document.querySelector(".chat-input textarea");
+    const sendChatBtn = document.querySelector("#send-btn");
+    const chatbox = document.querySelector(".chatbox");
+    const clearChatBtn = document.querySelector("#clear-btn");
+    const convsList = document.getElementById("convs-list");
+    const newConvBtn = document.getElementById("new-conv-btn");
+    const fileInput = document.getElementById("file-input");
+    const fileBtn = document.getElementById("file-btn");
+
+    // Adiciona área de prévia se não existir (sem textarea, só preview e botão X)
+    let previewArea = document.getElementById('file-preview-area');
+    if (!previewArea) {
+        previewArea = document.createElement('div');
+        previewArea.id = 'file-preview-area';
+        previewArea.style.display = 'none';
+        previewArea.style.margin = '8px 0';
+        previewArea.innerHTML = `
+            <div id="file-preview-content" style="position:relative;"></div>
+        `;
+        // Insere a prévia logo acima do campo de texto do chat
+        const chatInputBox = chatInput.parentNode;
+        chatInputBox.insertBefore(previewArea, chatInput);
+    }
+
+    // Função para mostrar prévia
+    function showFilePreview(file) {
+        const content = document.getElementById('file-preview-content');
+        if (!content) return;
+        content.innerHTML = '';
+        if (file) {
+            const ext = file.name.split('.').pop().toLowerCase();
+            // Botão X para cancelar
+            const closeBtn = document.createElement('button');
+            closeBtn.innerHTML = '<span style="font-size:1.3em;line-height:1;color:#fff;background:#d32f2f;border-radius:50%;padding:0 7px;">×</span>';
+            closeBtn.id = 'file-cancel-btn';
+            closeBtn.style.position = 'absolute';
+            closeBtn.style.top = '2px';
+            closeBtn.style.right = '2px';
+            closeBtn.style.background = 'transparent';
+            closeBtn.style.border = 'none';
+            closeBtn.style.cursor = 'pointer';
+            closeBtn.style.zIndex = '10';
+            closeBtn.title = 'Cancelar';
+            closeBtn.onclick = hideFilePreview;
+            content.appendChild(closeBtn);
+            if (["jpg","jpeg","png","gif","bmp","webp"].includes(ext)) {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.style.maxWidth = '120px';
+                img.style.maxHeight = '120px';
+                img.style.display = 'block';
+                img.style.marginBottom = '6px';
+                img.style.borderRadius = '8px';
+                img.style.boxShadow = '0 2px 8px rgba(0,0,0,0.12)';
+                content.appendChild(img);
+            } else {
+                const fileDiv = document.createElement('div');
+                fileDiv.textContent = `Arquivo: ${file.name}`;
+                fileDiv.style.padding = '12px 16px 12px 12px';
+                fileDiv.style.background = '#f5f5f5';
+                fileDiv.style.borderRadius = '8px';
+                fileDiv.style.marginBottom = '6px';
+                fileDiv.style.fontWeight = '600';
+                fileDiv.style.color = '#333';
+                content.appendChild(fileDiv);
+            }
+        }
+        previewArea.style.display = '';
+    }
+
+    // Função para esconder prévia
+    function hideFilePreview() {
+        previewArea.style.display = 'none';
+        document.getElementById('file-preview-content').innerHTML = '';
+        fileInput.value = '';
+    }
+
+    // Substitui handleFileUpload para usar texto adicional
+    function handleFileUploadWithText(file, extraText) {
+        const formData = new FormData();
+        formData.append('file', file);
+        if (extraText && extraText.trim()) formData.append('text', extraText.trim());
+        const fileExt = file.name.split('.').pop().toLowerCase();
+        const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileExt);
+        const isDocument = ['pdf', 'doc', 'docx', 'txt', 'md', 'csv'].includes(fileExt);
+        let fileIcon = '📎';
+        if (isImage) fileIcon = '📸';
+        else if (isDocument) fileIcon = '📄';
+        let userMessage = `${fileIcon} Arquivo enviado: ${file.name}`;
+        if (extraText && extraText.trim()) userMessage += `\n📝 ${extraText.trim()}`;
+        if(chatbox) {
+            chatbox.appendChild(createChatLi(userMessage, "outgoing"));
+            chatbox.scrollTo(0, chatbox.scrollHeight);
+        }
+        const incomingChatLi = createChatLi("typing", "incoming");
+        const pElement = incomingChatLi.querySelector("p");
+        let analysisText = "Analisando arquivo...";
+        if (isImage) analysisText = "Analisando imagem...";
+        else if (fileExt === 'pdf') analysisText = "Processando PDF...";
+        else if (fileExt === 'docx') analysisText = "Processando documento...";
+        if(pElement) {
+            pElement.textContent = analysisText;
+            pElement.classList.add("typing-animation");
+        }
+        if(chatbox) {
+            chatbox.appendChild(incomingChatLi);
+            chatbox.scrollTo(0, chatbox.scrollHeight);
+        }
+        chatInput.disabled = true;
+        sendChatBtn.disabled = true;
+        sendChatBtn.innerHTML = '<span class="material-symbols-outlined" style="background:#d32f2f;color:#fff;border-radius:6px;padding:4px 10px;font-size:1.3em;vertical-align:middle;">stop</span>';
+        let interrupted = false;
+        sendChatBtn.onclick = function() {
+            interrupted = true;
+            if(pElement) {
+                pElement.classList.remove("typing-animation");
+                pElement.textContent = "[Resposta interrompida pelo usuário.]";
+            }
+            chatInput.disabled = false;
+            sendChatBtn.disabled = false;
+            sendChatBtn.innerHTML = '<span class="material-symbols-outlined">send</span>';
+            sendChatBtn.onclick = handleChat;
+        };
+        fetch(API_URL_UPLOAD, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            if (interrupted) return;
+            if(pElement) {
+                pElement.classList.remove("typing-animation");
+                pElement.textContent = "";
+                if (data.response) {
+                    // Se a resposta for genérica, mostre um aviso
+                    if (/ARQUIVO RECEBIDO, NO QUE POSSO AJUDAR|ARQUIVO RECEBIDO|NO QUE POSSO AJUDAR|ARQUIVO PROCESSADO COM SUCESSO/i.test(data.response.trim())) {
+                        pElement.textContent = "⚠️ O backend retornou uma resposta genérica. Peça ao administrador para revisar a análise automática do arquivo.";
+                    } else {
+                        typeText(pElement, data.response);
+                    }
+                } else if (data.error) {
+                    pElement.textContent = `❌ Erro: ${data.error}`;
+                } else {
+                    pElement.textContent = "Arquivo processado com sucesso!";
+                }
+            }
+            if (isVoiceOutputEnabled && data.response) speakText(data.response);
+        })
+        .catch(error => {
+            if (interrupted) return;
+            console.error('Erro no upload:', error);
+            if(pElement) {
+                pElement.classList.remove("typing-animation");
+                pElement.textContent = "❌ Erro ao processar arquivo. Verifique se o formato é suportado e tente novamente.";
+            }
+        })
+        .finally(() => {
+            if (interrupted) return;
+            if(chatbox) chatbox.scrollTo(0, chatbox.scrollHeight);
+            saveCurrentConv();
+            chatInput.disabled = false;
+            sendChatBtn.disabled = false;
+            sendChatBtn.textContent = '';
+            const icon = document.createElement('span');
+            icon.className = 'material-symbols-outlined';
+            icon.textContent = 'send';
+            sendChatBtn.appendChild(icon);
+            sendChatBtn.onclick = handleChat;
+        });
+    }
+
+    // Eventos para upload de arquivo
+    if(fileBtn && fileInput) {
+        fileBtn.addEventListener("click", () => {
+            fileInput.click();
+        });
+        fileInput.addEventListener("change", (e) => {
+            const file = e.target.files[0];
+            if(file) {
+                showFilePreview(file);
+            }
+        });
+    }
+    // Substitui o evento do botão de enviar do chat para lidar com arquivo ou texto
+    if(sendChatBtn) {
+        sendChatBtn.addEventListener('click', function() {
+            const file = fileInput.files[0];
+            const extraText = chatInput.value;
+            if (previewArea.style.display !== 'none' && file) {
+                hideFilePreview();
+                handleFileUploadWithText(file, extraText);
+                chatInput.value = '';
+            } else {
+                handleChat();
+            }
+        });
+    }
+
+    // ===================
+    // FIM PRÉVIA DE IMAGEM E ENVIO DE ARQUIVO COM TEXTO
+    // ===================
+
     const sideMenu = document.getElementById("side-menu");
     const openMenuBtn = document.getElementById("open-menu-btn");
     const menuOverlay = document.getElementById("menu-overlay");
@@ -286,14 +492,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // ==================================================
 
     // --- Seletores do DOM (Restante do código) ---
-    const chatInput = document.querySelector(".chat-input textarea");
-    const sendChatBtn = document.querySelector("#send-btn");
-    const chatbox = document.querySelector(".chatbox");
-    const clearChatBtn = document.querySelector("#clear-btn");
-    const convsList = document.getElementById("convs-list");
-    const newConvBtn = document.getElementById("new-conv-btn");
-    const fileInput = document.getElementById("file-input");
-    const fileBtn = document.getElementById("file-btn");
+    // ...existing code...
 
     // --- Configuração Dinâmica da URL do Backend ---
     // Sempre usar a API do Render para garantir funcionamento ao abrir o HTML localmente
@@ -493,88 +692,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // --- Upload de Arquivo ---
-    const handleFileUpload = (file) => {
-        const formData = new FormData();
-        formData.append('file', file);
-
-        // Determina o tipo de arquivo
-        const fileExt = file.name.split('.').pop().toLowerCase();
-        const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileExt);
-        const isDocument = ['pdf', 'doc', 'docx', 'txt', 'md', 'csv'].includes(fileExt);
-        
-        // Adiciona mensagem do usuário com ícone apropriado
-        let fileIcon = '📎';
-        if (isImage) fileIcon = '📸';
-        else if (isDocument) fileIcon = '📄';
-        
-        const userMessage = `${fileIcon} Arquivo enviado: ${file.name}`;
-        if(chatbox) {
-            chatbox.appendChild(createChatLi(userMessage, "outgoing"));
-            chatbox.scrollTo(0, chatbox.scrollHeight);
-        }
-
-        // Cria mensagem de "analisando arquivo" com texto personalizado
-        const incomingChatLi = createChatLi("typing", "incoming");
-        const pElement = incomingChatLi.querySelector("p");
-        
-        let analysisText = "Analisando arquivo...";
-        if (isImage) analysisText = "Analisando imagem...";
-        else if (fileExt === 'pdf') analysisText = "Processando PDF...";
-        else if (fileExt === 'docx') analysisText = "Processando documento...";
-        
-        if(pElement) {
-            pElement.textContent = analysisText;
-            pElement.classList.add("typing-animation");
-        }
-
-        if(chatbox) {
-            chatbox.appendChild(incomingChatLi);
-            chatbox.scrollTo(0, chatbox.scrollHeight);
-        }
-
-        // Envia arquivo para análise
-        fetch(API_URL_UPLOAD, {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            if(pElement) {
-                pElement.classList.remove("typing-animation");
-                pElement.textContent = "";
-                
-                if (data.response) {
-                    typeText(pElement, data.response);
-                } else if (data.error) {
-                    pElement.textContent = `❌ Erro: ${data.error}`;
-                } else {
-                    pElement.textContent = "Arquivo processado com sucesso!";
-                }
-            }
-
-            if (isVoiceOutputEnabled && data.response) {
-                speakText(data.response);
-            }
-        })
-        .catch(error => {
-            console.error('Erro no upload:', error);
-            if(pElement) {
-                pElement.classList.remove("typing-animation");
-                pElement.textContent = "❌ Erro ao processar arquivo. Verifique se o formato é suportado e tente novamente.";
-            }
-        })
-        .finally(() => {
-            if(chatbox) {
-                chatbox.scrollTo(0, chatbox.scrollHeight);
-            }
-            saveCurrentConv();
-        });
-    };
+    // ...substituído por handleFileUploadWithText...
 
     // --- Envio de Mensagem e Resposta ---
     const generateResponse = (incomingChatLi) => {
@@ -615,14 +733,28 @@ document.addEventListener("DOMContentLoaded", () => {
     const handleChat = () => {
         if(!chatInput) return;
         userMessage = chatInput.value.trim();
-        const lowerCaseMessage = userMessage.toLowerCase(); // Converte para minúsculas para comparação
-
+        const lowerCaseMessage = userMessage.toLowerCase();
         if (!lowerCaseMessage) return;
-
         chatInput.value = "";
-        // chatInput.disabled = true; // Removido para permitir digitação enquanto a IA responde
-        // sendChatBtn.disabled = true; // Removido para permitir digitação enquanto a IA responde
-
+        // Bloqueia input e botão de enviar enquanto a IA digita
+        chatInput.disabled = true;
+        sendChatBtn.disabled = true;
+        sendChatBtn.innerHTML = '<span class="material-symbols-outlined" style="background:#d32f2f;color:#fff;border-radius:6px;padding:4px 10px;font-size:1.3em;vertical-align:middle;">stop</span>';
+        let interrupted = false;
+        // Permite interromper
+        sendChatBtn.onclick = function() {
+            interrupted = true;
+            // Remove animação e mostra mensagem de interrupção
+            const lastIncoming = chatbox.querySelector("li.incoming:last-child p");
+            if (lastIncoming) {
+                lastIncoming.classList.remove("typing-animation");
+                lastIncoming.textContent = "[Resposta interrompida pelo usuário.]";
+            }
+            chatInput.disabled = false;
+            sendChatBtn.disabled = false;
+            sendChatBtn.innerHTML = '<span class="material-symbols-outlined">send</span>';
+            sendChatBtn.onclick = handleChat;
+        };
         // Verifica se é um comando de voz ou uma mensagem normal
         if (lowerCaseMessage === "ativar voz") {
             isVoiceOutputEnabled = true;
@@ -631,8 +763,14 @@ document.addEventListener("DOMContentLoaded", () => {
                  chatbox.appendChild(createChatLi("Síntese de voz ativada.", "incoming"));
                  chatbox.scrollTo(0, chatbox.scrollHeight);
             }
-            chatInput.disabled = false; // Reabilita o input após o comando
-            sendChatBtn.disabled = false; // Reabilita o botão de enviar após o comando
+            chatInput.disabled = false;
+            sendChatBtn.disabled = false;
+            sendChatBtn.textContent = '';
+            const icon = document.createElement('span');
+            icon.className = 'material-symbols-outlined';
+            icon.textContent = 'send';
+            sendChatBtn.appendChild(icon);
+            sendChatBtn.onclick = handleChat;
         } else if (lowerCaseMessage === "desativar voz") {
             isVoiceOutputEnabled = false;
              if(chatbox) {
@@ -640,24 +778,66 @@ document.addEventListener("DOMContentLoaded", () => {
                  chatbox.appendChild(createChatLi("Síntese de voz desativada.", "incoming"));
                  chatbox.scrollTo(0, chatbox.scrollHeight);
              }
-            chatInput.disabled = false; // Reabilita o input após o comando
-            sendChatBtn.disabled = false; // Reabilita o botão de enviar após o comando
+            chatInput.disabled = false;
+            sendChatBtn.disabled = false;
+            sendChatBtn.textContent = '';
+            const icon = document.createElement('span');
+            icon.className = 'material-symbols-outlined';
+            icon.textContent = 'send';
+            sendChatBtn.appendChild(icon);
+            sendChatBtn.onclick = handleChat;
         } else {
-            // Se não for comando de voz, continua com a lógica normal
             if(chatbox) {
                 chatbox.appendChild(createChatLi(userMessage, "outgoing"));
                 chatbox.scrollTo(0, chatbox.scrollHeight);
-                // Cria a mensagem de "typing" antes de chamar generateResponse
                 const incomingChatLi = createChatLi("typing", "incoming");
-            setTimeout(() => {
-                chatbox.appendChild(incomingChatLi);
-                chatbox.scrollTo(0, chatbox.scrollHeight);
-                generateResponse(incomingChatLi);
-            }, 600);
+                setTimeout(() => {
+                    if (interrupted) return;
+                    chatbox.appendChild(incomingChatLi);
+                    chatbox.scrollTo(0, chatbox.scrollHeight);
+                    // Modifica generateResponse para respeitar interrupção
+                    const requestOptions = {
+                        method: "POST",
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: new URLSearchParams({ message: userMessage })
+                    };
+                    const pElement = incomingChatLi.querySelector("p") || document.createElement("p");
+                    if(!incomingChatLi.querySelector("p")){
+                        incomingChatLi.appendChild(pElement);
+                    }
+                    pElement.textContent = "";
+                    pElement.classList.add("typing-animation");
+                    fetch(API_URL_CHAT, requestOptions)
+                        .then(res => res.ok ? res.json() : Promise.reject(res))
+                        .then(data => {
+                            if (interrupted) return;
+                            pElement.classList.remove("typing-animation");
+                            pElement.textContent = "";
+                            typeText(pElement, data.response);
+                            if (isVoiceOutputEnabled) speakText(data.response);
+                        })
+                        .catch(() => {
+                            if (interrupted) return;
+                            pElement.classList.remove("typing-animation");
+                            pElement.textContent = "[Erro ao obter resposta da IA]";
+                        })
+                        .finally(() => {
+                            if (interrupted) return;
+                            chatInput.disabled = false;
+                            sendChatBtn.disabled = false;
+                            sendChatBtn.textContent = '';
+                            const icon = document.createElement('span');
+                            icon.className = 'material-symbols-outlined';
+                            icon.textContent = 'send';
+                            sendChatBtn.appendChild(icon);
+                            sendChatBtn.onclick = handleChat;
+                            chatbox.scrollTop = chatbox.scrollHeight;
+                        });
+                }, 600);
+            }
+            saveCurrentConv();
         }
-        saveCurrentConv();
     };
-    }
 
     // --- Limpar Chat ---
     const clearChat = () => {

@@ -941,13 +941,33 @@ def upload_file():
             os.remove(temp_path)
         except:
             pass
-        
+
+        # Monta prompt para IA
+        user_text = request.form.get('text', '').strip() if 'text' in request.form else ''
+        file_data = session.get('uploaded_file_content', {})
+        file_name = file_data.get('filename', file.filename)
+        file_type = file_data.get('type', ext)
+        file_content = file_data.get('content', '')
+        analysis_type = file_data.get('analysis_type', 'text')
+
+        if analysis_type == 'visual':
+            prompt = f"""Como A.E.M.I, especialista em manutenção industrial, analise esta imagem enviada pelo usuário{f' com o comentário: {user_text}' if user_text else ''} e forneça um resumo ou insights relevantes.\n\n📸 Arquivo: {file_name}\n🔍 Análise Visual e OCR:\n{file_content}"""
+        else:
+            prompt = f"""Como A.E.M.I, especialista em manutenção industrial, analise este documento enviado pelo usuário{f' com o comentário: {user_text}' if user_text else ''} e forneça um resumo ou insights relevantes.\n\n📄 Documento: {file_name} (tipo: {file_type})\n\nConteúdo extraído:\n{file_content}"""
+
+        chat_history = [
+            {"role": "system", "content": "Você é A.E.M.I, uma IA especialista em manutenção industrial, análise de documentos técnicos e imagens."},
+            {"role": "user", "content": prompt}
+        ]
+        bot_response = generate_chat_response(chat_history)
+        # Se a resposta da IA for genérica, force um aviso para o usuário
+        if bot_response and re.search(r'ARQUIVO RECEBIDO|NO QUE POSSO AJUDAR|ARQUIVO PROCESSADO COM SUCESSO', bot_response, re.I):
+            bot_response = "[Atenção: a IA retornou uma resposta genérica. O modelo pode não estar processando corretamente o conteúdo do arquivo. Por favor, revise o backend ou o prompt enviado à IA.]"
         return jsonify({
-            'response': response_text,
-            'filename': file.filename,
-            'file_type': ext
+            'response': bot_response,
+            'filename': file_name,
+            'file_type': file_type
         })
-    
     except Exception as e:
         print(f"Erro no upload de arquivo: {e}")
         return jsonify({'error': 'Erro ao processar arquivo'}), 500
