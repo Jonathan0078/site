@@ -33,3 +33,6 @@ charset-normalizer
 idna
 urllib3
 certifi
+# Novos para OCR e PDF avançado
+pdfplumber
+pytesseract

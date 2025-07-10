@@ -20,6 +20,15 @@ try:
     from bs4 import BeautifulSoup
 except ImportError:
     BeautifulSoup = None
+# Novos imports para OCR e PDF avançado
+try:
+    import pdfplumber
+except ImportError:
+    pdfplumber = None
+try:
+    import pytesseract
+except ImportError:
+    pytesseract = None
 from flask import Flask, request, jsonify, send_from_directory, session
 from flask_cors import CORS
 try:
@@ -820,50 +829,64 @@ def upload_file():
         # Verifica se é imagem
         if ext in ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']:
             response_text = "📸 **ARQUIVO RECEBIDO, NO QUE POSSO AJUDAR?**"
-            
+            visual_analysis = None
+            ocr_text = None
             # Análise visual da imagem
             try:
                 visual_analysis = analyze_image(temp_path)
-                if visual_analysis:
-                    # Salva análise na sessão
-                    session['uploaded_file_content'] = {
-                        'filename': file.filename,
-                        'type': 'image',
-                        'content': visual_analysis,
-                        'analysis_type': 'visual'
-                    }
-                    session.modified = True
             except Exception as e:
                 print(f"Erro na análise visual: {e}")
+            # OCR (leitura de texto na imagem)
+            try:
+                if pytesseract:
+                    img = Image.open(temp_path)
+                    ocr_text = pytesseract.image_to_string(img, lang='por')
+            except Exception as e:
+                print(f"Erro no OCR da imagem: {e}")
+            # Salva análise na sessão
+            session['uploaded_file_content'] = {
+                'filename': file.filename,
+                'type': 'image',
+                'content': (visual_analysis or '') + (f"\n\n📝 **Texto extraído por OCR:**\n{ocr_text}" if ocr_text and ocr_text.strip() else ''),
+                'analysis_type': 'visual'
+            }
+            session.modified = True
         
         # Verifica se é PDF
-        elif ext == '.pdf' and PyPDF2:
+        elif ext == '.pdf' and (PyPDF2 or pdfplumber):
             response_text = "📄 **ARQUIVO RECEBIDO, NO QUE POSSO AJUDAR?**"
-            
-            try:
-                with open(temp_path, 'rb') as f:
-                    reader = PyPDF2.PdfReader(f)
-                    text_content = ""
-                    
-                    # Extrai texto de até 15 páginas
-                    pages_to_read = min(15, len(reader.pages))
-                    for i in range(pages_to_read):
-                        try:
-                            page_text = reader.pages[i].extract_text() or ''
-                            text_content += f"\n--- Página {i+1} ---\n{page_text}"
-                        except:
-                            continue
-                    
-                    # Salva na sessão
-                    session['uploaded_file_content'] = {
-                        'filename': file.filename,
-                        'type': 'pdf',
-                        'content': text_content[:15000],  # Aumenta limite
-                        'analysis_type': 'text'
-                    }
-                    session.modified = True
-            except Exception as e:
-                print(f"Erro ao processar PDF: {e}")
+            text_content = ""
+            # Tenta PyPDF2 primeiro
+            if PyPDF2:
+                try:
+                    with open(temp_path, 'rb') as f:
+                        reader = PyPDF2.PdfReader(f)
+                        pages_to_read = min(15, len(reader.pages))
+                        for i in range(pages_to_read):
+                            try:
+                                page_text = reader.pages[i].extract_text() or ''
+                                text_content += f"\n--- Página {i+1} ---\n{page_text}"
+                            except:
+                                continue
+                except Exception as e:
+                    print(f"Erro ao processar PDF com PyPDF2: {e}")
+            # Se falhar ou não extrair nada, tenta pdfplumber
+            if not text_content.strip() and pdfplumber:
+                try:
+                    with pdfplumber.open(temp_path) as pdf:
+                        for i, page in enumerate(pdf.pages[:15]):
+                            page_text = page.extract_text() or ''
+                            text_content += f"\n--- Página {i+1} (plumber) ---\n{page_text}"
+                except Exception as e:
+                    print(f"Erro ao processar PDF com pdfplumber: {e}")
+            # Salva na sessão
+            session['uploaded_file_content'] = {
+                'filename': file.filename,
+                'type': 'pdf',
+                'content': text_content[:15000],
+                'analysis_type': 'text'
+            }
+            session.modified = True
         
         # Verifica se é documento Word
         elif ext in ['.docx'] and docx:
@@ -979,6 +1002,86 @@ def clear_session():
     except Exception as e:
         print(f"Erro ao limpar sessão: {e}")
         return jsonify({"error": "Erro ao limpar sessão"}), 500
+
+
+
+# --- NEWSLETTER AUTOMÁTICA ---
+@app.route('/newsletter/atualizar', methods=['POST'])
+def atualizar_newsletter():
+    """Atualiza automaticamente a newsletter com notícias de engenharia/manutenção industrial."""
+    try:
+        # 1. Busca notícias na internet
+        termos = [
+            'notícias manutenção industrial',
+            'novidades engenharia industrial',
+            'tendências manutenção preditiva',
+            'tecnologia manutenção industrial',
+            'inovação engenharia manutenção',
+        ]
+        noticias = []
+        for termo in termos:
+            resultado = search_internet(termo, max_results=2)
+            if 'results' in resultado:
+                noticias.extend(resultado['results'])
+
+        # Remove duplicatas por URL
+        urls_vistas = set()
+        noticias_unicas = []
+        for n in noticias:
+            if n['url'] not in urls_vistas:
+                noticias_unicas.append(n)
+                urls_vistas.add(n['url'])
+
+        # 2. Gera resumos usando IA (se disponível)
+        client = get_text_client()
+        conteudos = []
+        for noticia in noticias_unicas[:5]:
+            resumo = noticia.get('snippet', '')
+            if client:
+                prompt = f"Resuma a seguinte notícia de manutenção industrial para newsletter, de forma técnica e objetiva, em até 5 linhas:\nTítulo: {noticia['title']}\nConteúdo: {noticia.get('snippet','')}\nURL: {noticia['url']}"
+                try:
+                    resposta = client.text_generation(prompt, max_new_tokens=300, temperature=0.5, return_full_text=False)
+                    resumo = resposta.strip()
+                except Exception as e:
+                    print(f'Erro ao resumir notícia: {e}')
+            conteudos.append({
+                'titulo': noticia['title'],
+                'url': noticia['url'],
+                'resumo': resumo
+            })
+
+        # 3. Monta o HTML da newsletter
+        html = '<!DOCTYPE html><html lang="pt-br"><head><meta charset="UTF-8"><title>Newsletter - Engenharia e Manutenção Industrial</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/newsletter/style.css"></head><body>'
+        html += '<h1>Newsletter Automática - Engenharia e Manutenção Industrial</h1>'
+        html += f'<p>Atualizado em: <b>{__import__("datetime").datetime.now().strftime("%d/%m/%Y %H:%M")}</b></p>'
+        html += '<ul>'
+        for c in conteudos:
+            html += f'<li><a href="{c["url"]}" target="_blank"><b>{c["titulo"]}</b></a><br><span>{c["resumo"]}</span></li>'
+        html += '</ul>'
+        html += '<footer><small>Conteúdo gerado automaticamente por IA - AEMI</small></footer>'
+        html += '</body></html>'
+
+        # 4. Salva no arquivo da newsletter
+        newsletter_dir = os.path.join(os.path.dirname(__file__), '..', 'newsletter')
+        os.makedirs(newsletter_dir, exist_ok=True)
+        newsletter_path = os.path.join(newsletter_dir, 'index.html')
+        with open(newsletter_path, 'w', encoding='utf-8') as f:
+            f.write(html)
+
+        return jsonify({'success': True, 'msg': 'Newsletter atualizada com sucesso!', 'total_noticias': len(conteudos)})
+    except Exception as e:
+        print(f'Erro ao atualizar newsletter: {e}')
+        return jsonify({'success': False, 'error': str(e)})
+
+# --- SERVE NEWSLETTER HTML ---
+@app.route('/newsletter')
+def serve_newsletter():
+    """Serve a newsletter HTML gerada automaticamente."""
+    try:
+        newsletter_dir = os.path.join(os.path.dirname(__file__), '..', 'newsletter')
+        return send_from_directory(newsletter_dir, 'index.html')
+    except Exception as e:
+        return f"Erro ao servir newsletter: {e}", 500
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
