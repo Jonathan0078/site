@@ -176,29 +176,29 @@ const quizM12 = [
 ];
     // Funções de interação para botões do módulo 3
     window.mostrarExemplo = function(id) {
-        const ids = ['exemplo1','exemplo2','exemplo3','exemplo4','exemplo5','exemplo6','exemplo7','exemplo8','exemplo9','exemplo10','exemplo11','exemplo12'];
-        ids.forEach(eid => {
+        const exemplos = Array.from({length: 12}, (_, i) => `exemplo${i+1}`);
+        const dicas = Array.from({length: 12}, (_, i) => `dica${i+1}`);
+        const resumos = Array.from({length: 12}, (_, i) => `resumo${i+1}`);
+        exemplos.forEach(eid => {
             document.getElementById(eid) && (document.getElementById(eid).style.display = (eid === id ? 'block' : 'none'));
         });
-        const dicas = ['dica1','dica2','dica3','dica4','dica5','dica6','dica7','dica8','dica9','dica10','dica11','dica12'];
         dicas.forEach(did => { document.getElementById(did) && (document.getElementById(did).style.display = 'none'); });
-        const resumos = ['resumo1','resumo2','resumo3','resumo4','resumo5','resumo6','resumo7','resumo8','resumo9','resumo10','resumo11','resumo12'];
         resumos.forEach(rid => { document.getElementById(rid) && (document.getElementById(rid).style.display = 'none'); });
     };
     window.mostrarDica = function(id) {
-        const ids = ['exemplo1','exemplo2','exemplo3','exemplo4','exemplo5','exemplo6','exemplo7','exemplo8','exemplo9','exemplo10','exemplo11','exemplo12'];
-        ids.forEach(eid => { document.getElementById(eid) && (document.getElementById(eid).style.display = 'none'); });
-        const dicas = ['dica1','dica2','dica3','dica4','dica5','dica6','dica7','dica8','dica9','dica10','dica11','dica12'];
+        const exemplos = Array.from({length: 12}, (_, i) => `exemplo${i+1}`);
+        const dicas = Array.from({length: 12}, (_, i) => `dica${i+1}`);
+        const resumos = Array.from({length: 12}, (_, i) => `resumo${i+1}`);
+        exemplos.forEach(eid => { document.getElementById(eid) && (document.getElementById(eid).style.display = 'none'); });
         dicas.forEach(did => { document.getElementById(did) && (document.getElementById(did).style.display = (did === id ? 'block' : 'none')); });
-        const resumos = ['resumo1','resumo2','resumo3','resumo4','resumo5','resumo6','resumo7','resumo8','resumo9','resumo10','resumo11','resumo12'];
         resumos.forEach(rid => { document.getElementById(rid) && (document.getElementById(rid).style.display = 'none'); });
     };
     window.mostrarResumo = function(id) {
-        const ids = ['exemplo1','exemplo2','exemplo3','exemplo4','exemplo5','exemplo6','exemplo7','exemplo8','exemplo9','exemplo10','exemplo11','exemplo12'];
-        ids.forEach(eid => { document.getElementById(eid) && (document.getElementById(eid).style.display = 'none'); });
-        const dicas = ['dica1','dica2','dica3','dica4','dica5','dica6','dica7','dica8','dica9','dica10','dica11','dica12'];
+        const exemplos = Array.from({length: 12}, (_, i) => `exemplo${i+1}`);
+        const dicas = Array.from({length: 12}, (_, i) => `dica${i+1}`);
+        const resumos = Array.from({length: 12}, (_, i) => `resumo${i+1}`);
+        exemplos.forEach(eid => { document.getElementById(eid) && (document.getElementById(eid).style.display = 'none'); });
         dicas.forEach(did => { document.getElementById(did) && (document.getElementById(did).style.display = 'none'); });
-        const resumos = ['resumo1','resumo2','resumo3','resumo4','resumo5','resumo6','resumo7','resumo8','resumo9','resumo10','resumo11','resumo12'];
         resumos.forEach(rid => { document.getElementById(rid) && (document.getElementById(rid).style.display = (rid === id ? 'block' : 'none')); });
     };
 
@@ -223,43 +223,78 @@ const quizM12 = [
     let quizM3Index = 0;
     let quizM3Acertos = 0;
 
+// Função unificada para abrir quiz de qualquer módulo
+const quizzes = [null, quizM1, quizM2, quizM3, quizM4, quizM5, quizM6, quizM7, quizM8, quizM9, quizM10, quizM11, quizM12];
+const quizIndex = Array(13).fill(0); // 0 a 12
+const quizAcertos = Array(13).fill(0);
 window.abrirQuizModulo = function(modulo) {
-    // Esconde todos os quizzes
     for (let i = 1; i <= 12; i++) {
         const quizDiv = document.getElementById(`quiz-modulo-${i}`);
         if (quizDiv) quizDiv.style.display = 'none';
     }
-    // Mostra o quiz do módulo selecionado
     const quizAtual = document.getElementById(`quiz-modulo-${modulo}`);
     if (quizAtual) quizAtual.style.display = 'block';
-    // Inicia o quiz do módulo
-    switch (modulo) {
-        case 1:
-            quizM1Index = 0; quizM1Acertos = 0; mostrarQuizM1Pergunta(); break;
-        case 2:
-            quizM2Index = 0; quizM2Acertos = 0; mostrarQuizM2Pergunta(); break;
-        case 3:
-            quizM3Index = 0; quizM3Acertos = 0; mostrarQuizM3Pergunta(); break;
-        case 4:
-            quizM4Index = 0; quizM4Acertos = 0; mostrarQuizM4Pergunta(); break;
-        case 5:
-            quizM5Index = 0; quizM5Acertos = 0; mostrarQuizM5Pergunta(); break;
-        case 6:
-            quizM6Index = 0; quizM6Acertos = 0; mostrarQuizM6Pergunta(); break;
-        case 7:
-            quizM7Index = 0; quizM7Acertos = 0; mostrarQuizM7Pergunta(); break;
-        case 8:
-            quizM8Index = 0; quizM8Acertos = 0; mostrarQuizM8Pergunta(); break;
-        case 9:
-            quizM9Index = 0; quizM9Acertos = 0; mostrarQuizM9Pergunta(); break;
-        case 10:
-            quizM10Index = 0; quizM10Acertos = 0; mostrarQuizM10Pergunta(); break;
-        case 11:
-            quizM11Index = 0; quizM11Acertos = 0; mostrarQuizM11Pergunta(); break;
-        case 12:
-            quizM12Index = 0; quizM12Acertos = 0; mostrarQuizM12Pergunta(); break;
-    }
+    quizIndex[modulo] = 0;
+    quizAcertos[modulo] = 0;
+    mostrarQuizPergunta(modulo);
 };
+
+function mostrarQuizPergunta(modulo) {
+    const quiz = quizzes[modulo];
+    const idx = quizIndex[modulo];
+    const p = quiz[idx];
+    const perguntaEl = document.getElementById(`quiz-m${modulo}-pergunta`);
+    const opcoesEl = document.getElementById(`quiz-m${modulo}-opcoes`);
+    const feedbackEl = document.getElementById(`quiz-m${modulo}-feedback`);
+    const btnProxima = document.getElementById(`quiz-m${modulo}-proxima`);
+    perguntaEl.textContent = `Pergunta ${idx + 1} de ${quiz.length}: ${p.pergunta}`;
+    opcoesEl.innerHTML = '';
+    feedbackEl.textContent = '';
+    btnProxima.style.display = 'none';
+    p.opcoes.forEach(opcao => {
+        const btn = document.createElement('button');
+        btn.textContent = opcao;
+        btn.onclick = () => quizResponder(modulo, btn, opcao, p.resposta);
+        opcoesEl.appendChild(btn);
+    });
+}
+
+function quizResponder(modulo, btn, selecionada, correta) {
+    const opcoesEl = document.getElementById(`quiz-m${modulo}-opcoes`);
+    const botoes = opcoesEl.querySelectorAll('button');
+    const feedbackEl = document.getElementById(`quiz-m${modulo}-feedback`);
+    const btnProxima = document.getElementById(`quiz-m${modulo}-proxima`);
+    let acertou = (selecionada === correta);
+    if (acertou) quizAcertos[modulo]++;
+    botoes.forEach(b => {
+        b.disabled = true;
+        if (b.textContent === correta) b.classList.add('correta');
+        else if (b.textContent === selecionada) b.classList.add('incorreta');
+    });
+    feedbackEl.textContent = acertou ? '✅ Correto!' : '❌ Incorreto.';
+    btnProxima.style.display = 'inline-block';
+    btnProxima.onclick = () => quizProximaPergunta(modulo);
+}
+
+function quizProximaPergunta(modulo) {
+    quizIndex[modulo]++;
+    if (quizIndex[modulo] < quizzes[modulo].length) {
+        mostrarQuizPergunta(modulo);
+    } else {
+        mostrarQuizResultado(modulo);
+    }
+}
+
+function mostrarQuizResultado(modulo) {
+    const perguntaEl = document.getElementById(`quiz-m${modulo}-pergunta`);
+    const opcoesEl = document.getElementById(`quiz-m${modulo}-opcoes`);
+    const feedbackEl = document.getElementById(`quiz-m${modulo}-feedback`);
+    const btnProxima = document.getElementById(`quiz-m${modulo}-proxima`);
+    perguntaEl.textContent = 'Quiz finalizado!';
+    opcoesEl.innerHTML = '';
+    feedbackEl.textContent = quizAcertos[modulo] === quizzes[modulo].length ? 'Parabéns! Você acertou tudo!' : `Você acertou ${quizAcertos[modulo]} de ${quizzes[modulo].length}. Tente novamente para gabaritar!`;
+    btnProxima.style.display = 'none';
+}
 
     function mostrarQuizM3Pergunta() {
         const p = quizM3[quizM3Index];
