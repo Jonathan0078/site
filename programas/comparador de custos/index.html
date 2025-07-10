@@ -21,31 +21,31 @@
       <h2>Entrada de Dados</h2>
       <form id="form-custos">
         <div class="input-group">
-          <label for="custo-parada">Custo de Parada (R$):<span class="ajuda-icone" tabindex="0">❓</span></label>
+          <label for="custo-parada">Custo de Parada (R$):<span class="ajuda-icone" tabindex="0" title="Custo total de parada do equipamento.">?</span></label>
           <input type="number" id="custo-parada" required placeholder="Ex: 5000">
         </div>
         <div class="input-group">
-          <label for="custo-pecas">Custo de Peças (R$):<span class="ajuda-icone" tabindex="0">❓</span></label>
+          <label for="custo-pecas">Custo de Peças (R$):<span class="ajuda-icone" tabindex="0" title="Custo das peças trocadas.">?</span></label>
           <input type="number" id="custo-pecas" required placeholder="Ex: 1000">
         </div>
         <div class="input-group">
-          <label for="custo-mao-obra">Custo de Mão de Obra (R$):<span class="ajuda-icone" tabindex="0">❓</span></label>
+          <label for="custo-mao-obra">Custo de Mão de Obra (R$):<span class="ajuda-icone" tabindex="0" title="Custo da mão de obra envolvida.">?</span></label>
           <input type="number" id="custo-mao-obra" required placeholder="Ex: 800">
         </div>
         <div class="input-group">
-          <label for="falhas-ano">Frequência de Falhas por Ano:<span class="ajuda-icone" tabindex="0">❓</span></label>
+          <label for="falhas-ano">Frequência de Falhas por Ano:<span class="ajuda-icone" tabindex="0" title="Quantas vezes ocorre falha por ano.">?</span></label>
           <input type="number" id="falhas-ano" required placeholder="Ex: 3">
         </div>
         <div class="input-group">
-          <label for="intervalo-prev">Intervalo de Manutenção Preventiva (meses):<span class="ajuda-icone" tabindex="0">❓</span></label>
+          <label for="intervalo-prev">Intervalo de Manutenção Preventiva (meses):<span class="ajuda-icone" tabindex="0" title="A cada quantos meses é feita a preventiva.">?</span></label>
           <input type="number" id="intervalo-prev" required placeholder="Ex: 6">
         </div>
         <div class="input-group">
-          <label for="custo-prev">Custo da Preventiva (R$):<span class="ajuda-icone" tabindex="0">❓</span></label>
+          <label for="custo-prev">Custo da Preventiva (R$):<span class="ajuda-icone" tabindex="0" title="Custo total da manutenção preventiva.">?</span></label>
           <input type="number" id="custo-prev" required placeholder="Ex: 1500">
         </div>
         <div class="input-group">
-          <label for="inflacao">Inflação Anual (%):<span class="ajuda-icone" tabindex="0">❓</span></label>
+          <label for="inflacao">Inflação Anual (%):<span class="ajuda-icone" tabindex="0" title="Percentual de inflação anual.">?</span></label>
           <input type="number" id="inflacao" value="0" min="0" step="0.1" placeholder="Ex: 4">
         </div>
         <button type="submit" id="calcular-btn">Comparar</button>
