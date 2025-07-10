@@ -12,10 +12,17 @@ ARTIGOS_DIR = os.path.join(os.path.dirname(__file__), "artigos_gerados")
 MAX_ARTIGOS = 5
 
 app = FastAPI()
-
 os.makedirs(ARTIGOS_DIR, exist_ok=True)
 
 def buscar_noticias():
+    if not NEWS_API_KEY or NEWS_API_KEY == "SUA_CHAVE_AQUI":
+        # Gera artigo fake para teste
+        return [{
+            "title": "Exemplo de Artigo Técnico Industrial",
+            "publishedAt": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+            "description": "Este é um artigo de exemplo gerado localmente para testes.",
+            "url": "https://www.exemplo.com/artigo-industrial"
+        }]
     url = "https://newsapi.org/v2/everything"
     params = {
         "q": NEWS_QUERY,
@@ -44,8 +51,9 @@ def criar_artigo():
         f.write(f"<p>{artigo['description'] or ''}</p>\n")
         f.write(f"<a href='{artigo['url']}' target='_blank'>Leia na fonte original</a>\n")
 
-# Cria um artigo ao iniciar
-criar_artigo()
+# Garante que sempre haja pelo menos 1 artigo ao iniciar
+if not os.listdir(ARTIGOS_DIR):
+    criar_artigo()
 
 # Agenda para criar um novo artigo a cada 2 dias
 scheduler = BackgroundScheduler()
@@ -64,3 +72,9 @@ def ler_artigo(nome: str):
         raise HTTPException(status_code=404, detail="Artigo não encontrado")
     with open(caminho, encoding="utf-8") as f:
         return f.read()
+
+# Endpoint para forçar atualização manual
+@app.get("/atualizar")
+def atualizar_artigo():
+    criar_artigo()
+    return {"status": "ok", "msg": "Artigo gerado"}
