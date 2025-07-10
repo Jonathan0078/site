@@ -294,21 +294,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- Configuração Dinâmica da URL do Backend ---
     const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-    const isReplit = window.location.hostname.includes("replit");
-    const isRender = window.location.hostname.includes("onrender.com");
-
-    let BACKEND_URL;
-    if (isLocal) {
-        BACKEND_URL = "http://127.0.0.1:5000";
-    } else if (isReplit) {
-        BACKEND_URL = window.location.origin;
-    } else if (isRender) {
-        BACKEND_URL = window.location.origin;
-    } else {
-        // Para GitHub Pages ou outros
-        BACKEND_URL = "https://aemi.onrender.com";
-    }
-
+    const BACKEND_URL = isLocal ? "http://127.0.0.1:5000" : "https://aemi.onrender.com";
     const API_URL_CHAT = `${BACKEND_URL}/chat`;
     const API_URL_CLEAR = `${BACKEND_URL}/clear-session`;
     const API_URL_UPLOAD = `${BACKEND_URL}/upload-file`;
@@ -512,12 +498,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const fileExt = file.name.split('.').pop().toLowerCase();
         const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileExt);
         const isDocument = ['pdf', 'doc', 'docx', 'txt', 'md', 'csv'].includes(fileExt);
-
+        
         // Adiciona mensagem do usuário com ícone apropriado
         let fileIcon = '📎';
         if (isImage) fileIcon = '📸';
         else if (isDocument) fileIcon = '📄';
-
+        
         const userMessage = `${fileIcon} Arquivo enviado: ${file.name}`;
         if(chatbox) {
             chatbox.appendChild(createChatLi(userMessage, "outgoing"));
@@ -527,12 +513,12 @@ document.addEventListener("DOMContentLoaded", () => {
         // Cria mensagem de "analisando arquivo" com texto personalizado
         const incomingChatLi = createChatLi("typing", "incoming");
         const pElement = incomingChatLi.querySelector("p");
-
+        
         let analysisText = "Analisando arquivo...";
         if (isImage) analysisText = "Analisando imagem...";
         else if (fileExt === 'pdf') analysisText = "Processando PDF...";
         else if (fileExt === 'docx') analysisText = "Processando documento...";
-
+        
         if(pElement) {
             pElement.textContent = analysisText;
             pElement.classList.add("typing-animation");
@@ -558,7 +544,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if(pElement) {
                 pElement.classList.remove("typing-animation");
                 pElement.textContent = "";
-
+                
                 if (data.response) {
                     typeText(pElement, data.response);
                 } else if (data.error) {
@@ -794,77 +780,18 @@ document.addEventListener("DOMContentLoaded", () => {
             saveCurrentConv();
         }
     };
-    // Botão de pesquisa removido - pesquisa é automática nas mensagens
     const searchBtn = document.getElementById('search-btn');
-    if (searchBtn){
-        searchBtn.remove();
-    }
 
-    // --- Função principal de envio de mensagem ---
-    const sendMessage = () => {
-        if(!chatInput || !chatbox) return;
-
-        const userMessage = chatInput.value.trim();
-        if(!userMessage) return;
-
-        // Adiciona mensagem do usuário
-        chatbox.appendChild(createChatLi(userMessage, "outgoing"));
-        chatInput.value = "";
-        chatbox.scrollTo(0, chatbox.scrollHeight);
-
-        // Adiciona mensagem de "digitando"
-        const thinkingLi = createChatLi("🤖 Pensando...", "incoming");
-        chatbox.appendChild(thinkingLi);
-        chatbox.scrollTo(0, chatbox.scrollHeight);
-
-        // Envia para o servidor
-        const formData = new FormData();
-        formData.append('message', userMessage);
-
-        fetch('/chat', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Remove mensagem de "pensando"
-            if(thinkingLi && thinkingLi.parentNode) {
-                thinkingLi.parentNode.removeChild(thinkingLi);
+    searchBtn.addEventListener('click', () => {
+        const query = chatInput.value.trim();
+        if (query) {
+            performInternetSearch(query);
+        } else {
+            const searchQuery = prompt('Digite sua pesquisa:');
+            if (searchQuery && searchQuery.trim()) {
+                chatInput.value = `Pesquisar: ${searchQuery.trim()}`;
+                performInternetSearch(searchQuery.trim());
             }
-
-            const response = data.response || data.error || "Erro na resposta";
-            const responseLi = createChatLi(response, "incoming");
-            chatbox.appendChild(responseLi);
-            chatbox.scrollTo(0, chatbox.scrollHeight);
-
-            // Síntese de voz se habilitada
-            if(window.speechEnabled) {
-                speakText(response);
-            }
-        })
-        .catch(error => {
-            console.error('Erro:', error);
-            if(thinkingLi && thinkingLi.parentNode) {
-                thinkingLi.parentNode.removeChild(thinkingLi);
-            }
-
-            const errorLi = createChatLi("❌ Erro de conexão. Tente novamente.", "incoming");
-            chatbox.appendChild(errorLi);
-            chatbox.scrollTo(0, chatbox.scrollHeight);
-        });
-    };
-
-    // Event listeners para envio
-    if(sendChatBtn) {
-        sendChatBtn.addEventListener("click", sendMessage);
-    }
-
-    if(chatInput) {
-        chatInput.addEventListener("keydown", (e) => {
-            if(e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
-    }
+        }
+    });
 });
