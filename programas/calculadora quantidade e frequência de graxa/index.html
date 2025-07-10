@@ -8,8 +8,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
+
     <header class="top-header-bar">
         <h1 class="header-title">Calculadora de Lubrificação de Rolamentos</h1>
+        <button id="toggleThemeBtn" class="toggle-theme-btn" aria-label="Alternar modo claro/escuro" title="Alternar modo claro/escuro" tabindex="0">
+            <i class="fas fa-moon"></i>
+        </button>
     </header>
 
     <main class="container">
@@ -76,5 +80,30 @@
     <footer><p>&copy; 2025 Calculadora de Lubrificação. Todos os direitos reservados.</p></footer>
     <button id="scrollTopBtn" class="scroll-top-btn hidden">&uarr;</button>
     <script src="script.js"></script>
+    <script>
+    // Modo claro como padrão, toggle para escuro
+    (function() {
+      const root = document.documentElement;
+      const btn = document.getElementById('toggleThemeBtn');
+      const THEME_KEY = 'theme-mode';
+      function setTheme(mode) {
+        if (mode === 'dark') {
+          root.setAttribute('data-theme', 'dark');
+          btn.innerHTML = '<i class="fas fa-sun"></i>';
+        } else {
+          root.setAttribute('data-theme', 'light');
+          btn.innerHTML = '<i class="fas fa-moon"></i>';
+        }
+      }
+      // Inicialização: claro por padrão, mas respeita localStorage
+      let mode = localStorage.getItem(THEME_KEY) || 'light';
+      setTheme(mode);
+      btn.addEventListener('click', function() {
+        mode = (root.getAttribute('data-theme') === 'dark') ? 'light' : 'dark';
+        setTheme(mode);
+        localStorage.setItem(THEME_KEY, mode);
+      });
+    })();
+    </script>
 </body>
 </html>
