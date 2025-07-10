@@ -70,9 +70,12 @@ const kbFaq = document.getElementById('kb-faq');
 const kbList = document.getElementById('kb-list');
 const kbSearch = document.getElementById('kb-search');
 
+// Sempre usar a API do Render para garantir funcionamento ao abrir o HTML localmente
+const KB_BACKEND_URL = "https://aemi.onrender.com";
+
 async function fetchKbList(query = '') {
     try {
-        const res = await fetch('/kb/list?q=' + encodeURIComponent(query));
+        const res = await fetch(`${KB_BACKEND_URL}/kb/list?q=` + encodeURIComponent(query));
         if (!res.ok) throw new Error('Erro na resposta do servidor');
         const data = await res.json();
         renderKbList(data);
@@ -93,13 +96,13 @@ function renderKbList(items) {
         div.className = 'kb-list-item';
         div.innerHTML = `<span>${item.type === 'file' ? '📄' : '💬'} <b>${item.name}</b></span>` +
             `<button data-id="${item.id}" class="kb-remove-btn" title="Remover">Remover</button>` +
-            (item.type === 'file' ? ` <a href="/kb/download/${item.id}" target="_blank" style="margin-left:8px;">Baixar</a>` : '');
+            (item.type === 'file' ? ` <a href="${KB_BACKEND_URL}/kb/download/${item.id}" target="_blank" style="margin-left:8px;">Baixar</a>` : '');
         kbList.appendChild(div);
     });
     document.querySelectorAll('.kb-remove-btn').forEach(btn => {
         btn.onclick = async function() {
             if (confirm('Remover este item da base de conhecimento?')) {
-                await fetch('/kb/remove/' + btn.dataset.id, { method: 'DELETE' });
+                await fetch(`${KB_BACKEND_URL}/kb/remove/` + btn.dataset.id, { method: 'DELETE' });
                 fetchKbList(kbSearch.value);
             }
         };
@@ -119,7 +122,7 @@ if (kbForm) {
             btn.textContent = 'Adicionando...';
         }
         try {
-            const resp = await fetch('/kb/upload', { method: 'POST', body: formData });
+            const resp = await fetch(`${KB_BACKEND_URL}/kb/upload`, { method: 'POST', body: formData });
             if (resp.ok) {
                 kbFile.value = '';
                 kbFaq.value = '';
@@ -293,8 +296,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const fileBtn = document.getElementById("file-btn");
 
     // --- Configuração Dinâmica da URL do Backend ---
-    const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-    const BACKEND_URL = isLocal ? "http://127.0.0.1:5000" : "https://aemi.onrender.com";
+    // Sempre usar a API do Render para garantir funcionamento ao abrir o HTML localmente
+    const BACKEND_URL = "https://aemi.onrender.com";
     const API_URL_CHAT = `${BACKEND_URL}/chat`;
     const API_URL_CLEAR = `${BACKEND_URL}/clear-session`;
     const API_URL_UPLOAD = `${BACKEND_URL}/upload-file`;

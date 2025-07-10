@@ -1,4 +1,3 @@
-
 import os
 import uuid
 import json
@@ -31,8 +30,13 @@ except ImportError:
 # --- INICIALIZAÇÃO DO FLASK ---
 app = Flask(__name__)
 
-# Permite apenas o domínio do GitHub Pages do seu projeto e o endereço do backend Render
+# Permite qualquer origem (inclusive file:// e null) para uso local e web
 CORS(app, supports_credentials=True, origins=[
+    "*",
+    "null",
+    "file://",
+    "http://localhost",
+    "http://127.0.0.1",
     "https://jonathan0078.github.io",
     "https://aemi.onrender.com"
 ])
@@ -245,52 +249,30 @@ def search_internet(query, max_results=5):
 def extract_page_content(url, max_chars=1000):
     """Extrai conteúdo de uma página web para análise."""
     try:
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'Accept-Language': 'pt-BR,pt;q=0.9,en;q=0.8',
-            'Accept-Encoding': 'gzip, deflate',
-            'Connection': 'keep-alive',
-            'Upgrade-Insecure-Requests': '1'
-        }
+        response = requests.get(url, timeout=5)
+        if not response.ok:
+            return ""
         
-        response = requests.get(url, headers=headers, timeout=10, allow_redirects=True)
+        if BeautifulSoup is None:
+            return ""
+            
+        soup = BeautifulSoup(response.text, 'html.parser')
         
-        if response.status_code == 200 and BeautifulSoup:
-            soup = BeautifulSoup(response.text, 'html.parser')
+        # Remove scripts, styles e tags desnecessárias
+        for element in soup(['script', 'style', 'nav', 'header', 'footer', 'aside']):
+            element.decompose()
             
-            # Remove elementos desnecessários
-            for element in soup(['script', 'style', 'nav', 'header', 'footer', 'aside', 'iframe', 'noscript']):
-                element.decompose()
-            
-            # Tenta encontrar o conteúdo principal
-            main_content = soup.find('main') or soup.find('article') or soup.find('div', {'class': ['content', 'post', 'article']})
-            
-            if main_content:
-                text = main_content.get_text()
-            else:
-                text = soup.get_text()
-            
-            # Limpa o texto
-            lines = (line.strip() for line in text.splitlines())
-            chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
-            text = ' '.join(chunk for chunk in chunks if chunk)
-            
-            # Remove linhas muito curtas e repetitivas
-            sentences = text.split('.')
-            meaningful_sentences = []
-            for sentence in sentences:
-                sentence = sentence.strip()
-                if len(sentence) > 20 and sentence not in meaningful_sentences:
-                    meaningful_sentences.append(sentence)
-            
-            cleaned_text = '. '.join(meaningful_sentences[:10])  # Primeiras 10 frases
-            
-            return cleaned_text[:max_chars]
+        # Obtém o texto principal
+        text = ' '.join(soup.stripped_strings)
+        text = ' '.join(text.split())  # Remove espaços extras
         
-        return ""
+        # Limita o tamanho do texto
+        if len(text) > max_chars:
+            text = text[:max_chars] + "..."
+            
+        return text
     except Exception as e:
-        print(f"Erro ao extrair conteúdo de {url}: {e}")
+        print(f"Erro ao extrair conteúdo de {url}: {str(e)}")
         return ""
 
 def should_search_internet(message):
@@ -949,20 +931,25 @@ def upload_file():
 
 @app.route('/search-internet', methods=['POST'])
 def search_internet_route():
-    """Rota para pesquisa manual na internet."""
     try:
-        query = request.form.get('query', '').strip()
+        data = request.get_json()
+        query = data.get('query')
+        
         if not query:
-            return jsonify({"error": "Query de pesquisa não fornecida"}), 400
+            return jsonify({"error": "Query não fornecida"}), 400
+            
+        results = search_internet(query, max_results=5)
         
-        max_results = int(request.form.get('max_results', 5))
-        search_results = search_internet(query, max_results)
+        return jsonify({
+            "success": True,
+            "results": results
+        })
         
-        return jsonify(search_results)
-    
     except Exception as e:
-        print(f"Erro na pesquisa manual: {e}")
-        return jsonify({"error": "Erro ao realizar pesquisa"}), 500
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
 
 @app.route('/extract-content', methods=['POST'])
 def extract_content_route():

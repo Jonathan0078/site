@@ -1,6 +1,7 @@
 Flask
 Flask-Cors
 requests
+duckduckgo_search
 python-dotenv
 PyPDF2
 python-docx

@@ -975,6 +975,111 @@ ul {
     }
 }
 
+/* --- Melhorias de Responsividade --- */
+@media screen and (max-width: 768px) {
+    .chatbot-container {
+        margin: 0;
+        height: 100vh;
+        border-radius: 0;
+    }
+
+    .chatbox {
+        padding: 10px;
+    }
+
+    .chat-input {
+        padding: 10px;
+    }
+
+    .chat-input textarea {
+        font-size: 16px; /* Evita zoom automático em iOS */
+    }
+
+    .kb-section {
+        margin: 0;
+        border-radius: 0;
+        padding: 20px 15px;
+    }
+
+    .kb-upload-form {
+        padding: 12px 10px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .header-buttons {
+        gap: 8px;
+    }
+
+    .header-btn {
+        padding: 6px;
+    }
+
+    .chat {
+        padding: 12px;
+    }
+
+    .chat p {
+        font-size: 0.95em;
+    }
+
+    .search-result {
+        padding: 12px;
+        margin-bottom: 10px;
+    }
+
+    .search-result-title {
+        font-size: 1em;
+    }
+
+    .search-result-content {
+        font-size: 0.9em;
+        line-height: 1.4;
+        margin-top: 8px;
+    }
+
+    .search-result-link {
+        font-size: 0.85em;
+    }
+}
+
+/* --- Melhorias na exibição dos resultados de pesquisa --- */
+.search-result {
+    background: var(--cor-superficie);
+    border: 1px solid var(--cor-borda);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 6px var(--cor-sombra);
+}
+
+.search-result-title {
+    color: var(--cor-primaria);
+    font-size: 1.1em;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.search-result-content {
+    color: var(--cor-texto);
+    font-size: 0.95em;
+    line-height: 1.5;
+    margin: 10px 0;
+}
+
+.search-result-link {
+    color: var(--cor-destaque);
+    font-size: 0.9em;
+    text-decoration: none;
+    display: block;
+    margin-top: 8px;
+    word-break: break-all;
+}
+
+.search-result-link:hover {
+    text-decoration: underline;
+}
+
 /* --- Acessibilidade: Foco visível para botões e links --- */
 a:focus, button:focus, .header-btn:focus, .sidebar-convs li:focus {
     outline: 3px solid #ff9800;
