@@ -4,6 +4,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
+from fastapi.middleware.cors import CORSMiddleware
 
 NEWS_API_KEY = os.getenv("NEWS_API_KEY", "SUA_CHAVE_AQUI")
 NEWS_QUERY = "engenharia OR manutenção industrial OR indústria 4.0"
@@ -12,6 +13,15 @@ ARTIGOS_DIR = os.path.join(os.path.dirname(__file__), "artigos_gerados")
 MAX_ARTIGOS = 5
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Ou especifique ["https://jonathan0078.github.io"]
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 os.makedirs(ARTIGOS_DIR, exist_ok=True)
 
 def buscar_noticias():
