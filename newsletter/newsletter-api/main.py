@@ -2,8 +2,8 @@ import os
 import requests
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
-from datetime import datetime, timedelta
-from typing import List
+from datetime import datetime
+from apscheduler.schedulers.background import BackgroundScheduler
 
 NEWS_API_KEY = os.getenv("NEWS_API_KEY", "SUA_CHAVE_AQUI")
 NEWS_QUERY = "engenharia OR manutenção industrial OR indústria 4.0"
@@ -13,7 +13,6 @@ MAX_ARTIGOS = 5
 
 app = FastAPI()
 
-# Cria a pasta de artigos se não existir
 os.makedirs(ARTIGOS_DIR, exist_ok=True)
 
 def buscar_noticias():
@@ -23,52 +22,39 @@ def buscar_noticias():
         "language": NEWS_LANG,
         "sortBy": "publishedAt",
         "apiKey": NEWS_API_KEY,
-        "pageSize": MAX_ARTIGOS
+        "pageSize": 1
     }
     resp = requests.get(url, params=params)
     if resp.status_code != 200:
-        raise Exception(f"Erro ao buscar notícias: {resp.text}")
-    return resp.json().get("articles", [])
+        return []
+    data = resp.json()
+    return data.get("articles", [])
 
-def gerar_html_noticia(noticia):
-    titulo = noticia["title"]
-    descricao = noticia.get("description", "")
-    conteudo = noticia.get("content", "")
-    url = noticia.get("url", "")
-    fonte = noticia.get("source", {}).get("name", "")
-    data = noticia.get("publishedAt", "")
-    html = f"""
-    <h1>{titulo}</h1>
-    <p><strong>Fonte:</strong> {fonte} | <strong>Data:</strong> {data[:10]}</p>
-    <p>{descricao}</p>
-    <p>{conteudo}</p>
-    <p><a href='{url}' target='_blank'>Leia na fonte original</a></p>
-    """
-    return html
+def criar_artigo():
+    artigos = buscar_noticias()
+    if not artigos:
+        return
+    artigo = artigos[0]
+    titulo = artigo["title"].replace("/", "-").replace("\\", "-")
+    nome_arquivo = f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{titulo[:30].replace(' ', '_')}.html"
+    caminho = os.path.join(ARTIGOS_DIR, nome_arquivo)
+    with open(caminho, "w", encoding="utf-8") as f:
+        f.write(f"<h1>{artigo['title']}</h1>\n")
+        f.write(f"<p><em>{artigo['publishedAt']}</em></p>\n")
+        f.write(f"<p>{artigo['description'] or ''}</p>\n")
+        f.write(f"<a href='{artigo['url']}' target='_blank'>Leia na fonte original</a>\n")
 
-def atualizar_artigos():
-    # Remove artigos antigos
-    for f in os.listdir(ARTIGOS_DIR):
-        os.remove(os.path.join(ARTIGOS_DIR, f))
-    # Busca e salva novos artigos
-    noticias = buscar_noticias()
-    for i, noticia in enumerate(noticias):
-        html = gerar_html_noticia(noticia)
-        with open(os.path.join(ARTIGOS_DIR, f"artigo_{i+1}.html"), "w", encoding="utf-8") as f:
-            f.write(html)
-    return len(noticias)
+# Cria um artigo ao iniciar
+criar_artigo()
 
-@app.get("/atualizar", response_class=HTMLResponse)
-def atualizar():
-    try:
-        qtd = atualizar_artigos()
-        return f"<p>{qtd} artigos atualizados com sucesso!</p>"
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+# Agenda para criar um novo artigo a cada 2 dias
+scheduler = BackgroundScheduler()
+scheduler.add_job(criar_artigo, 'interval', days=2)
+scheduler.start()
 
-@app.get("/artigos", response_model=List[str])
+@app.get("/artigos")
 def listar_artigos():
-    arquivos = sorted(os.listdir(ARTIGOS_DIR))
+    arquivos = sorted(os.listdir(ARTIGOS_DIR), reverse=True)
     return arquivos
 
 @app.get("/artigo/{nome}", response_class=HTMLResponse)
@@ -78,8 +64,3 @@ def ler_artigo(nome: str):
         raise HTTPException(status_code=404, detail="Artigo não encontrado")
     with open(caminho, encoding="utf-8") as f:
         return f.read()
-
-# Atualização automática (exemplo simples, pode ser melhorado com APScheduler)
-@app.on_event("startup")
-def startup_event():
-    atualizar_artigos()
