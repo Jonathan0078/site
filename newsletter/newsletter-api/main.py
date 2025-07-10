@@ -14,7 +14,7 @@ MAX_ARTIGOS = 5
 app = FastAPI()
 
 # Cria a pasta de artigos se não existir
-ios.makedirs(ARTIGOS_DIR, exist_ok=True)
+os.makedirs(ARTIGOS_DIR, exist_ok=True)
 
 def buscar_noticias():
     url = "https://newsapi.org/v2/everything"
