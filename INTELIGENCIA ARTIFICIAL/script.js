@@ -501,9 +501,8 @@ document.addEventListener("DOMContentLoaded", () => {
         
         // Adiciona mensagem do usuário com ícone apropriado
         let fileIcon = '📎';
-        if (isImage) fileIcon = '🖼️';
-        else if (isDocument) fileIcon = '📋';
-        else if (fileExt === 'pdf') fileIcon = '📄';
+        if (isImage) fileIcon = '📸';
+        else if (isDocument) fileIcon = '📄';
         
         const userMessage = `${fileIcon} Arquivo enviado: ${file.name}`;
         if(chatbox) {

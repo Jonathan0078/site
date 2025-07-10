@@ -134,10 +134,10 @@ def generate_maintenance_response(content_data: Dict, original_query: str) -> st
 def analyze_web_content_for_maintenance(query: str, urls: List[str]) -> str:
     """Analisa conteúdo web com foco em manutenção industrial."""
     extractor = WebContentExtractor()
-    
+
     best_result = None
     best_similarity = 0
-    
+
     for url in urls:
         try:
             result = extractor.extract_focused_content(url, query)
@@ -146,15 +146,15 @@ def analyze_web_content_for_maintenance(query: str, urls: List[str]) -> str:
                 best_similarity = result["similarity"]
         except Exception as e:
             continue
-    
+
     if best_result:
         return generate_maintenance_response(best_result, query)
     else:
-        return """❌ **Nenhum conteúdo relevante encontrado**
+        return ("""❌ **Nenhum conteúdo relevante encontrado**
 
 🔄 **Sugestões:**
 • Reformule a pergunta com termos mais específicos
 • Verifique se as URLs estão acessíveis
 • Tente incluir palavras-chave técnicas da área de manutenção
 
-💬 **Alternativa:** Descreva sua dúvida específica sobre manutenção industrial."""
+💬 **Alternativa:** Descreva sua dúvida específica sobre manutenção industrial.""")
