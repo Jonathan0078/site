@@ -10,6 +10,7 @@ NEWS_API_KEY = os.getenv("NEWS_API_KEY", "SUA_CHAVE_AQUI")
 NEWS_QUERY = "manutenção industrial"  # restringe a busca
 NEWS_LANG = "pt"
 ARTIGOS_DIR = os.path.join("/tmp", "artigos_gerados")
+ARTIGOS_FIXOS_DIR = os.path.join(os.path.dirname(__file__), "../artigos_fixos")
 MAX_ARTIGOS = 5
 
 app = FastAPI()
@@ -113,10 +114,20 @@ scheduler.start()
 
 @app.get("/artigos")
 def listar_artigos():
-    arquivos = sorted([
+    # Lista artigos das duas pastas
+    arquivos_tmp = [
         f for f in os.listdir(ARTIGOS_DIR)
         if f.endswith('.html') and not f.startswith('@') and not f.startswith('.')
-    ], reverse=True)
+    ]
+    try:
+        arquivos_fixos = [
+            f for f in os.listdir(ARTIGOS_FIXOS_DIR)
+            if f.endswith('.html') and not f.startswith('@') and not f.startswith('.')
+        ]
+    except FileNotFoundError:
+        arquivos_fixos = []
+    # Junta e ordena (fixos primeiro, depois os temporários)
+    arquivos = sorted(arquivos_fixos) + sorted(arquivos_tmp, reverse=True)
     return arquivos
 
 from urllib.parse import unquote
@@ -124,11 +135,17 @@ from urllib.parse import unquote
 @app.get("/artigo/{nome}", response_class=HTMLResponse)
 def ler_artigo(nome: str):
     nome = unquote(nome)
-    caminho = os.path.join(ARTIGOS_DIR, nome)
-    if not (os.path.exists(caminho) and nome.endswith('.html')):
+    # Procura primeiro nos fixos, depois nos temporários
+    caminho_fixo = os.path.join(ARTIGOS_FIXOS_DIR, nome)
+    caminho_tmp = os.path.join(ARTIGOS_DIR, nome)
+    if os.path.exists(caminho_fixo) and nome.endswith('.html'):
+        with open(caminho_fixo, encoding="utf-8") as f:
+            return f.read()
+    elif os.path.exists(caminho_tmp) and nome.endswith('.html'):
+        with open(caminho_tmp, encoding="utf-8") as f:
+            return f.read()
+    else:
         raise HTTPException(status_code=404, detail="Artigo não encontrado")
-    with open(caminho, encoding="utf-8") as f:
-        return f.read()
 
 # Endpoint para forçar atualização manual
 @app.get("/atualizar")
