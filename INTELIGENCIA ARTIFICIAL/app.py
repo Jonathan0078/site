@@ -53,10 +53,15 @@ print("=========================")
 # --- INICIALIZAÇÃO DO FLASK ---
 app = Flask(__name__)
 
-# Permite apenas o domínio do GitHub Pages do seu projeto e o endereço do backend Render
+# Permite domínios do GitHub Pages, Render e Replit
 CORS(app, supports_credentials=True, origins=[
     "https://jonathan0078.github.io",
-    "https://aemi.onrender.com"
+    "https://aemi.onrender.com",
+    "https://*.onrender.com",
+    "https://*.replit.dev",
+    "https://*.replit.app",
+    "http://localhost:*",
+    "http://127.0.0.1:*"
 ])
 
 # Carrega as chaves da aplicação a partir de variáveis de ambiente
@@ -1547,4 +1552,6 @@ def clear_session():
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    print(f"🚀 Iniciando A.E.M.I na porta {port}")
+    print(f"🌐 Acesse em: http://0.0.0.0:{port}")
+    app.run(host='0.0.0.0', port=port, debug=False)
