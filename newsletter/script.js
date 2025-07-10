@@ -1,38 +1,47 @@
-async function carregarArtigo(url, containerId) {
-    const container = document.getElementById(containerId);
+const API_URL = "https://site-mtp5.onrender.com";
 
-    // Oculta todos os outros containers de artigo para que apenas um seja visível por vez
-    // e limpa o conteúdo para não haver sobreposição
-    document.querySelectorAll('.article-container').forEach(item => {
-        if (item.id !== containerId) { // Não oculta o container atual
-            item.classList.add('hidden');
-            item.innerHTML = ''; // Limpa o conteúdo dos outros containers
+async function carregarListaArtigos() {
+    const feed = document.querySelector('.newsletter-feed');
+    feed.innerHTML = '<p>Carregando artigos...</p>';
+    try {
+        const resp = await fetch(`${API_URL}/artigos`);
+        const artigos = await resp.json();
+        if (!artigos.length) {
+            feed.innerHTML = '<p>Nenhum artigo encontrado.</p>';
+            return;
         }
-    });
+        feed.innerHTML = '';
+        artigos.forEach(nome => {
+            const div = document.createElement('div');
+            div.className = 'newsletter-item';
+            div.innerHTML = `
+                <h2>${nome.replace('.html', '').replace('_', ' ').toUpperCase()}</h2>
+                <button class="article-button" onclick="carregarArtigoDinamico('${nome}', this)">Ler Artigo</button>
+                <div class="article-container hidden"></div>
+            `;
+            feed.appendChild(div);
+        });
+    } catch (e) {
+        feed.innerHTML = '<p style="color:red;">Erro ao carregar artigos.</p>';
+    }
+}
 
-    // Se o container clicado já estiver visível e com conteúdo (ou seja, o artigo já está aberto),
-    // oculta ele e limpa seu conteúdo para "fechar" o artigo.
+async function carregarArtigoDinamico(nome, btn) {
+    const container = btn.nextElementSibling;
     if (!container.classList.contains('hidden') && container.innerHTML.trim() !== '') {
         container.classList.add('hidden');
         container.innerHTML = '';
-        return; // Sai da função, pois já lidamos com o fechamento/toggle
+        return;
     }
-
-    // Exibe uma mensagem de carregamento enquanto o conteúdo é buscado
     container.innerHTML = '<p>Carregando artigo...</p>';
-    container.classList.remove('hidden'); // Garante que o container esteja visível para mostrar a mensagem de carregamento
-
+    container.classList.remove('hidden');
     try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Erro ao carregar o artigo: ${response.status} - ${response.statusText}`);
-        }
-        const html = await response.text();
-        container.innerHTML = html; // Insere o conteúdo HTML do artigo
-        // A classe 'hidden' já foi removida acima.
-    } catch (error) {
-        console.error("Falha ao carregar o artigo:", error);
-        container.innerHTML = `<p style="color: red;">Ocorreu um erro ao carregar o artigo. Por favor, tente novamente mais tarde.</p><p>Detalhes: ${error.message}</p>`;
-        container.classList.remove('hidden'); // Garante que a mensagem de erro seja visível
+        const resp = await fetch(`${API_URL}/artigo/${nome}`);
+        const html = await resp.text();
+        container.innerHTML = html;
+    } catch (e) {
+        container.innerHTML = '<p style="color:red;">Erro ao carregar artigo.</p>';
     }
 }
+
+window.onload = carregarListaArtigos;
