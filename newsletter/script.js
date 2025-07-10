@@ -1,4 +1,4 @@
-const API_URL = "https://site-mtp5.onrender.com";
+const API_URL = "https://newsletter-2-gew3.onrender.com";
 
 async function carregarListaArtigos() {
     const feed = document.querySelector('.newsletter-feed');
