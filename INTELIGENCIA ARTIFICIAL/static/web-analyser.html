@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisador de Conteúdo Web - Manutenção Industrial</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .web-analyzer {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+        
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        
+        .url-list {
+            margin-top: 1rem;
+        }
+        
+        .url-item {
+            display: flex;
+            margin-bottom: 0.5rem;
+        }
+        
+        .url-item input {
+            flex: 1;
+            margin-right: 0.5rem;
+        }
+        
+        .analysis-result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="web-analyzer">
+        <h1>🔍 Analisador de Conteúdo Web</h1>
+        <p>Pipeline estruturado para extração focada de informações técnicas</p>
+        
+        <form id="webAnalyzerForm">
+            <div class="input-group">
+                <label for="query">Sua pergunta técnica:</label>
+                <input type="text" id="query" placeholder="Ex: Como fazer alinhamento de polias?" required>
+                <small>Seja específico para obter melhores resultados</small>
+            </div>
+            
+            <div class="input-group">
+                <label>URLs para análise:</label>
+                <div class="url-list" id="urlList">
+                    <div class="url-item">
+                        <input type="url" placeholder="https://exemplo.com/artigo-tecnico" required>
+                        <button type="button" onclick="removeUrl(this)">❌</button>
+                    </div>
+                </div>
+                <button type="button" onclick="addUrl()">➕ Adicionar URL</button>
+            </div>
+            
+            <button type="submit">🚀 Analisar Conteúdo</button>
+        </form>
+        
+        <div id="loadingDiv" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>Extraindo e analisando conteúdo...</p>
+        </div>
+        
+        <div id="resultDiv" class="analysis-result" style="display: none;">
+            <h3>📊 Resultado da Análise</h3>
+            <div id="analysisContent"></div>
+        </div>
+    </div>
+
+    <script>
+        function addUrl() {
+            const urlList = document.getElementById('urlList');
+            const urlItem = document.createElement('div');
+            urlItem.className = 'url-item';
+            urlItem.innerHTML = `
+                <input type="url" placeholder="https://exemplo.com/artigo-tecnico" required>
+                <button type="button" onclick="removeUrl(this)">❌</button>
+            `;
+            urlList.appendChild(urlItem);
+        }
+        
+        function removeUrl(button) {
+            const urlList = document.getElementById('urlList');
+            if (urlList.children.length > 1) {
+                button.parentElement.remove();
+            }
+        }
+        
+        document.getElementById('webAnalyzerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const query = document.getElementById('query').value;
+            const urlInputs = document.querySelectorAll('.url-item input');
+            const urls = Array.from(urlInputs).map(input => input.value).filter(url => url);
+            
+            if (urls.length === 0) {
+                alert('Adicione pelo menos uma URL');
+                return;
+            }
+            
+            // Mostra loading
+            document.getElementById('loadingDiv').style.display = 'block';
+            document.getElementById('resultDiv').style.display = 'none';
+            
+            try {
+                const response = await fetch('/analyze-web-content', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        query: query,
+                        urls: urls
+                    })
+                });
+                
+                const data = await response.json();
+                
+                // Esconde loading
+                document.getElementById('loadingDiv').style.display = 'none';
+                
+                if (data.success) {
+                    document.getElementById('analysisContent').innerHTML = 
+                        data.analysis.replace(/\n/g, '<br>');
+                    document.getElementById('resultDiv').style.display = 'block';
+                } else {
+                    alert('Erro: ' + (data.error || 'Erro desconhecido'));
+                }
+                
+            } catch (error) {
+                document.getElementById('loadingDiv').style.display = 'none';
+                alert('Erro na comunicação: ' + error.message);
+            }
+        });
+        
+        // Exemplos predefinidos
+        const examples = [
+            "Como fazer alinhamento de polias?",
+            "Procedimento de troca de rolamentos",
+            "Sintomas de desgaste em engrenagens",
+            "Manutenção preventiva de bombas hidráulicas"
+        ];
+        
+        // Adiciona sugestões aleatórias
+        document.getElementById('query').placeholder = 
+            examples[Math.floor(Math.random() * examples.length)];
+    </script>
+</body>
+</html>
