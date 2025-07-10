@@ -7,7 +7,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from fastapi.middleware.cors import CORSMiddleware
 
 NEWS_API_KEY = os.getenv("NEWS_API_KEY", "SUA_CHAVE_AQUI")
-NEWS_QUERY = "engenharia OR manutenção industrial OR indústria 4.0"
+NEWS_QUERY = "manutenção industrial"  # restringe a busca
 NEWS_LANG = "pt"
 ARTIGOS_DIR = os.path.join("/tmp", "artigos_gerados")
 MAX_ARTIGOS = 5
@@ -55,9 +55,11 @@ def criar_artigo():
     titulo = artigo["title"].replace("/", "-").replace("\\", "-")
     nome_arquivo = f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{titulo[:30].replace(' ', '_')}.html"
     caminho = os.path.join(ARTIGOS_DIR, nome_arquivo)
-    descricao = artigo.get('description') or artigo.get('content') or 'Artigo sem descrição disponível.'
+    # Tenta pegar o conteúdo mais completo possível
+    descricao = artigo.get('content') or artigo.get('description') or 'Artigo sem descrição disponível.'
     if descricao.strip() == '':
         descricao = 'Artigo sem descrição disponível.'
+    fonte = artigo.get('url', '#')
     with open(caminho, "w", encoding="utf-8") as f:
         f.write(f"""
 <!DOCTYPE html>
@@ -67,20 +69,21 @@ def criar_artigo():
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <title>{artigo['title']} | Newsletter Industrial</title>
     <style>
-        body { font-family: 'Lato', Arial, sans-serif; background: #f8f9fa; color: #222; margin: 0; padding: 0; }
-        .artigo-container { max-width: 700px; margin: 40px auto; background: #fff; border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); padding: 32px 24px; }
-        header { text-align: center; margin-bottom: 32px; }
-        .site-title { font-family: 'Oswald', Arial, sans-serif; font-size: 2.2rem; color: #003366; margin-bottom: 0.2em; }
-        .site-sub { color: #005a9c; font-size: 1.1rem; margin-bottom: 0.8em; }
-        h1 { font-size: 2rem; color: #222; margin-bottom: 0.5em; }
-        .meta { color: #888; font-size: 1em; margin-bottom: 1.5em; }
-        p { font-size: 1.15em; line-height: 1.7; margin-bottom: 1.2em; }
-        a { color: #005a9c; text-decoration: underline; }
-        a:hover { color: #003366; }
-        @media (max-width: 600px) {
-            .artigo-container { padding: 16px 4vw; }
-            h1 { font-size: 1.3rem; }
-        }
+        body {{ font-family: 'Lato', Arial, sans-serif; background: #f8f9fa; color: #222; margin: 0; padding: 0; }}
+        .artigo-container {{ max-width: 700px; margin: 40px auto; background: #fff; border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); padding: 32px 24px; }}
+        header {{ text-align: center; margin-bottom: 32px; }}
+        .site-title {{ font-family: 'Oswald', Arial, sans-serif; font-size: 2.2rem; color: #003366; margin-bottom: 0.2em; }}
+        .site-sub {{ color: #005a9c; font-size: 1.1rem; margin-bottom: 0.8em; }}
+        h1 {{ font-size: 2rem; color: #222; margin-bottom: 0.5em; }}
+        .meta {{ color: #888; font-size: 1em; margin-bottom: 1.5em; }}
+        p {{ font-size: 1.15em; line-height: 1.7; margin-bottom: 1.2em; }}
+        .fonte {{ margin-top: 2em; font-size: 1em; color: #005a9c; font-weight: bold; }}
+        a {{ color: #005a9c; text-decoration: underline; }}
+        a:hover {{ color: #003366; }}
+        @media (max-width: 600px) {{
+            .artigo-container {{ padding: 16px 4vw; }}
+            h1 {{ font-size: 1.3rem; }}
+        }}
     </style>
 </head>
 <body>
@@ -92,15 +95,15 @@ def criar_artigo():
         <h1>{artigo['title']}</h1>
         <div class='meta'>Publicado em: {artigo['publishedAt']}</div>
         <p>{descricao}</p>
-        <a href='{artigo['url']}' target='_blank'>Leia na fonte original</a>
+        <div class='fonte'>Fonte: <a href='{fonte}' target='_blank'>{fonte}</a></div>
     </div>
 </body>
 </html>
 """)
 
-# Garante que sempre haja pelo menos 1 artigo ao iniciar
-if not os.listdir(ARTIGOS_DIR):
-    criar_artigo()
+# Remova ou comente esta linha para NÃO criar artigo ao iniciar:
+# if not os.listdir(ARTIGOS_DIR):
+#     criar_artigo()
 
 # Agenda para criar um novo artigo a cada 2 dias
 scheduler = BackgroundScheduler()
