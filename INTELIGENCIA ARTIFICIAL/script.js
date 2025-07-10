@@ -296,7 +296,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
     const isReplit = window.location.hostname.includes("replit");
     const isRender = window.location.hostname.includes("onrender.com");
-    
+
     let BACKEND_URL;
     if (isLocal) {
         BACKEND_URL = "http://127.0.0.1:5000";
@@ -308,7 +308,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Para GitHub Pages ou outros
         BACKEND_URL = "https://aemi.onrender.com";
     }
-    
+
     const API_URL_CHAT = `${BACKEND_URL}/chat`;
     const API_URL_CLEAR = `${BACKEND_URL}/clear-session`;
     const API_URL_UPLOAD = `${BACKEND_URL}/upload-file`;
@@ -800,4 +800,71 @@ document.addEventListener("DOMContentLoaded", () => {
         searchBtn.remove();
     }
 
+    // --- Função principal de envio de mensagem ---
+    const sendMessage = () => {
+        if(!chatInput || !chatbox) return;
+
+        const userMessage = chatInput.value.trim();
+        if(!userMessage) return;
+
+        // Adiciona mensagem do usuário
+        chatbox.appendChild(createChatLi(userMessage, "outgoing"));
+        chatInput.value = "";
+        chatbox.scrollTo(0, chatbox.scrollHeight);
+
+        // Adiciona mensagem de "digitando"
+        const thinkingLi = createChatLi("🤖 Pensando...", "incoming");
+        chatbox.appendChild(thinkingLi);
+        chatbox.scrollTo(0, chatbox.scrollHeight);
+
+        // Envia para o servidor
+        const formData = new FormData();
+        formData.append('message', userMessage);
+
+        fetch('/chat', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Remove mensagem de "pensando"
+            if(thinkingLi && thinkingLi.parentNode) {
+                thinkingLi.parentNode.removeChild(thinkingLi);
+            }
+
+            const response = data.response || data.error || "Erro na resposta";
+            const responseLi = createChatLi(response, "incoming");
+            chatbox.appendChild(responseLi);
+            chatbox.scrollTo(0, chatbox.scrollHeight);
+
+            // Síntese de voz se habilitada
+            if(window.speechEnabled) {
+                speakText(response);
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            if(thinkingLi && thinkingLi.parentNode) {
+                thinkingLi.parentNode.removeChild(thinkingLi);
+            }
+
+            const errorLi = createChatLi("❌ Erro de conexão. Tente novamente.", "incoming");
+            chatbox.appendChild(errorLi);
+            chatbox.scrollTo(0, chatbox.scrollHeight);
+        });
+    };
+
+    // Event listeners para envio
+    if(sendChatBtn) {
+        sendChatBtn.addEventListener("click", sendMessage);
+    }
+
+    if(chatInput) {
+        chatInput.addEventListener("keydown", (e) => {
+            if(e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+    }
 });
