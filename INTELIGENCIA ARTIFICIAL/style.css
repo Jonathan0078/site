@@ -312,14 +312,14 @@
     /* Ajustes específicos para mobile */
     @media (max-width: 480px) {
         .chat-input {
-            padding: 8px 10px;
-            gap: 6px;
+            padding: 10px 12px;
+            gap: 8px;
         }
         
         .chat-input textarea {
-            min-height: 38px;
-            padding: 8px 10px;
-            font-size: 0.95rem;
+            min-height: 42px;
+            padding: 10px 12px;
+            font-size: 1rem;
         }
         
         .chat-input button {
