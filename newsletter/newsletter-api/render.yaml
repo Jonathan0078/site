@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: newsletter-api
+    env: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn main:app --host 0.0.0.0 --port 10000"
+    envVars:
+      - key: NEWS_API_KEY
+        sync: false
+    autoDeploy: true
+    
+schedules:
+  - name: atualizar-artigos
+    cron: "0 * * * *" # Atualiza a cada hora (ajuste para 24h se quiser)
+    command: "curl https://newsletter-api.onrender.com/atualizar"
