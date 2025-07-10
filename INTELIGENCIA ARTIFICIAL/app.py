@@ -70,6 +70,9 @@ GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")  # Deve ser configurado no Replit Sec
 if not HUGGING_FACE_TOKEN:
     print("AVISO: Token da Hugging Face não configurado. Chat com IA não funcionará.")
     print("Configure a variável de ambiente HF_TOKEN no Replit Secrets.")
+    print("Vá em: https://huggingface.co/settings/tokens para criar um token")
+else:
+    print(f"✅ Token HuggingFace configurado (primeiros 10 chars: {HUGGING_FACE_TOKEN[:10]}...)")
 
 if not GOOGLE_API_KEY:
     print("AVISO: GOOGLE_API_KEY não configurada. Funcionalidade de busca web não funcionará.")
@@ -631,11 +634,28 @@ def get_text_client():
         print("❌ InferenceClient não disponível")
         return None
     try:
-        client = InferenceClient(model="meta-llama/Meta-Llama-3-8B-Instruct", token=HUGGING_FACE_TOKEN)
-        print("✅ Cliente de texto criado com sucesso")
-        return client
+        # Tenta modelos diferentes caso o Llama falhe
+        models_to_try = [
+            "meta-llama/Meta-Llama-3-8B-Instruct",
+            "microsoft/DialoGPT-medium",
+            "HuggingFaceH4/zephyr-7b-beta"
+        ]
+        
+        for model in models_to_try:
+            try:
+                client = InferenceClient(model=model, token=HUGGING_FACE_TOKEN)
+                print(f"✅ Cliente de texto criado com sucesso usando {model}")
+                return client
+            except Exception as model_error:
+                print(f"❌ Erro com modelo {model}: {model_error}")
+                continue
+        
+        print("❌ Nenhum modelo funcionou")
+        return None
     except Exception as e:
-        print(f"❌ Erro ao criar cliente de texto: {e}")
+        print(f"❌ Erro geral ao criar cliente de texto: {e}")
+        import traceback
+        traceback.print_exc()
         return None
 
 def get_vision_client():
@@ -935,15 +955,39 @@ def generate_chat_response(chat_history):
         return "Desculpe, o serviço de IA não está disponível no momento."
 
     try:
-        response_generator = client.chat_completion(
-            messages=chat_history,
-            max_tokens=1500,
-            stream=False
+        # Converte o histórico para um prompt único
+        prompt = ""
+        for message in chat_history:
+            role = message.get("role", "")
+            content = message.get("content", "")
+            
+            if role == "system":
+                prompt += f"SISTEMA: {content}\n\n"
+            elif role == "user":
+                prompt += f"USUÁRIO: {content}\n\n"
+            elif role == "assistant":
+                prompt += f"ASSISTENTE: {content}\n\n"
+        
+        prompt += "ASSISTENTE: "
+        
+        # Usa text_generation ao invés de chat_completion
+        response = client.text_generation(
+            prompt,
+            max_new_tokens=1500,
+            temperature=0.7,
+            return_full_text=False
         )
-        return response_generator.choices[0].message.content
+        
+        if response and isinstance(response, str):
+            return response.strip()
+        else:
+            return "Desculpe, não consegui gerar uma resposta adequada."
+            
     except Exception as e:
         print(f"Erro na geração de resposta: {e}")
-        return "Desculpe, ocorreu um erro ao gerar a resposta."
+        import traceback
+        traceback.print_exc()
+        return f"Erro técnico: {str(e)}"
 
 # --- ROTAS PRINCIPAIS ---
 @app.route('/')
@@ -966,6 +1010,33 @@ def health():
         "google_api": bool(GOOGLE_API_KEY and GOOGLE_CSE_ID),
         "hf_token": bool(HUGGING_FACE_TOKEN)
     })
+
+@app.route('/test-ai')
+def test_ai():
+    """Testa se a IA está funcionando corretamente."""
+    try:
+        client = get_text_client()
+        if not client:
+            return jsonify({"error": "Cliente de IA não disponível", "hf_token_configured": bool(HUGGING_FACE_TOKEN)})
+        
+        test_prompt = "Responda apenas: Teste OK"
+        response = client.text_generation(
+            test_prompt,
+            max_new_tokens=10,
+            temperature=0.1,
+            return_full_text=False
+        )
+        
+        return jsonify({
+            "status": "success",
+            "test_response": response,
+            "hf_token_configured": bool(HUGGING_FACE_TOKEN)
+        })
+    except Exception as e:
+        return jsonify({
+            "error": str(e),
+            "hf_token_configured": bool(HUGGING_FACE_TOKEN)
+        })
 
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -1129,7 +1200,17 @@ Instruções: Analise o conteúdo do arquivo e responda à pergunta do usuário 
         if not HUGGING_FACE_TOKEN:
             return jsonify({"response": "⚠️ **Serviço de IA temporariamente indisponível**\n\nPara que eu possa responder adequadamente, é necessário configurar o token da Hugging Face no Replit Secrets.\n\n**Como resolver:**\n1. Clique em 'Secrets' no painel lateral\n2. Adicione a variável `HF_TOKEN` com seu token da Hugging Face\n3. Reinicie a aplicação\n\n**Como obter o token:**\n- Acesse huggingface.co\n- Faça login\n- Vá em Settings → Access Tokens\n- Crie um novo token\n\nApós configurar, estarei pronta para te ajudar com qualquer dúvida sobre manutenção industrial! 🔧"})
 
-        bot_response = generate_chat_response(session['chat_history'])
+        try:
+            bot_response = generate_chat_response(session['chat_history'])
+            
+            if not bot_response or bot_response.strip() == "":
+                bot_response = "Desculpe, não consegui processar sua mensagem. Pode tentar reformular sua pergunta?"
+                
+        except Exception as e:
+            print(f"Erro ao gerar resposta: {e}")
+            import traceback
+            traceback.print_exc()
+            bot_response = f"Erro técnico na geração de resposta: {str(e)}"
 
         session['chat_history'].append({"role": "assistant", "content": bot_response})
         session.modified = True
