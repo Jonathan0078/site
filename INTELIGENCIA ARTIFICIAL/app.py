@@ -53,23 +53,18 @@ print("=========================")
 # --- INICIALIZAÇÃO DO FLASK ---
 app = Flask(__name__)
 
-# Permite domínios do GitHub Pages, Render e Replit
+# Permite apenas o domínio do GitHub Pages do seu projeto e o endereço do backend Render
 CORS(app, supports_credentials=True, origins=[
     "https://jonathan0078.github.io",
-    "https://aemi.onrender.com",
-    "https://*.onrender.com",
-    "https://*.replit.dev",
-    "https://*.replit.app",
-    "http://localhost:*",
-    "http://127.0.0.1:*"
+    "https://aemi.onrender.com"
 ])
 
 # Carrega as chaves da aplicação a partir de variáveis de ambiente
 FLASK_SECRET_KEY = os.getenv("FLASK_SECRET_KEY", "dev-key-change-in-production")
 HUGGING_FACE_TOKEN = os.getenv("HF_TOKEN")
-# NOVAS VARIÁVEIS PARA GOOGLE CUSTOM SEARCH
+# VARIÁVEIS PARA GOOGLE CUSTOM SEARCH API
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")  # Deve ser configurado no Replit Secrets
+GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")
 
 # Validação das chaves
 if not HUGGING_FACE_TOKEN:
@@ -81,8 +76,8 @@ if not GOOGLE_API_KEY:
     print("Configure as variáveis GOOGLE_API_KEY e GOOGLE_CSE_ID no Replit Secrets.")
     print("Siga: https://developers.google.com/custom-search/v1/introduction")
 
-if not GOOGLE_CSE_ID or GOOGLE_CSE_ID == "f1582494ef7894395":
-    print("AVISO: GOOGLE_CSE_ID usando valor padrão ou não configurado. Configure seu próprio CSE ID.")
+if not GOOGLE_CSE_ID:
+    print("AVISO: GOOGLE_CSE_ID não configurado. Configure seu próprio CSE ID.")
     print("Crie um CSE em: https://cse.google.com/")
 
 app.secret_key = FLASK_SECRET_KEY
@@ -117,9 +112,6 @@ def google_search_api(query, num_results=3):
     if not GOOGLE_API_KEY or not GOOGLE_CSE_ID:
         print("Erro: Chave de API do Google ou CSE ID não configurados.")
         return {"error": "API do Google não configurada. Configure GOOGLE_API_KEY e GOOGLE_CSE_ID no Replit Secrets."}
-
-    if GOOGLE_CSE_ID == "f1582494ef7894395":
-        print("Aviso: Usando CSE ID padrão, pode não funcionar.")
 
     url = "https://www.googleapis.com/customsearch/v1"
     params = {
@@ -1552,6 +1544,4 @@ def clear_session():
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    print(f"🚀 Iniciando A.E.M.I na porta {port}")
-    print(f"🌐 Acesse em: http://0.0.0.0:{port}")
-    app.run(host='0.0.0.0', port=port, debug=False)
+    app.run(host='0.0.0.0', port=port, debug=True)
