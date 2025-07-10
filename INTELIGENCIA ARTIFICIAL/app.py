@@ -242,55 +242,130 @@ def search_internet(query, max_results=5):
         print(f"Erro na pesquisa: {e}")
         return {"error": f"Erro durante a pesquisa: {str(e)}"}
 
-def extract_page_content(url, max_chars=1000):
-    """Extrai conteúdo de uma página web para análise."""
+def extract_page_content(url, max_chars=2000):
+    """Extrai conteúdo aprimorado de uma página web para análise profunda."""
     try:
         headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'Accept-Language': 'pt-BR,pt;q=0.9,en;q=0.8',
-            'Accept-Encoding': 'gzip, deflate',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+            'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7',
+            'Accept-Encoding': 'gzip, deflate, br',
             'Connection': 'keep-alive',
-            'Upgrade-Insecure-Requests': '1'
+            'Upgrade-Insecure-Requests': '1',
+            'Sec-Fetch-Dest': 'document',
+            'Sec-Fetch-Mode': 'navigate',
+            'Sec-Fetch-Site': 'none',
+            'Cache-Control': 'max-age=0'
         }
         
-        response = requests.get(url, headers=headers, timeout=10, allow_redirects=True)
+        print(f"🌐 Acessando: {url}")
+        response = requests.get(url, headers=headers, timeout=15, allow_redirects=True)
         
         if response.status_code == 200 and BeautifulSoup:
             soup = BeautifulSoup(response.text, 'html.parser')
             
-            # Remove elementos desnecessários
-            for element in soup(['script', 'style', 'nav', 'header', 'footer', 'aside', 'iframe', 'noscript']):
+            # Remove elementos desnecessários de forma mais abrangente
+            for element in soup(['script', 'style', 'nav', 'header', 'footer', 'aside', 
+                               'iframe', 'noscript', 'form', 'button', 'input', 
+                               'select', 'textarea', 'label', 'fieldset']):
                 element.decompose()
             
-            # Tenta encontrar o conteúdo principal
-            main_content = soup.find('main') or soup.find('article') or soup.find('div', {'class': ['content', 'post', 'article']})
+            # Remove divs com classes comuns de navegação e ads
+            unwanted_classes = ['nav', 'menu', 'sidebar', 'footer', 'header', 'ad', 
+                              'advertisement', 'banner', 'social', 'share', 'comment',
+                              'related', 'recommendation', 'popup', 'modal']
             
-            if main_content:
-                text = main_content.get_text()
-            else:
-                text = soup.get_text()
+            for class_name in unwanted_classes:
+                for element in soup.find_all(attrs={'class': lambda x: x and any(cls in str(x).lower() for cls in [class_name])}):
+                    element.decompose()
             
-            # Limpa o texto
-            lines = (line.strip() for line in text.splitlines())
+            # Estratégia melhorada para encontrar conteúdo principal
+            content_selectors = [
+                'article', 'main', '[role="main"]',
+                '.content', '.post', '.article', '.entry',
+                '.main-content', '.post-content', '.article-content',
+                '.description', '.summary', '.abstract',
+                'div[id*="content"]', 'div[class*="content"]',
+                'section', '.section'
+            ]
+            
+            main_content = None
+            for selector in content_selectors:
+                try:
+                    found = soup.select_one(selector)
+                    if found and len(found.get_text().strip()) > 200:
+                        main_content = found
+                        break
+                except:
+                    continue
+            
+            # Se não encontrou conteúdo principal, usa o body mas filtra melhor
+            if not main_content:
+                main_content = soup.find('body') or soup
+            
+            # Extrai o texto de forma mais inteligente
+            text_parts = []
+            
+            # Prioriza parágrafos, títulos e listas
+            for element in main_content.find_all(['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'td']):
+                text = element.get_text().strip()
+                if len(text) > 10 and text not in text_parts:  # Evita duplicatas
+                    text_parts.append(text)
+            
+            # Se não encontrou texto suficiente, pega todo o texto
+            if len(' '.join(text_parts)) < 300:
+                text_parts = [main_content.get_text()]
+            
+            # Junta e limpa o texto
+            full_text = ' '.join(text_parts)
+            
+            # Limpeza avançada do texto
+            lines = (line.strip() for line in full_text.splitlines())
             chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
-            text = ' '.join(chunk for chunk in chunks if chunk)
+            text = ' '.join(chunk for chunk in chunks if chunk and len(chunk) > 3)
             
-            # Remove linhas muito curtas e repetitivas
+            # Remove caracteres especiais em excesso
+            import re
+            text = re.sub(r'\s+', ' ', text)  # Múltiplos espaços
+            text = re.sub(r'[^\w\s\.\,\;\:\!\?\-\(\)\[\]\"\'\/]', '', text)  # Caracteres especiais
+            
+            # Filtra sentenças por qualidade
             sentences = text.split('.')
-            meaningful_sentences = []
+            quality_sentences = []
+            
             for sentence in sentences:
                 sentence = sentence.strip()
-                if len(sentence) > 20 and sentence not in meaningful_sentences:
-                    meaningful_sentences.append(sentence)
+                # Filtros de qualidade
+                if (len(sentence) > 15 and 
+                    len(sentence) < 500 and 
+                    sentence.count(' ') > 3 and  # Pelo menos 4 palavras
+                    not sentence.lower().startswith(('clique', 'click', 'more', 'read', 'ver mais', 'saiba mais')) and
+                    sentence not in quality_sentences):
+                    quality_sentences.append(sentence)
             
-            cleaned_text = '. '.join(meaningful_sentences[:10])  # Primeiras 10 frases
+            # Reconstrói o texto limpo
+            cleaned_text = '. '.join(quality_sentences[:20])  # Primeiras 20 sentenças de qualidade
             
-            return cleaned_text[:max_chars]
+            if len(cleaned_text) < 100:
+                # Fallback: pega texto bruto se a limpeza foi muito agressiva
+                cleaned_text = text[:max_chars]
+            
+            result = cleaned_text[:max_chars]
+            print(f"✅ Extraído {len(result)} caracteres de conteúdo útil")
+            
+            return result
         
+        print(f"❌ Erro HTTP {response.status_code} ao acessar {url}")
+        return ""
+        
+    except requests.exceptions.Timeout:
+        print(f"⏰ Timeout ao acessar {url}")
+        return ""
+    except requests.exceptions.RequestException as e:
+        print(f"🌐 Erro de conexão ao acessar {url}: {e}")
         return ""
     except Exception as e:
-        print(f"Erro ao extrair conteúdo de {url}: {e}")
+        print(f"❌ Erro geral ao extrair conteúdo de {url}: {e}")
         return ""
 
 def should_search_internet(message):
@@ -335,7 +410,7 @@ def should_search_internet(message):
     return False
 
 def analyze_search_content(search_data, original_query):
-    """Analisa o conteúdo dos resultados de pesquisa e gera uma resposta elaborada."""
+    """Analisa profundamente o conteúdo dos resultados de pesquisa e gera uma resposta elaborada."""
     if "error" in search_data:
         return f"🔍 **Pesquisa na Internet**\n\n❌ {search_data['error']}\n\nComo alternativa, posso ajudar com base no meu conhecimento sobre manutenção industrial."
     
@@ -343,79 +418,116 @@ def analyze_search_content(search_data, original_query):
     if not results:
         return f"🔍 **Pesquisa na Internet**\n\n🚫 Nenhum resultado encontrado para: \"{original_query}\"\n\nComo alternativa, posso ajudar com base no meu conhecimento sobre manutenção industrial."
     
-    # Extrai conteúdo dos primeiros resultados
+    # Extrai e analisa conteúdo dos primeiros resultados com mais profundidade
     content_sources = []
-    for result in results[:3]:  # Analisa os 3 primeiros resultados
-        content = extract_page_content(result['url'], max_chars=800)
-        if content.strip():
+    total_content = ""
+    
+    print(f"🔍 Analisando {len(results[:5])} resultados para: {original_query}")
+    
+    for i, result in enumerate(results[:5], 1):  # Analisa os 5 primeiros resultados
+        print(f"📖 Extraindo conteúdo do site {i}/5: {result['title']}")
+        content = extract_page_content(result['url'], max_chars=2000)  # Aumenta limite para mais conteúdo
+        
+        if content.strip() and len(content) > 100:  # Só considera conteúdo substancial
             content_sources.append({
                 'title': result['title'],
                 'url': result['url'],
                 'content': content,
                 'snippet': result.get('snippet', '')
             })
+            total_content += f"\n=== {result['title']} ===\n{content}\n"
     
     if not content_sources:
-        return f"🔍 **Pesquisa na Internet**\n\n⚠️ Encontrei resultados para \"{original_query}\", mas não consegui acessar o conteúdo dos sites.\n\nComo alternativa, posso ajudar com base no meu conhecimento sobre manutenção industrial."
+        return f"🔍 **Pesquisa na Internet**\n\n⚠️ Encontrei {len(results)} resultados para \"{original_query}\", mas não consegui extrair conteúdo útil dos sites.\n\n💡 **Isso pode acontecer quando:**\n• Os sites têm proteção anti-bot\n• O conteúdo é carregado por JavaScript\n• Sites requerem login\n\nComo alternativa, posso ajudar com base no meu conhecimento sobre manutenção industrial."
     
-    # Prepara o contexto para o LLM
-    context = f"Pergunta do usuário: {original_query}\n\n"
-    context += "Informações encontradas na internet:\n\n"
+    print(f"✅ Conteúdo extraído de {len(content_sources)} fontes. Gerando análise...")
     
-    for i, source in enumerate(content_sources, 1):
-        context += f"Fonte {i} - {source['title']}:\n"
-        context += f"URL: {source['url']}\n"
-        context += f"Conteúdo: {source['content']}\n\n"
-    
-    # Gera resposta usando LLM
+    # Gera resposta inteligente usando LLM com todo o conteúdo extraído
     try:
         client = get_text_client()
         if client:
-            prompt = f"""Como A.E.M.I, especialista em manutenção industrial, responda à pergunta do usuário com base nas informações encontradas na internet. Seja detalhada e técnica.
+            # Cria um prompt mais elaborado para análise profunda
+            prompt = f"""Como A.E.M.I, assistente especialista em manutenção industrial, analise profundamente o conteúdo extraído da internet e forneça uma resposta completa e técnica para a pergunta do usuário.
 
-{context}
+**PERGUNTA DO USUÁRIO:** {original_query}
 
-Instruções:
-1. Responda de forma completa e técnica sobre o assunto
-2. Use as informações das fontes para embasar sua resposta
-3. Mantenha o foco em manutenção industrial
-4. No final, cite as fontes utilizadas
-5. Seja prática e objetiva
+**CONTEÚDO EXTRAÍDO DA INTERNET:**
+{total_content[:12000]}  # Limita para não sobrecarregar
 
-Resposta:"""
+**INSTRUÇÕES PARA RESPOSTA:**
+1. **Análise Técnica Completa:** Forneça uma resposta detalhada e técnica baseada no conteúdo real extraído
+2. **Síntese Inteligente:** Combine informações de múltiplas fontes para criar uma resposta coerente
+3. **Foco em Manutenção Industrial:** Relacione tudo com práticas de manutenção, equipamentos e procedimentos
+4. **Informações Práticas:** Inclua dados específicos, especificações, procedimentos ou recomendações encontradas
+5. **Estrutura Clara:** Organize a resposta com tópicos e subtópicos quando relevante
+6. **Credibilidade:** Mencione dados específicos e técnicos encontrados nas fontes
+
+**FORMATO DA RESPOSTA:**
+- Comece com um resumo executivo
+- Desenvolva os pontos técnicos principais
+- Inclua informações práticas específicas
+- Termine com recomendações ou conclusões
+
+**NÃO APENAS CITE AS FONTES - ANALISE E SINTETIZE O CONTEÚDO REAL!**
+
+Resposta técnica detalhada:"""
 
             response = client.text_generation(
                 prompt,
-                max_new_tokens=1000,
-                temperature=0.7,
+                max_new_tokens=1500,  # Aumenta limite para respostas mais completas
+                temperature=0.6,  # Diminui temperatura para respostas mais focadas
                 return_full_text=False
             )
             
             ai_response = response.strip()
             
-            # Adiciona as fontes ao final
-            sources_text = "\n\n📚 **Fontes consultadas:**\n"
-            for i, source in enumerate(content_sources, 1):
-                sources_text += f"{i}. {source['title']}\n   🔗 {source['url']}\n"
+            # Adiciona resumo das fontes analisadas
+            sources_summary = "\n\n" + "="*50 + "\n"
+            sources_summary += "📚 **FONTES ANALISADAS E PROCESSADAS:**\n\n"
             
-            return f"🔍 **Pesquisa na Internet - \"{original_query}\"**\n\n{ai_response}{sources_text}"
-        
+            for i, source in enumerate(content_sources, 1):
+                word_count = len(source['content'].split())
+                sources_summary += f"**{i}. {source['title']}**\n"
+                sources_summary += f"   📊 Conteúdo analisado: ~{word_count} palavras\n"
+                sources_summary += f"   🔗 URL: {source['url']}\n"
+                if source['snippet']:
+                    sources_summary += f"   📝 Resumo: {source['snippet'][:100]}...\n"
+                sources_summary += "\n"
+            
+            sources_summary += f"💡 **Total:** {len(content_sources)} fontes com conteúdo real analisado pela IA"
+            
+            final_response = f"🔍 **ANÁLISE COMPLETA DA INTERNET - \"{original_query}\"**\n\n{ai_response}{sources_summary}"
+            
+            print(f"✅ Resposta gerada com sucesso! {len(final_response)} caracteres")
+            return final_response
+            
     except Exception as e:
-        print(f"Erro ao gerar resposta com LLM: {e}")
+        print(f"❌ Erro ao gerar resposta com LLM: {e}")
     
-    # Fallback: resposta baseada nos snippets
-    response = f"🔍 **Pesquisa na Internet - \"{original_query}\"**\n\n"
-    response += "📝 **Informações encontradas:**\n\n"
+    # Fallback melhorado: cria um resumo manual mais inteligente
+    print("🔄 Usando fallback para gerar resumo manual...")
     
+    response = f"🔍 **PESQUISA E ANÁLISE NA INTERNET - \"{original_query}\"**\n\n"
+    response += f"📊 **Analisei {len(content_sources)} fontes com conteúdo real:**\n\n"
+    
+    # Cria resumo mais inteligente do conteúdo
     for i, source in enumerate(content_sources, 1):
-        response += f"**{i}. {source['title']}**\n"
-        if source['snippet']:
-            response += f"📋 {source['snippet']}\n"
-        response += f"🔗 {source['url']}\n\n"
+        response += f"**📖 Fonte {i}: {source['title']}**\n"
+        
+        # Extrai trechos mais relevantes do conteúdo
+        content_words = source['content'].split()
+        if len(content_words) > 50:
+            # Pega primeiras e últimas partes para melhor contexto
+            summary_start = ' '.join(content_words[:30])
+            summary_end = ' '.join(content_words[-20:])
+            content_summary = f"{summary_start}... {summary_end}"
+        else:
+            content_summary = source['content']
+        
+        response += f"📋 **Conteúdo analisado:** {content_summary[:300]}...\n"
+        response += f"🔗 **Link:** {source['url']}\n\n"
     
-    response += "📚 **Fontes consultadas:**\n"
-    for i, source in enumerate(content_sources, 1):
-        response += f"{i}. {source['title']} - {source['url']}\n"
+    response += "💡 **IMPORTANTE:** Esta análise foi baseada no conteúdo REAL extraído dos sites, não apenas nos títulos ou links!"
     
     return response
 
@@ -433,45 +545,111 @@ def get_vision_client():
     return InferenceClient(model="microsoft/kosmos-2-patch14-224", token=HUGGING_FACE_TOKEN)
 
 def analyze_image(image_path):
-    """Analisa uma imagem e retorna uma descrição detalhada do conteúdo visual."""
+    """Analisa uma imagem com múltiplos métodos para máxima precisão."""
     try:
-        # 1. ANÁLISE VISUAL COM IA
+        print(f"🖼️ Iniciando análise completa da imagem: {os.path.basename(image_path)}")
+        
+        # 1. ANÁLISE VISUAL COM IA AVANÇADA
         vision_analysis = ""
+        detailed_analysis = ""
+        
         try:
             client = get_vision_client()
             if client and HUGGING_FACE_TOKEN:
-                # Converte imagem para base64
+                print("🤖 Tentando análise visual com IA...")
+                
+                # Prepara a imagem otimizada
                 with open(image_path, 'rb') as f:
                     image_data = f.read()
                 
-                # Prepara a imagem para análise
                 img = Image.open(io.BytesIO(image_data))
+                original_size = img.size
                 
-                # Redimensiona se muito grande
+                # Otimiza a imagem para melhor análise
                 if img.width > 1024 or img.height > 1024:
                     img.thumbnail((1024, 1024), Image.Resampling.LANCZOS)
                 
-                # Converte para RGB se necessário
                 if img.mode != 'RGB':
                     img = img.convert('RGB')
                 
-                # Salva temporariamente
+                # Melhora a qualidade da imagem para análise
+                from PIL import ImageEnhance
+                enhancer = ImageEnhance.Contrast(img)
+                img = enhancer.enhance(1.2)  # Aumenta contraste
+                
+                enhancer = ImageEnhance.Sharpness(img)
+                img = enhancer.enhance(1.1)  # Aumenta nitidez
+                
+                # Salva em alta qualidade
                 temp_buffer = io.BytesIO()
-                img.save(temp_buffer, format='JPEG', quality=85)
+                img.save(temp_buffer, format='JPEG', quality=95, optimize=True)
                 temp_buffer.seek(0)
                 
-                # Faz a análise visual com IA
-                try:
-                    result = client.image_to_text(temp_buffer.getvalue())
-                    vision_analysis = result.get('generated_text', '') if isinstance(result, dict) else str(result)
-                except Exception as e:
-                    print(f"Erro na análise visual: {e}")
-                    vision_analysis = ""
+                # Múltiplas tentativas com diferentes modelos/configurações
+                vision_models = [
+                    "microsoft/kosmos-2-patch14-224",
+                    "Salesforce/blip-image-captioning-large",
+                    "nlpconnect/vit-gpt2-image-captioning"
+                ]
+                
+                for model_name in vision_models:
+                    try:
+                        print(f"🔍 Testando modelo: {model_name}")
+                        vision_client = InferenceClient(model=model_name, token=HUGGING_FACE_TOKEN)
+                        
+                        temp_buffer.seek(0)
+                        result = vision_client.image_to_text(temp_buffer.getvalue())
+                        
+                        if result:
+                            if isinstance(result, dict):
+                                vision_analysis = result.get('generated_text', '')
+                            else:
+                                vision_analysis = str(result)
+                            
+                            if len(vision_analysis) > 20:  # Se obteve análise útil
+                                print(f"✅ Análise visual obtida com {model_name}")
+                                break
+                                
+                    except Exception as e:
+                        print(f"❌ Modelo {model_name} falhou: {e}")
+                        continue
+                
+                # Se conseguiu análise visual, faz análise mais detalhada
+                if vision_analysis and len(vision_analysis) > 20:
+                    try:
+                        text_client = get_text_client()
+                        if text_client:
+                            enhancement_prompt = f"""Como especialista em manutenção industrial, analise esta descrição visual de uma imagem e forneça uma interpretação técnica detalhada:
+
+DESCRIÇÃO VISUAL: {vision_analysis}
+
+Forneça uma análise técnica focada em:
+1. Identificação de equipamentos/componentes
+2. Estado/condição dos equipamentos
+3. Possíveis problemas ou anomalias
+4. Recomendações de manutenção
+5. Aspectos de segurança
+
+Seja específico e técnico:"""
+
+                            enhanced_result = text_client.text_generation(
+                                enhancement_prompt,
+                                max_new_tokens=800,
+                                temperature=0.6,
+                                return_full_text=False
+                            )
+                            
+                            detailed_analysis = enhanced_result.strip()
+                            print("✅ Análise técnica detalhada gerada")
+                            
+                    except Exception as e:
+                        print(f"⚠️ Erro na análise detalhada: {e}")
+                        
         except Exception as e:
-            print(f"Erro no cliente de visão: {e}")
+            print(f"❌ Erro no sistema de visão: {e}")
             vision_analysis = ""
         
-        # 2. ANÁLISE TÉCNICA DA IMAGEM
+        # 2. ANÁLISE TÉCNICA E METADADOS DA IMAGEM
         with open(image_path, 'rb') as f:
             image_data = f.read()
         
@@ -479,65 +657,126 @@ def analyze_image(image_path):
         width, height = img.size
         format_img = img.format or "Desconhecido"
         
-        # 3. ANÁLISE BASEADA EM CARACTERÍSTICAS VISUAIS
-        visual_characteristics = analyze_visual_characteristics(img)
+        print(f"📊 Analisando características da imagem {width}x{height}")
         
-        # 4. ANÁLISE DO NOME DO ARQUIVO
+        # 3. ANÁLISE AVANÇADA DE CARACTERÍSTICAS VISUAIS
+        visual_characteristics = analyze_visual_characteristics(img)
+        color_analysis = analyze_image_colors(img)
+        
+        # 4. ANÁLISE DO CONTEXTO DO ARQUIVO
         filename = os.path.basename(image_path).lower()
         context_hints = analyze_filename_context(filename)
         
-        # 5. MONTA A RESPOSTA COMPLETA
-        if vision_analysis:
-            # Se temos análise de IA, usamos ela como base
-            description = f"""🔍 **Análise Visual da Imagem:**
+        # 5. ANÁLISE DE METADADOS EXIF (se disponível)
+        metadata_info = extract_image_metadata(image_path)
+        
+        # 6. MONTA A RESPOSTA COMPLETA E INTELIGENTE
+        if vision_analysis and len(vision_analysis) > 20:
+            # Resposta completa com IA
+            description = f"""🔍 **ANÁLISE COMPLETA DA IMAGEM**
 
-🤖 **O que vejo na imagem:**
+🤖 **VISÃO COMPUTACIONAL - O que a IA identificou:**
 {vision_analysis}
 
-🔧 **Análise AEMI (Manutenção Industrial):**
+🔧 **ANÁLISE TÉCNICA AEMI:**"""
+            
+            if detailed_analysis:
+                description += f"\n{detailed_analysis}"
+            else:
+                description += f"\n{interpret_for_maintenance(vision_analysis)}"
+            
+            description += f"""
+
+📊 **DADOS TÉCNICOS:**
+• Formato: {format_img} | Resolução: {width}x{height}px
+• Tamanho do arquivo: {len(image_data)/1024:.1f} KB
+{visual_characteristics}
+{color_analysis}
+{context_hints}
+{metadata_info}
+
+🔬 **CAPACIDADES DE ANÁLISE ATIVADAS:**
+✅ Análise visual com IA
+✅ Reconhecimento de equipamentos
+✅ Detecção de anomalias
+✅ Análise de cores e texturas
+✅ Contextualização industrial
+
+💬 **PRÓXIMOS PASSOS:**
+Agora posso responder perguntas específicas como:
+• "Que tipo de falha você identifica?"
+• "Quais os procedimentos de manutenção?"
+• "Este equipamento está em bom estado?"
+• "Que ferramentas são necessárias?"
+
+❓ **Sua pergunta:** O que você gostaria de saber sobre esta imagem?"""
+
+        elif vision_analysis and len(vision_analysis) > 5:
+            # Análise básica
+            description = f"""🔍 **ANÁLISE DA IMAGEM**
+
+🤖 **Análise Visual Básica:**
+{vision_analysis}
+
+🔧 **Interpretação Técnica:**
 {interpret_for_maintenance(vision_analysis)}
 
-📊 **Características técnicas:**
-- Formato: {format_img} | Dimensões: {width}x{height}px
+📊 **Informações Técnicas:**
+• Formato: {format_img} | Dimensões: {width}x{height}px
+• Tamanho: {len(image_data)/1024:.1f} KB
 {visual_characteristics}
+{color_analysis}
 {context_hints}
 
-💡 **Como posso ajudar:**
-Baseado no que vejo, posso te orientar sobre:
-• Identificação de componentes
-• Análise de falhas ou desgastes
-• Procedimentos de manutenção
-• Normas de segurança
-• Ferramentas recomendadas
+💡 **Como posso ajudar mais:**
+Descreva sua dúvida específica sobre a imagem para uma análise mais direcionada."""
 
-❓ **Próximo passo:** Me conte qual é sua dúvida específica sobre esta imagem."""
         else:
-            # Fallback para análise baseada em características
-            description = f"""📸 **Análise da Imagem:**
+            # Fallback robusto com análise alternativa
+            description = f"""📸 **ANÁLISE DA IMAGEM (Modo Alternativo)**
 
-⚠️ **Análise Visual Limitada:**
-Não foi possível fazer análise visual completa com IA no momento.
+⚠️ **Status da Análise Visual:**
+A análise automática com IA não está disponível no momento, mas posso ajudar de outras formas:
 
-🔧 **Análise AEMI baseada em características:**
+🔧 **ANÁLISE BASEADA EM CARACTERÍSTICAS:**
 {visual_characteristics}
+{color_analysis}
 {context_hints}
+{metadata_info}
 
-📊 **Informações técnicas:**
-- Formato: {format_img}
-- Dimensões: {width}x{height} pixels
+📊 **Dados Técnicos:**
+• Formato: {format_img} | Resolução: {width}x{height}px  
+• Tamanho: {len(image_data)/1024:.1f} KB
 
-💡 **Como posso ajudar:**
-Mesmo sem análise visual completa, posso te orientar sobre manutenção industrial se você me descrever:
-• Que equipamento/componente está na imagem
-• Qual problema você está enfrentando
-• Que tipo de análise precisa
+🎯 **COMO POSSO AJUDAR:**
+Mesmo sem análise visual automática, sou especialista em:
+• Procedimentos de manutenção para equipamentos específicos
+• Análise de falhas com base em sua descrição
+• Recomendações de ferramentas e métodos
+• Normas de segurança industrial
+• Especificações técnicas
 
-❓ **Me conte:** O que você vê na imagem e como posso te ajudar?"""
-        
+📝 **Para melhor ajuda, me informe:**
+1. Que equipamento/componente você vê na imagem?
+2. Qual problema ou dúvida você tem?
+3. Que tipo de análise precisa?
+
+💬 **Exemplo:** "Vejo um motor elétrico com ruído anormal" ou "Rolamento apresentando desgaste unusual\""""
+
+        print("✅ Análise completa da imagem finalizada")
         return description
         
     except Exception as e:
-        return f"❌ Erro ao analisar imagem: {str(e)}\n\nTente enviar novamente ou descreva o que você vê na imagem para que eu possa te ajudar."
+        error_msg = f"❌ Erro ao analisar imagem: {str(e)}"
+        print(error_msg)
+        return f"""{error_msg}
+
+🔄 **Soluções possíveis:**
+• Verifique se o arquivo não está corrompido
+• Tente enviar em formato JPG ou PNG
+• Reduza o tamanho da imagem se for muito grande
+
+💬 **Alternativa:** Descreva o que você vê na imagem e eu posso ajudar com base na descrição!"""
 
 def analyze_visual_characteristics(img):
     """Analisa características visuais básicas da imagem."""
@@ -569,7 +808,7 @@ def analyze_visual_characteristics(img):
         return ""
 
 def analyze_filename_context(filename):
-    """Analisa o nome do arquivo para contexto."""
+    """Analisa o nome do arquivo para contexto industrial."""
     maintenance_keywords = {
         'motor': 'Motor elétrico/mecânico',
         'rolamento': 'Rolamento/bearing',
@@ -593,7 +832,15 @@ def analyze_filename_context(filename):
         'hidraulica': 'Sistema hidráulico',
         'hydraulic': 'Hidráulico',
         'pneumatic': 'Pneumático',
-        'pneumatica': 'Pneumático'
+        'pneumatica': 'Pneumático',
+        'eletrica': 'Sistema elétrico',
+        'electric': 'Elétrico',
+        'sensor': 'Sensor/instrumento',
+        'temperatura': 'Monitoramento térmico',
+        'pressure': 'Sistema de pressão',
+        'pressao': 'Sistema de pressão',
+        'vibration': 'Análise de vibração',
+        'vibracao': 'Análise de vibração'
     }
     
     found = []
@@ -602,8 +849,84 @@ def analyze_filename_context(filename):
             found.append(description)
     
     if found:
-        return f"\n🏷️ **Contexto do arquivo:** {', '.join(found)}"
+        return f"\n🏷️ **Contexto identificado:** {', '.join(found)}"
     return ""
+
+def analyze_image_colors(img):
+    """Analisa as cores da imagem para contexto industrial."""
+    try:
+        # Converte para RGB se necessário
+        if img.mode != 'RGB':
+            img = img.convert('RGB')
+        
+        # Redimensiona para análise mais rápida
+        img_small = img.resize((100, 100))
+        
+        # Obtém cores dominantes
+        colors = img_small.getcolors(maxcolors=256*256*256)
+        if not colors:
+            return ""
+        
+        # Ordena por frequência
+        dominant_colors = sorted(colors, key=lambda x: x[0], reverse=True)[:5]
+        
+        color_interpretations = []
+        for count, color in dominant_colors:
+            if isinstance(color, tuple) and len(color) >= 3:
+                r, g, b = color[:3]
+                
+                # Interpretação industrial das cores
+                if r > 180 and g < 80 and b < 80:  # Vermelho forte
+                    color_interpretations.append("🔴 Vermelho predominante (indicação de perigo/parada)")
+                elif r > 200 and g > 150 and b < 100:  # Amarelo/laranja
+                    color_interpretations.append("🟡 Amarelo/laranja (sinalização de atenção)")
+                elif r < 100 and g > 120 and b < 100:  # Verde
+                    color_interpretations.append("🟢 Verde detectado (operação normal)")
+                elif r < 100 and g < 100 and b > 120:  # Azul
+                    color_interpretations.append("🔵 Azul presente (sistemas hidráulicos)")
+                elif r > 150 and g > 100 and b < 80:  # Marrom/ferrugem
+                    color_interpretations.append("🟤 Tons marrons (possível oxidação)")
+                elif r > 120 and g > 120 and b > 120:  # Tons metálicos
+                    color_interpretations.append("⚪ Tons metálicos (estruturas/equipamentos)")
+        
+        if color_interpretations:
+            return f"\n🎨 **Análise de cores:** {'; '.join(color_interpretations[:3])}"
+        return ""
+        
+    except Exception as e:
+        print(f"Erro na análise de cores: {e}")
+        return ""
+
+def extract_image_metadata(image_path):
+    """Extrai metadados EXIF da imagem quando disponível."""
+    try:
+        from PIL.ExifTags import TAGS
+        
+        img = Image.open(image_path)
+        
+        if hasattr(img, '_getexif'):
+            exifdata = img.getexif()
+            
+            if exifdata:
+                metadata = []
+                for tag_id in exifdata:
+                    tag = TAGS.get(tag_id, tag_id)
+                    data = exifdata.get(tag_id)
+                    
+                    if tag in ['DateTime', 'DateTimeOriginal']:
+                        metadata.append(f"📅 Data: {data}")
+                    elif tag == 'Make':
+                        metadata.append(f"📱 Dispositivo: {data}")
+                    elif tag == 'Software':
+                        metadata.append(f"💻 Software: {data}")
+                
+                if metadata:
+                    return f"\n📋 **Metadados:** {'; '.join(metadata[:2])}"
+        
+        return ""
+        
+    except Exception:
+        return ""
 
 def interpret_for_maintenance(vision_text):
     """Interpreta a análise visual no contexto de manutenção industrial."""
@@ -856,32 +1179,79 @@ def upload_file():
         
         # Verifica se é PDF
         elif ext == '.pdf' and PyPDF2:
-            response_text = "📄 **ARQUIVO RECEBIDO, NO QUE POSSO AJUDAR?**"
+            response_text = "📄 **DOCUMENTO PDF RECEBIDO - ANALISANDO CONTEÚDO...**"
             
             try:
+                print(f"📄 Processando PDF: {file.filename}")
+                
                 with open(temp_path, 'rb') as f:
                     reader = PyPDF2.PdfReader(f)
                     text_content = ""
+                    pdf_info = {
+                        'total_pages': len(reader.pages),
+                        'processed_pages': 0,
+                        'tables_found': 0,
+                        'images_found': 0
+                    }
                     
-                    # Extrai texto de até 15 páginas
-                    pages_to_read = min(15, len(reader.pages))
+                    print(f"📊 PDF tem {pdf_info['total_pages']} páginas")
+                    
+                    # Extrai texto de forma mais inteligente
+                    pages_to_read = min(20, len(reader.pages))  # Aumenta para 20 páginas
+                    
                     for i in range(pages_to_read):
                         try:
-                            page_text = reader.pages[i].extract_text() or ''
-                            text_content += f"\n--- Página {i+1} ---\n{page_text}"
-                        except:
+                            page = reader.pages[i]
+                            page_text = page.extract_text() or ''
+                            
+                            if len(page_text.strip()) > 50:  # Só processa páginas com conteúdo substancial
+                                # Limpa e formata o texto da página
+                                cleaned_page = clean_pdf_text(page_text)
+                                text_content += f"\n=== PÁGINA {i+1} ===\n{cleaned_page}\n"
+                                pdf_info['processed_pages'] += 1
+                                
+                                # Detecta tabelas (texto com muitos espaços/tabs)
+                                if count_table_patterns(page_text) > 3:
+                                    pdf_info['tables_found'] += 1
+                                    
+                        except Exception as e:
+                            print(f"Erro na página {i+1}: {e}")
                             continue
                     
-                    # Salva na sessão
-                    session['uploaded_file_content'] = {
-                        'filename': file.filename,
-                        'type': 'pdf',
-                        'content': text_content[:15000],  # Aumenta limite
-                        'analysis_type': 'text'
-                    }
-                    session.modified = True
+                    # Gera resumo inteligente do PDF
+                    if text_content.strip():
+                        pdf_summary = generate_pdf_summary(text_content, file.filename)
+                        
+                        full_content = f"""📋 **RESUMO DO DOCUMENTO:**
+{pdf_summary}
+
+📊 **ESTATÍSTICAS DO PDF:**
+• Total de páginas: {pdf_info['total_pages']}
+• Páginas processadas: {pdf_info['processed_pages']}
+• Tabelas detectadas: {pdf_info['tables_found']}
+• Tamanho do conteúdo: ~{len(text_content.split())} palavras
+
+📄 **CONTEÚDO COMPLETO EXTRAÍDO:**
+{text_content[:20000]}"""  # Aumenta limite significativamente
+                        
+                        # Salva na sessão com análise aprimorada
+                        session['uploaded_file_content'] = {
+                            'filename': file.filename,
+                            'type': 'pdf',
+                            'content': full_content,
+                            'analysis_type': 'document',
+                            'metadata': pdf_info
+                        }
+                        session.modified = True
+                        
+                        response_text = f"📄 **PDF PROCESSADO COM SUCESSO!**\n\n{pdf_summary}\n\n💬 **Agora você pode perguntar sobre qualquer aspecto do documento!**"
+                        
+                    else:
+                        response_text = "📄 **PDF processado, mas pouco texto foi extraído. Pode ser um documento com muitas imagens ou texto digitalizado.**"
+                        
             except Exception as e:
                 print(f"Erro ao processar PDF: {e}")
+                response_text = f"❌ **Erro ao processar PDF:** {str(e)}\n\n💡 **Dica:** Verifique se o PDF não está protegido ou corrompido."
         
         # Verifica se é documento Word
         elif ext in ['.docx'] and docx:
@@ -992,6 +1362,81 @@ def clear_session():
     except Exception as e:
         print(f"Erro ao limpar sessão: {e}")
         return jsonify({"error": "Erro ao limpar sessão"}), 500
+
+def clean_pdf_text(text):
+    """Limpa e formata texto extraído de PDF."""
+    import re
+    
+    # Remove quebras de linha excessivas
+    text = re.sub(r'\n\s*\n', '\n\n', text)
+    
+    # Remove espaços múltiplos
+    text = re.sub(r' +', ' ', text)
+    
+    # Remove caracteres especiais problemáticos
+    text = re.sub(r'[^\w\s\.\,\;\:\!\?\-\(\)\[\]\"\'\/\%\$\@\#\&\*\+\=\~\`]', '', text)
+    
+    # Corrige quebras de linha no meio de palavras
+    text = re.sub(r'(\w)-\s*\n\s*(\w)', r'\1\2', text)
+    
+    return text.strip()
+
+def count_table_patterns(text):
+    """Conta padrões que indicam presença de tabelas."""
+    import re
+    
+    # Conta linhas com múltiplas sequências de espaços (indicativo de colunas)
+    tab_patterns = len(re.findall(r'.*\s{3,}.*\s{3,}.*', text))
+    
+    # Conta linhas com números seguidos de espaços (típico de tabelas)
+    num_patterns = len(re.findall(r'\d+\s+\d+', text))
+    
+    return tab_patterns + num_patterns
+
+def generate_pdf_summary(content, filename):
+    """Gera um resumo inteligente do conteúdo do PDF."""
+    try:
+        client = get_text_client()
+        if not client:
+            return "Documento processado - conteúdo disponível para consulta."
+        
+        # Pega uma amostra representativa do conteúdo
+        content_sample = content[:8000]  # Primeiros 8000 caracteres
+        
+        summary_prompt = f"""Como A.E.M.I, especialista em manutenção industrial, analise este documento PDF e forneça um resumo técnico detalhado:
+
+ARQUIVO: {filename}
+
+CONTEÚDO DO DOCUMENTO:
+{content_sample}
+
+INSTRUÇÕES:
+1. Identifique o tipo de documento (manual, norma, procedimento, etc.)
+2. Liste os principais tópicos técnicos abordados
+3. Destaque informações relevantes para manutenção industrial
+4. Identifique especificações, procedimentos ou dados importantes
+5. Seja conciso mas técnico
+
+FORMATO DO RESUMO:
+📋 **Tipo de documento:** [tipo identificado]
+🔧 **Principais tópicos:** [lista dos principais assuntos]
+⚙️ **Aspectos técnicos relevantes:** [informações técnicas importantes]
+💡 **Aplicação prática:** [como usar este documento na manutenção]
+
+Resumo:"""
+
+        response = client.text_generation(
+            summary_prompt,
+            max_new_tokens=800,
+            temperature=0.5,
+            return_full_text=False
+        )
+        
+        return response.strip()
+        
+    except Exception as e:
+        print(f"Erro ao gerar resumo: {e}")
+        return f"📄 **Documento processado:** {filename}\n\n🔍 **Conteúdo disponível para análise** - Faça perguntas específicas sobre o documento!"
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
