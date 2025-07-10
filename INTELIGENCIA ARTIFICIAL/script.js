@@ -220,14 +220,208 @@ document.querySelectorAll('.suggestion-btn').forEach(btn => {
 document.addEventListener("DOMContentLoaded", () => {
 
     // ===================
-    // REMOVE FUNÇÕES E EVENTOS DE ENVIO/PRÉVIA DE ARQUIVO
+    // PRÉVIA DE IMAGEM E ENVIO DE ARQUIVO COM TEXTO
     // ===================
-    // Remove elementos e eventos relacionados a upload de arquivos/imagens e prévia
-    // Remove fileInput, fileBtn, previewArea, showFilePreview, hideFilePreview, handleFileUploadWithText
-    // Remove eventos de click/preview/upload de arquivo
-    // Remove manipulação de sendChatBtn para upload
+    // Elementos extras para prévia e texto do arquivo
+    const chatInput = document.querySelector(".chat-input textarea");
+    const sendChatBtn = document.querySelector("#send-btn");
+    const chatbox = document.querySelector(".chatbox");
+    const clearChatBtn = document.querySelector("#clear-btn");
+    const convsList = document.getElementById("convs-list");
+    const newConvBtn = document.getElementById("new-conv-btn");
+    const fileInput = document.getElementById("file-input");
+    const fileBtn = document.getElementById("file-btn");
+
+    // Adiciona área de prévia se não existir (sem textarea, só preview e botão X)
+    let previewArea = document.getElementById('file-preview-area');
+    if (!previewArea) {
+        previewArea = document.createElement('div');
+        previewArea.id = 'file-preview-area';
+        previewArea.style.display = 'none';
+        previewArea.style.margin = '8px 0';
+        previewArea.innerHTML = `
+            <div id="file-preview-content" style="position:relative;"></div>
+        `;
+        // Insere a prévia logo acima do campo de texto do chat
+        const chatInputBox = chatInput.parentNode;
+        chatInputBox.insertBefore(previewArea, chatInput);
+    }
+
+    // Função para mostrar prévia
+    function showFilePreview(file) {
+        const content = document.getElementById('file-preview-content');
+        if (!content) return;
+        content.innerHTML = '';
+        if (file) {
+            const ext = file.name.split('.').pop().toLowerCase();
+            // Botão X para cancelar
+            const closeBtn = document.createElement('button');
+            closeBtn.innerHTML = '<span style="font-size:1.3em;line-height:1;color:#fff;background:#d32f2f;border-radius:50%;padding:0 7px;">×</span>';
+            closeBtn.id = 'file-cancel-btn';
+            closeBtn.style.position = 'absolute';
+            closeBtn.style.top = '2px';
+            closeBtn.style.right = '2px';
+            closeBtn.style.background = 'transparent';
+            closeBtn.style.border = 'none';
+            closeBtn.style.cursor = 'pointer';
+            closeBtn.style.zIndex = '10';
+            closeBtn.title = 'Cancelar';
+            closeBtn.onclick = hideFilePreview;
+            content.appendChild(closeBtn);
+            if (["jpg","jpeg","png","gif","bmp","webp"].includes(ext)) {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.style.maxWidth = '120px';
+                img.style.maxHeight = '120px';
+                img.style.display = 'block';
+                img.style.marginBottom = '6px';
+                img.style.borderRadius = '8px';
+                img.style.boxShadow = '0 2px 8px rgba(0,0,0,0.12)';
+                content.appendChild(img);
+            } else {
+                const fileDiv = document.createElement('div');
+                fileDiv.textContent = `Arquivo: ${file.name}`;
+                fileDiv.style.padding = '12px 16px 12px 12px';
+                fileDiv.style.background = '#f5f5f5';
+                fileDiv.style.borderRadius = '8px';
+                fileDiv.style.marginBottom = '6px';
+                fileDiv.style.fontWeight = '600';
+                fileDiv.style.color = '#333';
+                content.appendChild(fileDiv);
+            }
+        }
+        previewArea.style.display = '';
+    }
+
+    // Função para esconder prévia
+    function hideFilePreview() {
+        previewArea.style.display = 'none';
+        document.getElementById('file-preview-content').innerHTML = '';
+        fileInput.value = '';
+    }
+
+    // Substitui handleFileUpload para usar texto adicional
+    function handleFileUploadWithText(file, extraText) {
+        const formData = new FormData();
+        formData.append('file', file);
+        if (extraText && extraText.trim()) formData.append('text', extraText.trim());
+        // ...restante igual...
+        const fileExt = file.name.split('.').pop().toLowerCase();
+        const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileExt);
+        const isDocument = ['pdf', 'doc', 'docx', 'txt', 'md', 'csv'].includes(fileExt);
+        let fileIcon = '📎';
+        if (isImage) fileIcon = '📸';
+        else if (isDocument) fileIcon = '📄';
+        let userMessage = `${fileIcon} Arquivo enviado: ${file.name}`;
+        if (extraText && extraText.trim()) userMessage += `\n📝 ${extraText.trim()}`;
+        if(chatbox) {
+            chatbox.appendChild(createChatLi(userMessage, "outgoing"));
+            chatbox.scrollTo(0, chatbox.scrollHeight);
+        }
+        const incomingChatLi = createChatLi("typing", "incoming");
+        const pElement = incomingChatLi.querySelector("p");
+        let analysisText = "Analisando arquivo...";
+        if (isImage) analysisText = "Analisando imagem...";
+        else if (fileExt === 'pdf') analysisText = "Processando PDF...";
+        else if (fileExt === 'docx') analysisText = "Processando documento...";
+        if(pElement) {
+            pElement.textContent = analysisText;
+            pElement.classList.add("typing-animation");
+        }
+        if(chatbox) {
+            chatbox.appendChild(incomingChatLi);
+            chatbox.scrollTo(0, chatbox.scrollHeight);
+        }
+        chatInput.disabled = true;
+        sendChatBtn.disabled = true;
+        sendChatBtn.innerHTML = '<span class="material-symbols-outlined" style="background:#d32f2f;color:#fff;border-radius:6px;padding:4px 10px;font-size:1.3em;vertical-align:middle;">stop</span>';
+        let interrupted = false;
+        sendChatBtn.onclick = function() {
+            interrupted = true;
+            if(pElement) {
+                pElement.classList.remove("typing-animation");
+                pElement.textContent = "[Resposta interrompida pelo usuário.]";
+            }
+            chatInput.disabled = false;
+            sendChatBtn.disabled = false;
+            sendChatBtn.innerHTML = '<span class="material-symbols-outlined">send</span>';
+            sendChatBtn.onclick = handleChat;
+        };
+        fetch(API_URL_UPLOAD, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            if (interrupted) return;
+            if(pElement) {
+                pElement.classList.remove("typing-animation");
+                pElement.textContent = "";
+                if (data.response) {
+                    typeText(pElement, data.response);
+                } else if (data.error) {
+                    pElement.textContent = `❌ Erro: ${data.error}`;
+                } else {
+                    pElement.textContent = "Arquivo processado com sucesso!";
+                }
+            }
+            if (isVoiceOutputEnabled && data.response) speakText(data.response);
+        })
+        .catch(error => {
+            if (interrupted) return;
+            console.error('Erro no upload:', error);
+            if(pElement) {
+                pElement.classList.remove("typing-animation");
+                pElement.textContent = "❌ Erro ao processar arquivo. Verifique se o formato é suportado e tente novamente.";
+            }
+        })
+        .finally(() => {
+            if (interrupted) return;
+            if(chatbox) chatbox.scrollTo(0, chatbox.scrollHeight);
+            saveCurrentConv();
+            chatInput.disabled = false;
+            sendChatBtn.disabled = false;
+            sendChatBtn.textContent = '';
+            const icon = document.createElement('span');
+            icon.className = 'material-symbols-outlined';
+            icon.textContent = 'send';
+            sendChatBtn.appendChild(icon);
+            sendChatBtn.onclick = handleChat;
+        });
+    }
+
+    // Eventos para upload de arquivo
+    if(fileBtn && fileInput) {
+        fileBtn.addEventListener("click", () => {
+            fileInput.click();
+        });
+        fileInput.addEventListener("change", (e) => {
+            const file = e.target.files[0];
+            if(file) {
+                showFilePreview(file);
+            }
+        });
+    }
+    // Substitui o evento do botão de enviar do chat para lidar com arquivo ou texto
+    if(sendChatBtn) {
+        sendChatBtn.addEventListener('click', function() {
+            const file = fileInput.files[0];
+            const extraText = chatInput.value;
+            if (previewArea.style.display !== 'none' && file) {
+                hideFilePreview();
+                handleFileUploadWithText(file, extraText);
+                chatInput.value = '';
+            } else {
+                handleChat();
+            }
+        });
+    }
+
     // ===================
-    // FIM REMOVE FUNÇÕES E EVENTOS DE ENVIO/PRÉVIA DE ARQUIVO
+    // FIM PRÉVIA DE IMAGEM E ENVIO DE ARQUIVO COM TEXTO
     // ===================
 
     const sideMenu = document.getElementById("side-menu");
@@ -294,6 +488,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // ==================================================
 
     // --- Seletores do DOM (Restante do código) ---
+    // ...existing code...
+
     // --- Configuração Dinâmica da URL do Backend ---
     // Sempre usar a API do Render para garantir funcionamento ao abrir o HTML localmente
     const BACKEND_URL = "https://aemi.onrender.com";
@@ -491,6 +687,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // --- Upload de Arquivo ---
+    // ...substituído por handleFileUploadWithText...
+
     // --- Envio de Mensagem e Resposta ---
     const generateResponse = (incomingChatLi) => {
         const requestOptions = {
@@ -665,6 +864,22 @@ document.addEventListener("DOMContentLoaded", () => {
             handleChat();
         }
     });
+
+    // Eventos para upload de arquivo
+    if(fileBtn && fileInput) {
+        fileBtn.addEventListener("click", () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener("change", (e) => {
+            const file = e.target.files[0];
+            if(file) {
+                handleFileUpload(file);
+                fileInput.value = ''; // Limpa o input
+            }
+        });
+    }
+
     // Interromper a fala da IA ao começar a digitar
     if(chatInput && 'speechSynthesis' in window) {
         chatInput.addEventListener('input', () => {
@@ -680,4 +895,82 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- Inicia a aplicação ---
     init();
+
+    // --- Pesquisa na Internet ---
+    const performInternetSearch = async (query) => {
+        const chatContainer = document.querySelector(".chatbox"); // Make sure this selector is correct
+        const outgoingChatLi = createChatLi(`🔍 Pesquisando: "${query}"`, "outgoing");
+        chatContainer.appendChild(outgoingChatLi);
+        chatContainer.scrollTo(0, chatContainer.scrollHeight);
+
+        const incomingChatLi = createChatLi("typing", "incoming");
+        chatContainer.appendChild(incomingChatLi);
+        chatContainer.scrollTo(0, chatContainer.scrollHeight);
+
+        const pElement = incomingChatLi.querySelector("p");
+        pElement.textContent = "Pesquisando na internet..."; // Updated message
+
+        const formData = new FormData();
+        formData.append('query', query);
+        formData.append('max_results', '5');
+
+        try {
+            const response = await fetch(`${BACKEND_URL}/search-internet`, { // Updated API URL
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                pElement.classList.remove("typing-animation");
+                pElement.textContent = `❌ Erro na pesquisa: ${data.error}`;
+            } else if (data.results && data.results.length > 0) {
+                let resultText = `🔍 **Resultados da pesquisa para "${query}"**\n\n`;
+                resultText += `📊 Encontrei ${data.results.length} resultado(s):\n\n`;
+
+                data.results.forEach((result, index) => {
+                    resultText += `**${index + 1}. ${result.title}**\n`;
+                    resultText += `🔗 ${result.url}\n`;
+                    if (result.snippet) {
+                        resultText += `📝 ${result.snippet}\n`;
+                    }
+                    resultText += `\n`;
+                });
+
+                resultText += `💡 **Como usar:** Clique nos links para mais detalhes ou me pergunte algo específico!`;
+
+                pElement.classList.remove("typing-animation");
+                typeText(pElement, resultText);
+
+                if (isVoiceOutputEnabled) {
+                    speakText(`Encontrei ${data.results.length} resultados para sua pesquisa sobre ${query}`);
+                }
+            } else {
+                pElement.classList.remove("typing-animation");
+                pElement.textContent = `🚫 Nenhum resultado encontrado para "${query}". Tente reformular sua pesquisa.`;
+            }
+        } catch (error) {
+            console.error('Erro na pesquisa:', error);
+            pElement.classList.remove("typing-animation");
+            pElement.textContent = '❌ Erro ao realizar pesquisa na internet.';
+        } finally {
+            chatContainer.scrollTo(0, chatContainer.scrollHeight);
+            saveCurrentConv();
+        }
+    };
+    const searchBtn = document.getElementById('search-btn');
+
+    searchBtn.addEventListener('click', () => {
+        const query = chatInput.value.trim();
+        if (query) {
+            performInternetSearch(query);
+        } else {
+            const searchQuery = prompt('Digite sua pesquisa:');
+            if (searchQuery && searchQuery.trim()) {
+                chatInput.value = `Pesquisar: ${searchQuery.trim()}`;
+                performInternetSearch(searchQuery.trim());
+            }
+        }
+    });
 });
