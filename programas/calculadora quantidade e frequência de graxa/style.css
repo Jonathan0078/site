@@ -18,6 +18,114 @@
 }
 
 body { font-family: 'Roboto', sans-serif; background-color: var(--cor-fundo); color: var(--cor-texto); margin: 0; padding: 0; }
+
+/* Dark mode automático (pode ser expandido para toggle JS) */
+
+/* Modo escuro ativado por [data-theme=dark] */
+[data-theme="dark"] {
+  --cor-fundo: #181a1b;
+  --card-bg: #23272b;
+  --cor-texto: #f8f9fa;
+  --border-color: #333;
+  --cor-primaria: #00bfff;
+  --cor-secundaria: #005a9c;
+  --cor-destaque: #ffc107;
+  --cor-sucesso: #28a745;
+  --cor-aviso: #ffc107;
+  --cor-perigo: #dc3545;
+  --cor-destaque-hover: #e0a800;
+  --tooltip-bg: #222;
+  --tooltip-text: #fff;
+}
+[data-theme="dark"] .result-card,
+[data-theme="dark"] .health-card,
+[data-theme="dark"] .recommendation-card,
+[data-theme="dark"] .recommendation-item {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+/* Botão de alternância de tema */
+.toggle-theme-btn {
+  background: var(--cor-destaque);
+  color: #222;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin-left: 1rem;
+  cursor: pointer;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.toggle-theme-btn:focus {
+  outline: 2px solid var(--cor-destaque-hover);
+}
+.toggle-theme-btn:hover {
+  background: var(--cor-destaque-hover);
+  color: #111;
+}
+
+/* Foco visível para acessibilidade */
+button:focus, input:focus, select:focus, .tooltip:focus {
+  outline: 2px solid var(--cor-destaque);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.25);
+}
+
+/* Foco visível só para teclado */
+button:focus-visible, input:focus-visible, select:focus-visible, .tooltip:focus-visible {
+  outline: 2px solid var(--cor-destaque);
+}
+
+/* Tooltip acessível por teclado */
+.tooltip {
+  outline: none;
+}
+.tooltip:focus .tooltiptext, .tooltip:active .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Feedback visual para campos inválidos */
+input:invalid, select:invalid {
+  border-color: var(--cor-perigo);
+  box-shadow: 0 0 0 2px rgba(220,53,69,0.15);
+}
+
+/* Animação suave para barra de saúde */
+.health-bar {
+  transition: width 0.7s cubic-bezier(.4,2,.6,1), background-color 0.5s;
+}
+
+/* Animação em cards de resultado */
+.result-card, .recommendation-card, .health-card {
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+.result-card:hover, .recommendation-card:hover, .health-card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+  transform: translateY(-4px) scale(1.02);
+}
+
+/* Contraste extra para botões */
+.calculate-btn, .reset-btn {
+  text-shadow: 0 1px 2px rgba(0,0,0,0.08);
+}
+.calculate-btn:focus, .reset-btn:focus {
+  background-color: var(--cor-destaque-hover);
+  color: #222;
+}
+
+/* Melhoria responsiva extra */
+@media (max-width: 480px) {
+  .container { padding: 0.5rem; }
+  .calculator-form { padding: 1rem; }
+  .result-card, .recommendation-card, .health-card { padding: 1rem; }
+  .input-section { grid-template-columns: 1fr; }
+}
 .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
 .top-header-bar { background: linear-gradient(90deg, var(--cor-primaria), var(--cor-secundaria)); color: #ffffff; padding: 1.5rem 2rem; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); display: flex; justify-content: center; align-items: center; position: sticky; top: 0; width: 100%; z-index: 1000; border-bottom: 5px solid var(--cor-destaque); box-sizing: border-box; }
 .header-title { margin: 0; font-family: 'Oswald', sans-serif; font-size: 2rem; font-weight: 700; }
