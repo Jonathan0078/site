@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora GreasePRO 5.0 - Offline</title>
+    <title>Calculadora GreasePRO 5.1 - Offline</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -83,16 +83,15 @@
             </div>
 
             <div class="results-grid">
-                <!-- Resultados Principais -->
-                <div class="result-card"><h3>Carga Inicial</h3><p><span id="initialFill">0</span> <small>gramas</small></p></div>
-                <div class="result-card"><h3>Relubrificação</h3><p><span id="relubAmount">0</span> <small>gramas</small></p></div>
-                <div class="result-card"><h3>Bombadas / Relub.</h3><p><span id="relubPumps">0</span> <small>acionamentos</small></p></div>
-                <div class="result-card"><h3>Custo Anual</h3><p><span id="annualCost">0</span> <small>R$ / ano</small></p></div>
-                <!-- Resultados Detalhados -->
-                <div class="result-card"><h3>Intervalo (Horas)</h3><p><span id="relubIntervalHours">0</span> <small>horas</small></p></div>
-                <div class="result-card"><h3>Intervalo (Semanas)</h3><p><span id="relubIntervalWeeks">0</span> <small>semanas</small></p></div>
-                <div class="result-card"><h3>Vida da Graxa (L10)</h3><p><span id="greaseLife">0</span> <small>horas</small></p></div>
-                <div class="result-card"><h3>Massa (Aprox.)</h3><p><span id="bearingMass">0</span> <small>kg</small></p></div>
+                <!-- Estrutura dos cards padronizada com ID no <p> -->
+                <div class="result-card"><h3>Carga Inicial</h3><p id="initialFill">0 <small>gramas</small></p></div>
+                <div class="result-card"><h3>Relubrificação</h3><p id="relubAmount">0 <small>gramas</small></p></div>
+                <div class="result-card"><h3>Bombadas / Relub.</h3><p id="relubPumps">0 <small>acionamentos</small></p></div>
+                <div class="result-card"><h3>Custo Anual</h3><p id="annualCost">R$ 0,00 <small>por ano</small></p></div>
+                <div class="result-card"><h3>Intervalo (Horas)</h3><p id="relubIntervalHours">0 <small>horas</small></p></div>
+                <div class="result-card"><h3>Intervalo (Semanas)</h3><p id="relubIntervalWeeks">0 <small>semanas</small></p></div>
+                <div class="result-card"><h3>Vida da Graxa (L10)</h3><p id="greaseLife">0 <small>horas</small></p></div>
+                <div class="result-card"><h3>Massa (Aprox.)</h3><p id="bearingMass">0 <small>kg</small></p></div>
             </div>
 
             <div class="interval-chart-card">
