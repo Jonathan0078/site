@@ -30,11 +30,11 @@
                 <div class="calculator-grid">
                     <div class="input-group">
                         <label for="temp-operacao">Temperatura de Operação (°C)</label>
-                        <input type="number" id="temp-operacao" placeholder="Ex: 60">
+                        <input type="number" id="temp-operacao" placeholder="Ex: 60" required>
                     </div>
                     <div class="input-group">
                         <label for="tipo-equipamento">Tipo de Equipamento</label>
-                        <select id="tipo-equipamento">
+                        <select id="tipo-equipamento" required>
                             <option value="">-- Selecione o tipo --</option>
                             <option value="redutor_paralelo">Redutor de Eixos Paralelos</option>
                             <option value="redutor_semfim">Redutor Coroa e Sem-Fim</option>
@@ -44,7 +44,7 @@
                         </select>
                     </div>
                 </div>
-                <button id="calculate-button">Calcular Viscosidade</button>
+                <button id="calculate-button"><i class="fas fa-calculator"></i> Calcular Viscosidade</button>
                 <div id="calculator-result" class="hidden">
                     <h3>Viscosidade Recomendada:</h3>
                     <p id="recommended-vg-text" class="recommended-vg"></p>
@@ -54,11 +54,12 @@
             </section>
             <div id="calculator-search-results-container"></div>
 
+            <!-- [IMPROVEMENT] Seção de projetos salvos agora é funcional -->
             <section class="saved-projects-section">
                 <h2><i class="fas fa-save"></i> Projetos Salvos</h2>
                 <div class="save-project-form">
                     <div class="input-group">
-                        <label for="project-name">Nome para o Projeto Atual</label>
+                        <label for="project-name">Nome para o Cálculo Atual</label>
                         <input type="text" id="project-name" placeholder="Ex: Motor Principal Prensa 1">
                     </div>
                     <button id="save-project-btn"><i class="fas fa-plus-circle"></i> Salvar Cálculo Atual</button>
@@ -72,7 +73,7 @@
                     </div>
                     <div class="button-group">
                         <button id="load-project-btn"><i class="fas fa-upload"></i> Carregar Projeto</button>
-                        <button id="delete-project-btn" class="delete-button"><i class="fas fa-trash-alt"></i> Apagar Projeto</button>
+                        <button id="delete-project-btn"><i class="fas fa-trash-alt"></i> Apagar Projeto</button>
                     </div>
                 </div>
             </section>
@@ -83,7 +84,6 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                // CAMINHO ABSOLUTO E CORRIGIDO PARA O SERVICE WORKER
                 navigator.serviceWorker.register('/site/sw.js').then(reg => console.log('Service worker registado.', reg));
             });
         }
