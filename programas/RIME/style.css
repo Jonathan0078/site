@@ -1,15 +1,20 @@
-/* --- Estilização Geral --- */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+/* --- Estilização Geral com a Nova Identidade Visual --- */
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto+Mono&family=Roboto:wght@400;700&display=swap');
 
 :root {
-    --cor-primaria: #0a3d62;
-    --cor-secundaria: #3c6382;
-    --cor-fundo: #f4f7f9;
-    --cor-texto: #333;
-    --cor-alta: #e74c3c;
-    --cor-media: #f39c12;
-    --cor-baixa: #2ecc71;
-    --cor-highlight: #000;
+    /* Paleta de cores da nova identidade */
+    --cor-primaria: #003366;
+    --cor-secundaria: #005a9c;
+    --cor-destaque: #ffc107;
+    --cor-fundo: #f8f9fa;
+    --cor-texto: #212529;
+    --cor-sucesso: #28a745;
+    --cor-erro: #dc3545;
+
+    /* Cores adaptadas do sistema antigo */
+    --cor-alta: var(--cor-erro);
+    --cor-media: var(--cor-destaque);
+    --cor-baixa: var(--cor-sucesso);
 }
 
 * {
@@ -27,33 +32,32 @@ body {
 
 .container {
     max-width: 1200px;
-    margin: 20px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin: 2rem auto;
+    padding: 1rem;
 }
 
 /* --- Cabeçalho e Títulos --- */
 header {
+    background: linear-gradient(90deg, var(--cor-primaria), var(--cor-secundaria));
+    color: #ffffff;
+    padding: 1.5rem 1rem;
     text-align: center;
-    margin-bottom: 20px;
-    padding: 20px;
-    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria));
-    color: #fff;
+    border-bottom: 5px solid var(--cor-destaque);
     border-radius: 8px;
+    margin-bottom: 2rem;
 }
 
 header h1 {
+    font-family: 'Oswald', sans-serif;
     font-size: 2.5em;
     margin-bottom: 10px;
 }
 
 h2 {
+    font-family: 'Oswald', sans-serif;
     color: var(--cor-primaria);
-    border-bottom: 2px solid var(--cor-secundaria);
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 1.5rem;
+    text-align: center;
     font-size: 1.8em;
 }
 
@@ -66,29 +70,30 @@ h2 {
 }
 
 #rime-form, #result-section {
-    padding: 20px;
-    background-color: #fdfdfd;
-    border: 1px solid #e0e0e0;
+    background: #ffffff;
+    padding: 2rem;
     border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 1.5rem;
 }
 
 label {
     display: block;
-    font-weight: 700;
-    margin-bottom: 8px;
-    color: var(--cor-secundaria);
+    font-weight: bold;
+    color: var(--cor-texto);
+    margin-bottom: 0.5rem;
 }
 
 select {
     width: 100%;
-    padding: 12px;
-    font-size: 1em;
+    padding: 0.8rem;
+    font-size: 1.1rem;
     border: 1px solid #ccc;
     border-radius: 5px;
+    background-color: #fff;
     cursor: pointer;
     transition: border-color 0.3s;
 }
@@ -100,51 +105,50 @@ select:focus {
 
 .buttons {
     display: flex;
-    gap: 10px;
+    gap: 15px;
     margin-top: 20px;
 }
 
 button {
     flex: 1;
-    padding: 12px 20px;
-    font-size: 1.1em;
-    font-weight: 700;
-    border: none;
+    padding: 1rem;
+    font-size: 1.1rem;
     border-radius: 5px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    color: #fff;
+    border: none;
+    color: white;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    transform: scale(1.02);
+    opacity: 0.9;
 }
 
 button[type="submit"] {
-    background-color: var(--cor-primaria);
-}
-button[type="submit"]:hover {
-    background-color: #08304f;
-    transform: translateY(-2px);
+    background-color: var(--cor-sucesso);
 }
 
 button[type="reset"] {
-    background-color: #95a5a6;
-}
-button[type="reset"]:hover {
-    background-color: #7f8c8d;
-    transform: translateY(-2px);
+    background-color: var(--cor-secundaria);
 }
 
 /* --- Seção de Resultados --- */
 #result-display {
-    font-size: 1.5em;
+    font-family: 'Oswald', sans-serif;
+    font-size: 2.2em;
     font-weight: 700;
     text-align: center;
     padding: 20px;
     border-radius: 8px;
     margin-bottom: 20px;
     transition: all 0.4s ease;
+    text-transform: uppercase;
 }
 
 #result-display.alta { background-color: var(--cor-alta); color: white; }
-#result-display.media { background-color: var(--cor-media); color: white; }
+#result-display.media { background-color: var(--cor-media); color: var(--cor-texto); } /* Texto escuro para melhor contraste com amarelo */
 #result-display.baixa { background-color: var(--cor-baixa); color: white; }
 
 #recommendation-display {
@@ -152,6 +156,7 @@ button[type="reset"]:hover {
     border-left: 5px solid var(--cor-primaria);
     background-color: #eaf2f8;
     border-radius: 5px;
+    font-family: 'Roboto Mono', monospace;
 }
 
 /* --- Matriz RIME --- */
@@ -177,10 +182,11 @@ button[type="reset"]:hover {
     color: white;
     font-weight: 700;
     vertical-align: middle;
+    font-family: 'Oswald', sans-serif;
 }
 
-#rime-matrix tbody tr:nth-child(odd) {
-    background-color: #f9f9f9;
+#rime-matrix tbody tr:nth-child(even) {
+    background-color: var(--cor-fundo);
 }
 
 #rime-matrix .criticidade-header {
@@ -189,15 +195,15 @@ button[type="reset"]:hover {
     width: 100px;
 }
 
-/* Cores das células */
-.prio-alta { background-color: rgba(231, 76, 60, 0.7); }
-.prio-media { background-color: rgba(243, 156, 18, 0.7); }
-.prio-baixa { background-color: rgba(46, 204, 113, 0.7); }
-.prio-muito-baixa { background-color: rgba(46, 204, 113, 0.4); }
+/* Cores das células adaptadas para a nova identidade */
+.prio-alta { background-color: var(--cor-alta); color: white; }
+.prio-media { background-color: var(--cor-media); color: var(--cor-texto); }
+.prio-baixa { background-color: var(--cor-baixa); color: white; }
+.prio-muito-baixa { background-color: #a3d9b1; color: var(--cor-texto); } /* Tom mais claro do verde sucesso */
 
 /* Destaque da célula selecionada */
 .highlight {
-    border: 4px solid var(--cor-highlight) !important;
+    border: 4px solid var(--cor-destaque) !important;
     transform: scale(1.15);
     font-weight: bold;
     font-size: 1.2em;
@@ -216,7 +222,7 @@ footer {
 }
 
 .logo {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Oswald', sans-serif;
     font-size: 1.5rem;
     font-weight: bold;
     color: var(--cor-primaria);
@@ -225,7 +231,7 @@ footer {
     position: relative;
 }
 
-/* --- Responsividade --- */
+/* --- Responsividade (Mantida do código original) --- */
 @media (max-width: 992px) {
     .app-layout {
         grid-template-columns: 1fr;
@@ -243,5 +249,11 @@ footer {
     }
     h2 {
         font-size: 1.5em;
+    }
+    .app-layout {
+        gap: 20px;
+    }
+    #rime-form, #result-section {
+        padding: 1.5rem;
     }
 }
