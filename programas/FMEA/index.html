@@ -3,46 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FMEA Automático</title>
+    <title>Gerador de FMEA Avançado</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Gerador de FMEA Automático</h1>
+    <header>
+        <h1>Gerador de FMEA Avançado</h1>
+        <p>Crie, gerencie e exporte sua Análise de Modos de Falha e Efeitos.</p>
+    </header>
 
-    <div class="form-container">
-        <label for="severidade">Severidade (1-10):</label>
-        <input type="number" id="severidade" min="1" max="10">
-        <label for="ocorrencia">Ocorrência (1-10):</label>
-        <input type="number" id="ocorrencia" min="1" max="10">
-        <label for="deteccao">Detecção (1-10):</label>
-        <input type="number" id="deteccao" min="1" max="10">
-        <button id="calcularRpn">Calcular RPN</button>
-        <p>RPN: <span id="rpnResultado">0</span></p>
+    <div class="container">
+        <div class="form-container card">
+            <h2>Adicionar Nova Falha</h2>
+            <form id="fmeaForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="itemFuncao">Item / Função do Processo:</label>
+                        <input type="text" id="itemFuncao" placeholder="Ex: Sistema de Freio" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modoFalha">Modo de Falha Potencial:</label>
+                        <input type="text" id="modoFalha" placeholder="Ex: Vazamento de fluido" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="efeitoFalha">Efeito Potencial da Falha:</label>
+                        <input type="text" id="efeitoFalha" placeholder="Ex: Perda de capacidade de frenagem" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="causaFalha">Causa Potencial da Falha:</label>
+                        <input type="text" id="causaFalha" placeholder="Ex: Mangueira ressecada" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="controlesAtuais">Controles Atuais (Prevenção/Detecção):</label>
+                        <input type="text" id="controlesAtuais" placeholder="Ex: Inspeção visual periódica">
+                    </div>
+                    <div class="form-group rating-group">
+                        <label for="severidade">Severidade (1-10):</label>
+                        <input type="number" id="severidade" min="1" max="10" value="5" required>
+                    </div>
+                    <div class="form-group rating-group">
+                        <label for="ocorrencia">Ocorrência (1-10):</label>
+                        <input type="number" id="ocorrencia" min="1" max="10" value="5" required>
+                    </div>
+                    <div class="form-group rating-group">
+                        <label for="deteccao">Detecção (1-10):</label>
+                        <input type="number" id="deteccao" min="1" max="10" value="5" required>
+                    </div>
+                     <div class="form-group">
+                        <label for="acoesRecomendadas">Ações Recomendadas:</label>
+                        <input type="text" id="acoesRecomendadas" placeholder="Ex: Substituir mangueiras a cada 2 anos">
+                    </div>
+                </div>
+                <input type="hidden" id="editIndex">
+                <button type="submit" class="button-primary">Salvar Linha</button>
+                <button type="button" id="cancelEdit" class="button-secondary" style="display:none;">Cancelar Edição</button>
+            </form>
+        </div>
 
-        <button id="addLinha">Adicionar Linha FMEA</button>
+        <div class="fmea-output card">
+            <div class="output-header">
+                <h2>Tabela FMEA</h2>
+                <div class="button-group">
+                    <button id="gerarPdf" class="button-secondary">Gerar PDF</button>
+                    <button id="limparDados" class="button-danger">Limpar Tudo</button>
+                </div>
+            </div>
+            <div class="table-wrapper">
+                <table id="fmeaTable">
+                    <thead>
+                        <tr>
+                            <th data-sort="itemFuncao">Item/Função</th>
+                            <th data-sort="modoFalha">Modo de Falha</th>
+                            <th data-sort="efeitoFalha">Efeitos</th>
+                            <th data-sort="causaFalha">Causas</th>
+                            <th data-sort="controlesAtuais">Controles Atuais</th>
+                            <th data-sort="severidade">S</th>
+                            <th data-sort="ocorrencia">O</th>
+                            <th data-sort="deteccao">D</th>
+                            <th data-sort="rpn">RPN</th>
+                            <th data-sort="acoesRecomendadas">Ações Recomendadas</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Linhas serão inseridas dinamicamente aqui -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
-    <div class="fmea-output">
-        <h2>Tabela FMEA</h2>
-        <table id="fmeaTable">
-            <thead>
-                <tr>
-                    <th>Item/Função</th>
-                    <th>Modo de Falha</th>
-                    <th>Severidade</th>
-                    <th>Ocorrência</th>
-                    <th>Detecção</th>
-                    <th>RPN</th>
-                    </tr>
-            </thead>
-            <tbody>
-                </tbody>
-        </table>
-        <button id="gerarPdf">Gerar PDF</button>
-    </div>
-
+    <!-- Scripts no final para carregamento mais rápido -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
