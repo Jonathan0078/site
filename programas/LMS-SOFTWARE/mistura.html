@@ -24,32 +24,33 @@
     <div class="container">
         <main>
             <section class="blend-calculator-section">
-                <h2>Calculador de Mistura de Óleos</h2>
+                <h2><i class="fas fa-vial"></i> Calculador de Mistura de Óleos</h2>
                 <form id="blend-form" class="blend-form">
                     <div class="oil-input-card">
-                        <h3><i class="fas fa-tint"></i> Óleo 1 (Existente)</h3>
+                        <h3><i class="fas fa-tint"></i> Óleo 1</h3>
                         <div class="input-group">
-                            <label for="visc1">Viscosidade (cSt)</label>
-                            <input type="number" id="visc1" required>
+                            <label for="visc1">Viscosidade (cSt a 40°C)</label>
+                            <input type="number" id="visc1" required placeholder="Ex: 150">
                         </div>
                         <div class="input-group">
-                            <label for="vol1">Volume (%)</label>
-                            <input type="number" id="vol1" min="1" max="99" required>
+                            <label for="vol1">Volume na mistura (%)</label>
+                            <input type="number" id="vol1" min="1" max="99" required placeholder="Ex: 70">
                         </div>
                     </div>
                     <div class="oil-input-card">
-                        <h3><i class="fas fa-plus"></i> Óleo 2 (A adicionar)</h3>
+                        <h3><i class="fas fa-plus"></i> Óleo 2</h3>
                         <div class="input-group">
-                            <label for="visc2">Viscosidade (cSt)</label>
-                            <input type="number" id="visc2" required>
+                            <label for="visc2">Viscosidade (cSt a 40°C)</label>
+                            <input type="number" id="visc2" required placeholder="Ex: 32">
                         </div>
+                        <!-- [IMPROVEMENT] - Volume do óleo 2 é calculado automaticamente -->
                         <div class="input-group">
-                            <label for="vol2">Volume (%)</label>
-                            <input type="number" id="vol2" min="1" max="99" required>
+                             <label>Volume na mistura (%)</label>
+                             <input type="text" id="vol2-display" disabled placeholder="Calculado automaticamente">
                         </div>
                     </div>
                 </form>
-                <button id="calculate-blend-button">Calcular Viscosidade Resultante</button>
+                <button type="button" id="calculate-blend-button"><i class="fas fa-calculator"></i> Calcular Viscosidade Resultante</button>
 
                 <div id="blend-result" class="hidden">
                     <h3>Viscosidade da Mistura:</h3>
@@ -63,7 +64,6 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                // Caminho Absoluto Corrigido para o Service Worker
                 navigator.serviceWorker.register('/site/sw.js').then(reg => console.log('Service worker registado.', reg));
             });
         }
