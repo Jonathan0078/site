@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora GreasePRO 4.0 - Offline</title>
+    <title>Calculadora GreasePRO 5.0 - Offline</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -19,24 +19,49 @@
     <main class="container">
         <form id="lubricationForm" class="calculator-form" onsubmit="return false;">
             <p class="form-description">
-                Insira os dados do rolamento e as condições operacionais para obter uma recomendação de lubrificação.
+                Insira os dados do rolamento e as condições operacionais para obter uma recomendação de lubrificação completa.
             </p>
-            <div class="input-section">
-                <div class="form-group"><label for="bearingType">Tipo de Rolamento <span class="tooltip">?<span class="tooltiptext">O tipo de elemento rolante (esfera ou rolo) impacta diretamente no cálculo do intervalo de lubrificação.</span></span></label><select id="bearingType"><option value="ball">Rígido de Esferas</option><option value="angular">Contato Angular</option><option value="sphericalRoller">Autocompensador de Rolos</option><option value="taperedRoller">Rolos Cônicos</option><option value="cylindricalRoller">Rolos Cilíndricos</option></select></div>
-                <div class="form-group"><label for="boreDiameter">Diâmetro do Furo (d, mm) <span class="tooltip">?<span class="tooltiptext">Diâmetro interno do rolamento, em milímetros (mm).</span></span></label><input type="number" id="boreDiameter" placeholder="ex: 50"></div>
-                <div class="form-group"><label for="outerDiameter">Diâmetro Externo (D, mm) <span class="tooltip">?<span class="tooltiptext">Diâmetro externo total do rolamento, em milímetros (mm).</span></span></label><input type="number" id="outerDiameter" placeholder="ex: 110"></div>
-                <div class="form-group"><label for="width">Largura (B, mm) <span class="tooltip">?<span class="tooltiptext">Largura ou espessura do rolamento, em milímetros (mm).</span></span></label><input type="number" id="width" placeholder="ex: 27"></div>
-                <div class="form-group"><label for="rpm">Rotação (RPM) <span class="tooltip">?<span class="tooltiptext">Velocidade de rotação do eixo em Rotações Por Minuto.</span></span></label><input type="number" id="rpm" placeholder="ex: 1800"></div>
-                <div class="form-group"><label for="temperature">Temperatura (°C) <span class="tooltip">?<span class="tooltiptext">Temperatura de operação na carcaça do rolamento. Regra geral: a vida da graxa cai pela metade a cada 15°C acima de 70°C.</span></span></label><input type="number" id="temperature" value="70"></div>
-                <div class="form-group"><label for="lubeApplication">Ponto de Aplicação <span class="tooltip">?<span class="tooltiptext">Lubrificação pelo canal central é mais eficiente e requer menos graxa do que pela lateral.</span></span></label><select id="lubeApplication"><option value="side">Pela Lateral</option><option value="center">Pelo Canal Central</option></select></div>
-                <div class="form-group"><label for="workingHours">Horas de Trabalho (semanal) <span class="tooltip">?<span class="tooltiptext">Número de horas que a máquina opera por semana. Usado para converter o intervalo para uma escala de manutenção prática.</span></span></label><input type="number" id="workingHours" value="168"></div>
-                <div class="form-group"><label for="greaseDensity">Densidade da Graxa (g/cm³) <span class="tooltip">?<span class="tooltiptext">Encontrada na ficha técnica do produto. Usada para converter massa (g) em volume (cm³). Padrão ~0.90 g/cm³.</span></span></label><input type="number" step="0.01" id="greaseDensity" value="0.90"></div>
-                <div class="form-group"><label for="loadCondition">Condição de Carga <span class="tooltip">?<span class="tooltiptext">Cargas pesadas ou com choques aceleram a degradação da graxa e exigem intervalos menores.</span></span></label><select id="loadCondition"><option value="normal">Normal</option><option value="heavy">Carga Pesada</option><option value="shock">Carga com Choques</option></select></div>
-                <div class="form-group"><label for="environment">Nível de Contaminação <span class="tooltip">?<span class="tooltiptext">Poeira e água são os maiores inimigos da graxa. Ambientes contaminados exigem relubrificação mais frequente para purgar os contaminantes.</span></span></label><select id="environment"><option value="clean">Limpo</option><option value="dusty">Poeira</option><option value="humid">Água</option><option value="chemical">Químico</option></select></div>
-                <div class="form-group"><label for="vibration">Fator de Vibração <span class="tooltip">?<span class="tooltiptext">Vibração excessiva pode causar a separação do óleo e do espessante da graxa (sangramento).</span></span></label><select id="vibration"><option value="1.0">Nenhuma</option><option value="0.6">Moderada</option><option value="0.3">Severa</option></select></div>
-                <div class="form-group"><label for="moisture">Fator de Umidade <span class="tooltip">?<span class="tooltiptext">A presença de água requer graxas com espessantes resistentes, como Sulfonato de Cálcio ou Complexo de Alumínio.</span></span></label><select id="moisture"><option value="1.0">1.0 - Seco</option><option value="0.8">0.8 - Úmido</option><option value="0.4">0.4 - Contato c/ Água</option></select></div>
-                <div class="form-group"><label for="orientation">Fator de Orientação <span class="tooltip">?<span class="tooltiptext">Eixos verticais são mais desafiadores, pois a gravidade tende a puxar a graxa para fora da zona de contato.</span></span></label><select id="orientation"><option value="1.0">1.0 - Eixo Horizontal</option><option value="0.5">0.5 - Eixo Vertical</option></select></div>
-            </div>
+            
+            <fieldset class="form-fieldset">
+                <legend>Dados do Rolamento</legend>
+                <div class="input-section">
+                    <div class="form-group"><label for="bearingType">Tipo de Rolamento <span class="tooltip">?<span class="tooltiptext">O tipo de elemento rolante (esfera ou rolo) impacta diretamente no cálculo do intervalo de lubrificação.</span></span></label><select id="bearingType"><option value="ball">Rígido de Esferas</option><option value="angular">Contato Angular</option><option value="sphericalRoller">Autocompensador de Rolos</option><option value="taperedRoller">Rolos Cônicos</option><option value="cylindricalRoller">Rolos Cilíndricos</option></select></div>
+                    <div class="form-group"><label for="boreDiameter">Diâmetro do Furo (d, mm) <span class="tooltip">?<span class="tooltiptext">Diâmetro interno do rolamento, em milímetros (mm).</span></span></label><input type="number" id="boreDiameter" placeholder="ex: 50" required></div>
+                    <div class="form-group"><label for="outerDiameter">Diâmetro Externo (D, mm) <span class="tooltip">?<span class="tooltiptext">Diâmetro externo total do rolamento, em milímetros (mm).</span></span></label><input type="number" id="outerDiameter" placeholder="ex: 110" required></div>
+                    <div class="form-group"><label for="width">Largura (B, mm) <span class="tooltip">?<span class="tooltiptext">Largura ou espessura do rolamento, em milímetros (mm).</span></span></label><input type="number" id="width" placeholder="ex: 27" required></div>
+                </div>
+            </fieldset>
+
+            <fieldset class="form-fieldset">
+                <legend>Condições de Operação</legend>
+                <div class="input-section">
+                    <div class="form-group"><label for="rpm">Rotação (RPM) <span class="tooltip">?<span class="tooltiptext">Velocidade de rotação do eixo em Rotações Por Minuto.</span></span></label><input type="number" id="rpm" placeholder="ex: 1800" required></div>
+                    <div class="form-group"><label for="temperature">Temperatura (°C) <span class="tooltip">?<span class="tooltiptext">Temperatura de operação na carcaça do rolamento. Regra geral: a vida da graxa cai pela metade a cada 15°C acima de 70°C.</span></span></label><input type="number" id="temperature" value="70"></div>
+                    <div class="form-group"><label for="workingHours">Horas de Trabalho (semanal) <span class="tooltip">?<span class="tooltiptext">Número de horas que a máquina opera por semana. Usado para converter o intervalo para uma escala de manutenção prática.</span></span></label><input type="number" id="workingHours" value="168"></div>
+                    <div class="form-group"><label for="loadCondition">Condição de Carga <span class="tooltip">?<span class="tooltiptext">Cargas pesadas ou com choques aceleram a degradação da graxa e exigem intervalos menores.</span></span></label><select id="loadCondition"><option value="normal">Normal</option><option value="heavy">Carga Pesada</option><option value="shock">Carga com Choques</option></select></div>
+                </div>
+            </fieldset>
+
+            <fieldset class="form-fieldset">
+                <legend>Fatores de Correção e Ambiente</legend>
+                <div class="input-section">
+                    <div class="form-group"><label for="environment">Nível de Contaminação <span class="tooltip">?<span class="tooltiptext">Poeira e água são os maiores inimigos da graxa. Ambientes contaminados exigem relubrificação mais frequente para purgar os contaminantes.</span></span></label><select id="environment"><option value="clean">Limpo</option><option value="dusty">Poeira</option><option value="humid">Água</option><option value="chemical">Químico</option></select></div>
+                    <div class="form-group"><label for="vibration">Fator de Vibração <span class="tooltip">?<span class="tooltiptext">Vibração excessiva pode causar a separação do óleo e do espessante da graxa (sangramento).</span></span></label><select id="vibration"><option value="1.0">Nenhuma</option><option value="0.6">Moderada</option><option value="0.3">Severa</option></select></div>
+                    <div class="form-group"><label for="moisture">Fator de Umidade <span class="tooltip">?<span class="tooltiptext">A presença de água requer graxas com espessantes resistentes, como Sulfonato de Cálcio ou Complexo de Alumínio.</span></span></label><select id="moisture"><option value="1.0">1.0 - Seco</option><option value="0.8">0.8 - Úmido</option><option value="0.4">0.4 - Contato c/ Água</option></select></div>
+                    <div class="form-group"><label for="orientation">Fator de Orientação <span class="tooltip">?<span class="tooltiptext">Eixos verticais são mais desafiadores, pois a gravidade tende a puxar a graxa para fora da zona de contato.</span></span></label><select id="orientation"><option value="1.0">1.0 - Eixo Horizontal</option><option value="0.5">0.5 - Eixo Vertical</option></select></div>
+                </div>
+            </fieldset>
+
+            <fieldset class="form-fieldset">
+                <legend>Parâmetros da Graxa e Custo</legend>
+                <div class="input-section">
+                    <div class="form-group"><label for="lubeApplication">Ponto de Aplicação <span class="tooltip">?<span class="tooltiptext">Lubrificação pelo canal central é mais eficiente e requer menos graxa do que pela lateral.</span></span></label><select id="lubeApplication"><option value="side">Pela Lateral</option><option value="center">Pelo Canal Central</option></select></div>
+                    <div class="form-group"><label for="greaseDensity">Densidade da Graxa (g/cm³) <span class="tooltip">?<span class="tooltiptext">Encontrada na ficha técnica do produto. Usada para converter massa (g) em volume (cm³). Padrão ~0.90 g/cm³.</span></span></label><input type="number" step="0.01" id="greaseDensity" value="0.90"></div>
+                    <div class="form-group"><label for="greasePumpVolume">Volume por Acionamento (g) <span class="tooltip">?<span class="tooltiptext">Quantidade de graxa, em gramas, que sua engraxadeira aplica a cada 'bombada'. Calibre para obter precisão. Padrão: 1.5g.</span></span></label><input type="number" step="0.1" id="greasePumpVolume" value="1.5"></div>
+                    <div class="form-group"><label for="greasePrice">Preço da Graxa (R$/kg) <span class="tooltip">?<span class="tooltiptext">Custo por quilograma da graxa utilizada. Usado para o cálculo de custo anual.</span></span></label><input type="number" step="0.01" id="greasePrice" value="50.00"></div>
+                </div>
+            </fieldset>
+
             <div class="button-group">
                 <button type="button" id="calculate" class="calculate-btn">Calcular</button>
                 <button type="button" id="reset" class="reset-btn">Limpar</button>
@@ -44,6 +69,11 @@
         </form>
 
         <section id="results" class="results-section hidden">
+            <div class="results-header">
+                <h2>Resultados e Recomendações</h2>
+                <button id="printBtn" class="print-btn"><i class="fas fa-print"></i> Imprimir Relatório</button>
+            </div>
+            
             <div class="health-card">
                 <h3><i class="fas fa-heart-pulse"></i> Saúde da Graxa</h3>
                 <div class="health-bar-container">
@@ -53,15 +83,27 @@
             </div>
 
             <div class="results-grid">
+                <!-- Resultados Principais -->
                 <div class="result-card"><h3>Carga Inicial</h3><p><span id="initialFill">0</span> <small>gramas</small></p></div>
-                <div class="result-card"><h3>Volume Inicial</h3><p><span id="initialFillCm3">0</span> <small>cm³</small></p></div>
                 <div class="result-card"><h3>Relubrificação</h3><p><span id="relubAmount">0</span> <small>gramas</small></p></div>
-                <div class="result-card"><h3>Vida da Graxa (L10)</h3><p><span id="greaseLife">0</span> <small>horas</small></p></div>
+                <div class="result-card"><h3>Bombadas / Relub.</h3><p><span id="relubPumps">0</span> <small>acionamentos</small></p></div>
+                <div class="result-card"><h3>Custo Anual</h3><p><span id="annualCost">0</span> <small>R$ / ano</small></p></div>
+                <!-- Resultados Detalhados -->
                 <div class="result-card"><h3>Intervalo (Horas)</h3><p><span id="relubIntervalHours">0</span> <small>horas</small></p></div>
-                <div class="result-card"><h3>Intervalo (Dias)</h3><p><span id="relubIntervalDays">0</span> <small>dias</small></p></div>
                 <div class="result-card"><h3>Intervalo (Semanas)</h3><p><span id="relubIntervalWeeks">0</span> <small>semanas</small></p></div>
+                <div class="result-card"><h3>Vida da Graxa (L10)</h3><p><span id="greaseLife">0</span> <small>horas</small></p></div>
                 <div class="result-card"><h3>Massa (Aprox.)</h3><p><span id="bearingMass">0</span> <small>kg</small></p></div>
             </div>
+
+            <div class="interval-chart-card">
+                <h3>Análise do Intervalo de Relubrificação</h3>
+                <div class="interval-chart-container">
+                    <div class="chart-row"><span class="chart-label">Intervalo Teórico</span><div class="chart-bar-wrapper"><div class="chart-bar" id="theoreticalBar"><span>0h</span></div></div></div>
+                    <div class="chart-row"><span class="chart-label">Vida da Graxa (Segurança 50%)</span><div class="chart-bar-wrapper"><div class="chart-bar" id="safetyBar"><span>0h</span></div></div></div>
+                    <div class="chart-row"><span class="chart-label final-label">Intervalo Final Recomendado</span><div class="chart-bar-wrapper"><div class="chart-bar final-bar" id="finalBar"><span>0h</span></div></div></div>
+                </div>
+            </div>
+
              <div class="recommendation-card">
                 <h3>Recomendação de Graxa</h3>
                 <div class="recommendation-grid">
@@ -77,8 +119,8 @@
         </section>
     </main>
     
-    <footer><p>&copy; 2025 Calculadora de Lubrificação. Todos os direitos reservados.</p></footer>
-    <button id="scrollTopBtn" class="scroll-top-btn hidden">&uarr;</button>
+    <footer><p>© 2025 Calculadora de Lubrificação. Todos os direitos reservados.</p></footer>
+    <button id="scrollTopBtn" class="scroll-top-btn hidden">↑</button>
     <script src="script.js"></script>
     <script>
     // Modo claro como padrão, toggle para escuro
@@ -95,7 +137,6 @@
           btn.innerHTML = '<i class="fas fa-moon"></i>';
         }
       }
-      // Inicialização: claro por padrão, mas respeita localStorage
       let mode = localStorage.getItem(THEME_KEY) || 'light';
       setTheme(mode);
       btn.addEventListener('click', function() {
