@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Software de Diagrama de Pareto</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Importando a biblioteca Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+    <header>
+        <h1>Análise de Pareto para Priorização</h1>
+        <p>Use a regra 80/20 para identificar os problemas mais significativos.</p>
+    </header>
+
+    <main class="container">
+        <div class="input-section">
+            <h2>1. Insira seus Dados</h2>
+            <label for="data-input">Insira cada item em uma nova linha no formato: <strong>Causa, Valor</strong></label>
+            <textarea id="data-input" rows="10" placeholder="Ex: Atraso na entrega, 55
+Defeito no produto, 28
+Erro de faturamento, 12
+Suporte lento, 6
+Outros, 3"></textarea>
+            <button id="generate-btn">Gerar Diagrama de Pareto</button>
+            <div id="error-message" class="error"></div>
+        </div>
+
+        <div class="output-section">
+            <h2>2. Análise Visual</h2>
+            <div class="chart-container">
+                <canvas id="pareto-chart"></canvas>
+            </div>
+            
+            <h2>3. Tabela de Dados</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Causa</th>
+                            <th>Frequência / Custo</th>
+                            <th>% Acumulada</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pareto-table-body">
+                        <!-- Linhas da tabela serão inseridas via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Desenvolvido como uma solução completa em Java, HTML e CSS.</p>
+    </footer>
+
+</body>
+</html>
