@@ -16,41 +16,174 @@
 
     <div class="main-container">
         <main class="content">
-            
+
             <section id="module-1" class="module">
                 <h2>Módulo 1 — Introdução</h2>
                 <p>Inspecionar uma máquina não é só dar uma olhada rápida e seguir em frente. <br>É sobre entender que cada peça, cada ruído estranho, cada gota de óleo fora do lugar pode ser um sinal de algo maior — uma falha prestes a acontecer.
                 <br>Em um ambiente industrial, as máquinas trabalham duro. <br>Algumas ficam horas, dias ou até semanas em funcionamento contínuo. <br>E como tudo que é submetido a esforço constante, elas se desgastam. <br>A inspeção existe pra isso: detectar sinais de falhas antes que elas causem paradas inesperadas, acidentes ou prejuízo financeiro.
                 </p>
+
+                <div class="dica-destaque">
+                    <h4>💡 Dica do Instrutor</h4>
+                    <p>Um inspetor experiente não só observa — ele <strong>escuta a máquina</strong>. Cada equipamento tem seu "batimento cardíaco" normal. Quando algo muda, é sinal de atenção!</p>
+                </div>
+
                 <h3>Os três pilares na inspeção</h3>
                 <p>Existem três pilares na inspeção que vale a pena entender desde o começo:</p>
                 <ul>
-                    <li><strong>Inspeção Preventiva:</strong> É feita de forma programada, independente do estado do equipamento. Ou seja, mesmo que esteja tudo “aparentemente bem”, o técnico vai até lá, verifica pontos específicos, aplica lubrificante, limpa, mede — porque o cronograma manda. É tipo uma revisão de carro aos 10.000 km: pode não ter nada errado, mas você faz por segurança.</li>
+                    <li><strong>Inspeção Preventiva:</strong> É feita de forma programada, independente do estado do equipamento. Ou seja, mesmo que esteja tudo "aparentemente bem", o técnico vai até lá, verifica pontos específicos, aplica lubrificante, limpa, mede — porque o cronograma manda. É tipo uma revisão de carro aos 10.000 km: pode não ter nada errado, mas você faz por segurança.</li>
                     <li><strong>Inspeção Preditiva:</strong> Aqui a parada fica mais tecnológica. A ideia é usar dados reais, coletados com instrumentos como sensores de vibração, termografia ou análise de óleo, pra prever falhas futuras. Se um motor começa a vibrar mais do que o normal, mesmo que ainda esteja funcionando, isso pode indicar que algo ali dentro está se desgastando.</li>
-                    <li><strong>Inspeção Corretiva:</strong> Essa entra em ação quando o problema já apareceu — a máquina já tá com defeito. O técnico faz a inspeção pra entender o que quebrou, por que aconteceu e como corrigir. Apesar de necessária em muitas situações, ela é a mais “cara”, porque envolve tempo parado, troca urgente de peças e, às vezes, prejuízo no processo produtivo.</li>
+                    <li><strong>Inspeção Corretiva:</strong> Essa entra em ação quando o problema já apareceu — a máquina já tá com defeito. O técnico faz a inspeção pra entender o que quebrou, por que aconteceu e como corrigir. Apesar de necessária em muitas situações, ela é a mais "cara", porque envolve tempo parado, troca urgente de peças e, às vezes, prejuízo no processo produtivo.</li>
                 </ul>
+
+                <div class="exemplo-pratico">
+                    <h4>📋 Exemplo Prático: Fábrica de Papel</h4>
+                    <p><strong>Situação:</strong> Uma fábrica de papel tinha paradas frequentes em uma bomba de polpa.</p>
+                    <p><strong>Problema:</strong> Faziam apenas manutenção corretiva (só quando quebrava).</p>
+                    <p><strong>Solução:</strong> Implementaram inspeção preditiva com análise de vibração.</p>
+                    <p><strong>Resultado:</strong> Reduziram paradas em 70% e economizaram R$ 150.000/ano em manutenção.</p>
+                </div>
+
+                <div class="exercicio-interativo">
+                    <h4>🎯 Exercício Interativo: Identifique o Tipo de Inspeção</h4>
+                    <p>Clique na situação que corresponde a cada tipo de inspeção:</p>
+                    <div class="exercicio-opcoes">
+                        <button class="opcao-exercicio" data-tipo="preventiva">Lubrificar rolamentos a cada 30 dias, independente da condição</button>
+                        <button class="opcao-exercicio" data-tipo="preditiva">Medir vibração de um motor mensalmente para detectar tendências</button>
+                        <button class="opcao-exercicio" data-tipo="corretiva">Investigar causa de quebra de um acoplamento</button>
+                    </div>
+                    <div id="feedback-exercicio-1" class="feedback-exercicio"></div>
+                </div>
+
+                <div class="calculadora-simples">
+                    <h4>📊 Calculadora: Impacto Financeiro da Inspeção</h4>
+                    <p>Vamos calcular quanto você pode economizar com inspeção preventiva:</p>
+                    <div class="calc-inputs">
+                        <label>Custo médio de uma parada não programada (R$):</label>
+                        <input type="number" id="custo-parada" value="5000" min="0">
+                        <label>Paradas por ano sem inspeção:</label>
+                        <input type="number" id="paradas-ano" value="12" min="0">
+                        <label>Redução estimada com inspeção (%):</label>
+                        <input type="range" id="reducao-percent" min="0" max="90" value="60">
+                        <span id="valor-reducao">60%</span>
+                    </div>
+                    <button onclick="calcularEconomia()">Calcular Economia Anual</button>
+                    <div id="resultado-economia" class="resultado-calc"></div>
+                </div>
+
+                <div class="reflexao">
+                    <h4>🤔 Momento de Reflexão</h4>
+                    <p><strong>Pergunta:</strong> Na sua experiência (ou imaginando uma situação), qual seria o impacto de uma parada não programada de 8 horas em uma linha de produção?</p>
+                    <textarea id="reflexao-1" placeholder="Digite suas reflexões aqui... (Ex: perda de produção, retrabalho, clientes insatisfeitos, etc.)" rows="3"></textarea>
+                    <button onclick="salvarReflexao('reflexao-1')">Salvar Reflexão</button>
+                </div>
             </section>
 
             <section id="module-2" class="module">
                 <h2>Módulo 2 — Tipos de Inspeção</h2>
                 <p>Existem várias formas de inspecionar uma máquina, e cada uma tem seu momento certo. Algumas são simples, outras requerem instrumentos avançados. O importante é saber quando usar o quê pra garantir segurança e eficiência.</p>
+
+                <div class="dica-destaque">
+                    <h4>⚡ Dica de Segurança</h4>
+                    <p>Antes de qualquer inspeção: <strong>LOTO</strong> (Lock Out Tag Out), uso de EPIs adequados e autorização para trabalho. A segurança nunca pode ser comprometida pela pressa!</p>
+                </div>
+
                 <h3>Inspeções Sensitivas - Os 5 Sentidos Humanos:</h3>
+
+                <div class="sentidos-interativo">
+                    <h4>🎮 Atividade Interativa: Teste Seus Sentidos</h4>
+                    <p>Clique em cada sentido para ver exemplos específicos:</p>
+                    <div class="sentidos-buttons">
+                        <button class="sentido-btn" data-sentido="visao">👀 Visão</button>
+                        <button class="sentido-btn" data-sentido="audicao">👂 Audição</button>
+                        <button class="sentido-btn" data-sentido="tato">✋ Tato</button>
+                        <button class="sentido-btn" data-sentido="olfato">👃 Olfato</button>
+                        <button class="sentido-btn" data-sentido="intuicao">❤️ Intuição</button>
+                    </div>
+                    <div id="detalhes-sentido" class="detalhes-sentido"></div>
+                </div>
+
                 <ul>
-                    <li><strong>Visão:</strong> O mais utilizado. Permite detectar: Vazamentos visíveis (óleo, fluido, graxa); Trincas, corrosão ou deformações em peças; Indicadores visuais (luzes de alarme, manômetros, etiquetas de segurança); Mudança de cor em componentes (por exemplo, escurecimento de isolantes). Exemplo real: um retentor mal encaixado começa a “suar” óleo visivelmente antes de vazar de vez. Um olhar atento evita a parada.</li>
-                    <li><strong>Audição:</strong> Barulhos estranhos indicam que algo não está certo: Batidas metálicas incomuns; Ruído de cavitação em bombas; Assobios de vazamentos de ar comprimido; Vibração perceptível ao ouvido em rolamentos. O técnico experiente “escuta” a máquina e percebe quando ela está fora do tom habitual.</li>
+                    <li><strong>Visão:</strong> O mais utilizado. Permite detectar: Vazamentos visíveis (óleo, fluido, graxa); Trincas, corrosão ou deformações em peças; Indicadores visuais (luzes de alarme, manômetros, etiquetas de segurança); Mudança de cor em componentes (por exemplo, escurecimento de isolantes). Exemplo real: um retentor mal encaixado começa a "suar" óleo visivelmente antes de vazar de vez. Um olhar atento evita a parada.</li>
+                    <li><strong>Audição:</strong> Barulhos estranhos indicam que algo não está certo: Batidas metálicas incomuns; Ruído de cavitação em bombas; Assobios de vazamentos de ar comprimido; Vibração perceptível ao ouvido em rolamentos. O técnico experiente "escuta" a máquina e percebe quando ela está fora do tom habitual.</li>
                     <li><strong>Tato:</strong> Ao tocar com segurança (com EPI e permissão), é possível sentir: Excesso de calor em mancais e motores; Vibrações fora do padrão; Folgas ou desalinhamentos em acoplamentos. Um motor excessivamente quente ao toque pode indicar sobrecarga ou falha de ventilação.</li>
                     <li><strong>Olfato:</strong> O cheiro é poderoso na detecção precoce: Odor de queimado = sobrecarga elétrica ou atrito; Cheiro de óleo queimado = problema em redutores; Gás ou vapores = vazamentos perigosos (atenção redobrada). Um leve cheiro de borracha pode indicar correias derretendo no início de uma falha.</li>
-                    <li><strong>Sexto Sentido — Amor pelo que se faz:</strong> Mais do que olhos atentos, ouvidos treinados e mãos experientes, o que realmente transforma uma inspeção em algo eficiente é o amor pela profissão. Esse sexto sentido é invisível, mas perceptível: O técnico que se importa percebe o que os sensores ainda não captaram; Ele não inspeciona por obrigação, mas por compromisso; Tem orgulho em prevenir o problema antes mesmo que ele exista; Conhece as máquinas como se fossem parte do time. “Faz anos que inspeciono esse equipamento. Hoje ele não está se comportando como deveria.” Essa percepção não está nos manuais. Ela vem de quem veste o uniforme com propósito, respeita o que faz e quer ver tudo funcionando bem — não por protocolo, mas por vocação. "O melhor inspetor é aquele que se importa com o que protege."</li>
+                    <li><strong>Sexto Sentido — Amor pelo que se faz:</strong> Mais do que olhos atentos, ouvidos treinados e mãos experientes, o que realmente transforma uma inspeção em algo eficiente é o amor pela profissão. Esse sexto sentido é invisível, mas perceptível: O técnico que se importa percebe o que os sensores ainda não captaram; Ele não inspeciona por obrigação, mas por compromisso; Tem orgulho em prevenir o problema antes mesmo que ele exista; Conhece as máquinas como se fossem parte do time. "Faz anos que inspeciono esse equipamento. Hoje ele não está se comportando como deveria." Essa percepção não está nos manuais. Ela vem de quem veste o uniforme com propósito, respeita o que faz e quer ver tudo funcionando bem — não por protocolo, mas por vocação. "O melhor inspetor é aquele que se importa com o que protege."</li>
                 </ul>
-                <h3>Inspeções Instrumentadas</h3>
-                <ul>
-                    <li><strong>Inspeção Termográfica:</strong> Com uma câmera infravermelha, dá pra ver os “pontos quentes” — áreas onde a temperatura está anormalmente alta. Isso pode indicar atrito excessivo, sobrecarga elétrica ou rolamentos prestes a travar.</li>
-                    <li><strong>Inspeção por Ultrassom:</strong> Quando tem algo vazando (ar comprimido, vapor, óleo), o ultrassom escuta aquilo que o ouvido humano não capta. Também é usado pra identificar trincas internas em estruturas metálicas.</li>
-                    <li><strong>Análise de Vibração:</strong> Motores, bombas e redutores têm um padrão de vibração “normal”. Se alguma peça desbalancear, desgastar ou afrouxar, esse padrão muda — e o sensor capta rapidinho.</li>
-                    <li><strong>Análise de óleo:</strong> Verifica contaminação e desgaste interno. Medidas dimensionais: usa paquímetro, relógio comparador etc. Teste elétrico: pra isolação, continuidade, resistência e mais.</li>
-                </ul>
+
+                <div class="comparativo-instrumentada">
+                    <h3>Inspeções Instrumentadas</h3>
+                    <div class="cards-instrumentos">
+                        <div class="card-instrumento" data-instrumento="termografia">
+                            <h4>🌡️ Termografia</h4>
+                            <p>Detecção de pontos quentes</p>
+                            <div class="detalhes-ocultos">
+                                <p><strong>Como funciona:</strong> Câmera infravermelha detecta radiação térmica invisível ao olho humano.</p>
+                                <p><strong>Aplicações:</strong> Painéis elétricos, mancais, motores, acoplamentos.</p>
+                                <p><strong>Vantagens:</strong> Inspeção à distância, sem parada de equipamento.</p>
+                                <p><strong>Custo médio:</strong> R$ 15.000 - R$ 80.000</p>
+                            </div>
+                        </div>
+                        <div class="card-instrumento" data-instrumento="ultrassom">
+                            <h4>🔊 Ultrassom</h4>
+                            <p>Detecção de vazamentos e trincas</p>
+                            <div class="detalhes-ocultos">
+                                <p><strong>Como funciona:</strong> Capta sons de alta frequência (acima de 20kHz).</p>
+                                <p><strong>Aplicações:</strong> Vazamentos de ar, vapor, gases; rolamentos; válvulas.</p>
+                                <p><strong>Vantagens:</strong> Localização precisa, funciona em ambientes ruidosos.</p>
+                                <p><strong>Custo médio:</strong> R$ 8.000 - R$ 25.000</p>
+                            </div>
+                        </div>
+                        <div class="card-instrumento" data-instrumento="vibracao">
+                            <h4>📳 Análise de Vibração</h4>
+                            <p>Diagnóstico de desbalanceamento</p>
+                            <div class="detalhes-ocultos">
+                                <p><strong>Como funciona:</strong> Sensores captam vibrações e analisam frequências.</p>
+                                <p><strong>Aplicações:</strong> Motores, bombas, redutores, ventiladores.</p>
+                                <p><strong>Vantagens:</strong> Diagnóstico preciso de diferentes falhas.</p>
+                                <p><strong>Custo médio:</strong> R$ 12.000 - R$ 45.000</p>
+                            </div>
+                        </div>
+                        <div class="card-instrumento" data-instrumento="oleo">
+                            <h4>🛢️ Análise de Óleo</h4>
+                            <p>Condição interna dos equipamentos</p>
+                            <div class="detalhes-ocultos">
+                                <p><strong>Como funciona:</strong> Análise laboratorial de partículas, contaminantes e propriedades.</p>
+                                <p><strong>Aplicações:</strong> Redutores, motores, compressores, turbinas.</p>
+                                <p><strong>Vantagens:</strong> Detecta desgaste interno antes de falhas externas.</p>
+                                <p><strong>Custo médio:</strong> R$ 50 - R$ 200 por análise</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="simulador-escolha">
+                    <h4>⚙️ Simulador: Escolha a Técnica Ideal</h4>
+                    <p><strong>Situação:</strong> Motor elétrico de 50 CV apresentando ruído anormal</p>
+                    <div class="opcoes-simulador">
+                        <button class="opcao-sim" data-correto="false">Apenas inspeção visual</button>
+                        <button class="opcao-sim" data-correto="true">Análise de vibração + termografia</button>
+                        <button class="opcao-sim" data-correto="false">Análise de óleo apenas</button>
+                        <button class="opcao-sim" data-correto="false">Aguardar até falhar</button>
+                    </div>
+                    <div id="resultado-simulador" class="resultado-simulador"></div>
+                </div>
+
+                <div class="checklist-interativo">
+                    <h4>📝 Checklist Interativo: Planejando uma Inspeção</h4>
+                    <p>Marque os itens essenciais antes de iniciar uma inspeção:</p>
+                    <div class="checklist-items">
+                        <label><input type="checkbox" data-item="seguranca"> Verificar EPIs e autorizações de trabalho</label>
+                        <label><input type="checkbox" data-item="ferramentas"> Separar ferramentas e instrumentos necessários</label>
+                        <label><input type="checkbox" data-item="documentacao"> Revisar histórico e procedimentos do equipamento</label>
+                        <label><input type="checkbox" data-item="comunicacao"> Comunicar operação sobre a inspeção</label>
+                        <label><input type="checkbox" data-item="registro"> Preparar formulário de registro</label>
+                    </div>
+                    <button onclick="verificarChecklist()">Verificar Preparação</button>
+                    <div id="feedback-checklist" class="feedback-checklist"></div>
+                </div>
             </section>
-            
+
             <section id="module-3" class="module">
                 <h2>Módulo 3 — Procedimentos Padrão</h2>
                 <p>Inspecionar não é só ter boa vontade — tem método, tem sequência, e acima de tudo, tem responsabilidade. Um procedimento bem estruturado garante que nada escape do olhar técnico e, melhor ainda, que a inspeção seja padronizada para qualquer operador ou técnico que assumir.</p>
@@ -79,22 +212,153 @@
             <section id="module-5" class="module">
                 <h2>Módulo 5 — Estudo de Casos</h2>
                 <p>Agora que você já sabe os tipos de inspeção, como padronizá-las e como registrar tudo direitinho, é hora de colocar a mão na massa — ou melhor, no cérebro. Vamos trabalhar alguns casos práticos, como se você estivesse vivendo a situação na fábrica. Cada cenário a seguir representa algo que realmente pode acontecer (ou já aconteceu) em ambientes industriais. A ideia é estimular a análise crítica e mostrar como os conhecimentos de inspeção fazem diferença real na manutenção.</p>
-                <ul>
-                    <li><strong>Caso 1: Vibração fora do normal -</strong> Você está numa inspeção semanal de rotina e, ao encostar no motor de um exaustor industrial, percebe uma leve vibração diferente do comum. Nada gritante, mas parece “fora do padrão”.
-                      <br><strong>Você tem três opções:</strong> Ignorar, já que o motor está funcionando normalmente; Registrar como observação e manter o monitoramento nas próximas inspeções; Acionar análise de vibração com equipamento portátil no mesmo dia.
-                      <br><strong>Resposta recomendada:</strong> Acionar análise de vibração.
-                    </li>
-                    <li><strong>Caso 2: Cheiro de queimado em painel elétrico -</strong> Durante uma inspeção visual, ao passar por um painel elétrico, você sente um cheiro de “plástico queimando”. Visualmente, tudo parece normal. Nenhum disjuntor caiu, e os cabos estão aparentemente íntegros.
-                      <br><strong>O que fazer?</strong> Abrir o painel imediatamente para ver o que está acontecendo; Ignorar e só anotar como "possível cheiro suspeito"; Solicitar inspeção termográfica imediatamente com profissional autorizado.
-                      <br><strong>Resposta ideal:</strong> Solicitar inspeção termográfica imediatamente com profissional autorizado.
-                    </li>
-                    <li><strong>Caso 3: Vazamento intermitente de óleo hidráulico -</strong> Uma prensa hidráulica apresenta vazamento leve de óleo, mas só quando está sob carga máxima. Em repouso, nada vaza.
-                      <br><strong>Como agir?</strong> Marcar troca do selo apenas na próxima parada geral; Acompanhar visualmente nas próximas semanas; Programar manutenção corretiva agendada fora do turno de produção.
-                      <br><strong>Caminho ideal:</strong> Programar manutenção corretiva agendada fora do turno de produção.
-                    </li>
-                </ul>
+
+                <div class="caso-interativo" id="caso-1">
+                    <h3>🎯 Caso 1: Vibração Anormal no Motor</h3>
+                    <div class="cenario-caso">
+                        <p><strong>Situação:</strong> Você está numa inspeção semanal de rotina e, ao encostar no motor de um exaustor industrial de 30 CV, percebe uma leve vibração diferente do comum. Nada gritante, mas parece "fora do padrão".</p>
+                        <p><strong>Informações adicionais:</strong></p>
+                        <ul>
+                            <li>Motor instalado há 3 anos</li>
+                            <li>Última manutenção: 6 meses atrás</li>
+                            <li>Produção funcionando normalmente</li>
+                            <li>Sem alarmes no painel</li>
+                        </ul>
+                    </div>
+                    <div class="opcoes-caso">
+                        <h4>Qual sua decisão?</h4>
+                        <button class="opcao-caso" data-caso="1" data-opcao="a">Ignorar, já que o motor está funcionando normalmente</button>
+                        <button class="opcao-caso" data-caso="1" data-opcao="b">Registrar como observação e manter monitoramento</button>
+                        <button class="opcao-caso" data-caso="1" data-opcao="c" data-correta="true">Acionar análise de vibração com equipamento portátil hoje</button>
+                    </div>
+                    <div id="feedback-caso-1" class="feedback-caso"></div>
+                    <div class="consequencias" id="consequencias-1" style="display: none;">
+                        <h5>📊 Consequências das Decisões:</h5>
+                        <div class="consequencia-item">
+                            <strong>Opção A:</strong> 2 semanas depois, o motor travou por falha no rolamento. Parada não programada de 12 horas. Custo: R$ 25.000.
+                        </div>
+                        <div class="consequencia-item">
+                            <strong>Opção B:</strong> Na próxima inspeção (1 semana), vibração piorou. Motor precisou ser parado. Custo: R$ 8.000.
+                        </div>
+                        <div class="consequencia-item correta">
+                            <strong>Opção C:</strong> Análise detectou desbalanceamento inicial. Manutenção programada na parada do fim de semana. Custo: R$ 2.500.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="caso-interativo" id="caso-2">
+                    <h3>🔥 Caso 2: Cheiro de Queimado no Painel</h3>
+                    <div class="cenario-caso">
+                        <p><strong>Situação:</strong> Durante uma inspeção visual, ao passar por um painel elétrico, você sente um cheiro de "plástico queimando". Visualmente, tudo parece normal. Nenhum disjuntor caiu, e os cabos estão aparentemente íntegros.</p>
+                        <p><strong>Detalhes importantes:</strong></p>
+                        <ul>
+                            <li>Painel alimenta linha de produção crítica</li>
+                            <li>Cheiro fraco, mas perceptível</li>
+                            <li>Temperatura ambiente normal</li>
+                            <li>Sem sinais visuais de problemas</li>
+                        </ul>
+                    </div>
+                    <div class="timer-pressao">
+                        <p><strong>⏰ Pressão da situação:</strong> A produção está em ritmo acelerado para cumprir pedido urgente.</p>
+                    </div>
+                    <div class="opcoes-caso">
+                        <h4>Sua ação imediata:</h4>
+                        <button class="opcao-caso" data-caso="2" data-opcao="a">Abrir o painel imediatamente para investigar</button>
+                        <button class="opcao-caso" data-caso="2" data-opcao="b">Ignorar e apenas anotar como "possível cheiro suspeito"</button>
+                        <button class="opcao-caso" data-caso="2" data-opcao="c" data-correta="true">Solicitar inspeção termográfica urgente com profissional autorizado</button>
+                    </div>
+                    <div id="feedback-caso-2" class="feedback-caso"></div>
+                </div>
+
+                <div class="caso-interativo" id="caso-3">
+                    <h3>💧 Caso 3: Vazamento Hidráulico Intermitente</h3>
+                    <div class="cenario-caso">
+                        <p><strong>Situação:</strong> Uma prensa hidráulica apresenta vazamento leve de óleo, mas só quando está sob carga máxima. Em repouso, nada vaza.</p>
+                        <div class="dados-equipamento">
+                            <h5>📋 Dados do Equipamento:</h5>
+                            <ul>
+                                <li>Pressão de trabalho: 210 bar</li>
+                                <li>Vazamento: ~50ml por ciclo de prensagem</li>
+                                <li>Localização: cilindro principal</li>
+                                <li>Equipamento crítico para produção</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="opcoes-caso">
+                        <h4>Estratégia recomendada:</h4>
+                        <button class="opcao-caso" data-caso="3" data-opcao="a">Aguardar próxima parada geral programada (3 meses)</button>
+                        <button class="opcao-caso" data-caso="3" data-opcao="b">Acompanhar visualmente e medir vazamento semanalmente</button>
+                        <button class="opcao-caso" data-caso="3" data-opcao="c" data-correta="true">Programar manutenção corretiva no próximo fim de semana</button>
+                    </div>
+                    <div id="feedback-caso-3" class="feedback-caso"></div>
+                </div>
+
+                <div class="simulador-decisoes">
+                    <h3>🎮 Simulador de Decisões: Você é o Gestor</h3>
+                    <p>Você é responsável pela manutenção e precisa tomar decisões rápidas. Cada escolha tem consequências financeiras e operacionais.</p>
+
+                    <div class="situacao-simulador" id="situacao-atual">
+                        <h4>Situação: Motor de Bomba com Ruído Anormal</h4>
+                        <div class="dados-situacao">
+                            <p><strong>Equipamento:</strong> Bomba centrífuga 100 CV</p>
+                            <p><strong>Problema:</strong> Ruído metálico intermitente</p>
+                            <p><strong>Impacto da parada:</strong> R$ 15.000/hora</p>
+                            <p><strong>Orçamento disponível:</strong> R$ 8.000</p>
+                        </div>
+
+                        <div class="opcoes-simulador-gestao">
+                            <button class="opcao-gestao" data-custo="0" data-risco="alto">Aguardar até falhar completamente</button>
+                            <button class="opcao-gestao" data-custo="1500" data-risco="medio">Análise de vibração + monitoramento</button>
+                            <button class="opcao-gestao" data-custo="6000" data-risco="baixo">Parada imediata para manutenção</button>
+                        </div>
+
+                        <div id="resultado-gestao" class="resultado-gestao"></div>
+                    </div>
+                </div>
+
+                <div class="matriz-decisao">
+                    <h3>📊 Matriz de Decisão Interativa</h3>
+                    <p>Use esta ferramenta para avaliar cenários de inspeção:</p>
+
+                    <div class="fatores-matriz">
+                        <div class="fator">
+                            <label>Criticidade do Equipamento (1-5):</label>
+                            <input type="range" id="criticidade" min="1" max="5" value="3">
+                            <span id="valor-criticidade">3</span>
+                        </div>
+                        <div class="fator">
+                            <label>Severidade do Problema (1-5):</label>
+                            <input type="range" id="severidade" min="1" max="5" value="3">
+                            <span id="valor-severidade">3</span>
+                        </div>
+                        <div class="fator">
+                            <label>Urgência da Situação (1-5):</label>
+                            <input type="range" id="urgencia" min="1" max="5" value="3">
+                            <span id="valor-urgencia">3</span>
+                        </div>
+                    </div>
+
+                    <button onclick="calcularMatrizDecisao()">Calcular Prioridade</button>
+                    <div id="resultado-matriz" class="resultado-matriz"></div>
+                </div>
+
+                <div class="licoes-aprendidas">
+                    <h3>💡 Lições Aprendidas dos Casos</h3>
+                    <div class="licao">
+                        <h4>🎯 Princípio da Ação Imediata</h4>
+                        <p>Sinais anômalos em equipamentos críticos requerem ação imediata. O custo da investigação é sempre menor que o custo da falha.</p>
+                    </div>
+                    <div class="licao">
+                        <h4>🎯 Hierarquia de Decisões</h4>
+                        <p>1. Segurança primeiro | 2. Diagnóstico preciso | 3. Ação corretiva planejada | 4. Documentação e aprendizado</p>
+                    </div>
+                    <div class="licao">
+                        <h4>🎯 Comunicação Efetiva</h4>
+                        <p>Sempre comunique achados críticos imediatamente à operação e manutenção. A informação salva equipamentos.</p>
+                    </div>
+                </div>
             </section>
-            
+
             <section id="module-6" class="module">
                 <h2>Módulo 6 — Principais Falhas Mecânicas</h2>
                 <p>Compreender as principais falhas mecânicas é essencial para profissionais que atuam na manutenção, operação e inspeção de máquinas industriais. Nenhuma falha surge do nada. Toda falha apresenta sinais, e o bom inspetor é aquele que sabe reconhecer esses sinais antes que se tornem uma parada de produção ou um acidente.</p>
@@ -131,7 +395,7 @@
                 <p>Em muitos casos, a inspeção sensorial não é suficiente para identificar falhas ocultas. Para aumentar a precisão e garantir maior segurança e confiabilidade, são utilizadas ferramentas avançadas de diagnóstico.</p>
                 <h3>Principais Ferramentas de Inspeção</h3>
                 <ul>
-                    <li><strong>Termografia:</strong> Detecta variações de temperatura, identificando pontos de aquecimento anormal. Aplicações: Painéis elétricos, motores, rolamentos, redutores, transformadores, inversores. Benefícios: Inspeção sem desligamento, detecção rápida e precisa, prevenção de incêndios.</li>
+                    <li><strong>Termografia:</strong> Detecta variações de temperatura, identificando pontos de aquecimento anormal. Aplicações: Painéis elétricos, motores,rolamentos, redutores, transformadores, inversores. Benefícios: Inspeção sem desligamento, detecção rápida e precisa, prevenção de incêndios.</li>
                     <li><strong>Analisador de Vibração:</strong> Mede e interpreta vibrações, identificando desbalanceamento, desalinhamento, folgas, defeitos em rolamentos e engrenagens. Aplicações: Motores, bombas, redutores, compressores e ventiladores. Benefícios: Diagnóstico detalhado, redução de paradas, aumento da vida útil.</li>
                     <li><strong>Ultrassom Industrial:</strong> Capta sons de alta frequência que indicam vazamentos, trincas ou falhas internas. Aplicações: Detecção de vazamentos em sistemas pneumáticos, hidráulicos, vapor e gases; Inspeção de rolamentos, válvulas e purgadores; Identificação de descargas parciais. Benefícios: Localização exata de vazamentos, inspeção eficiente e não invasiva, redução de perdas de energia.</li>
                     <li><strong>Boroscópio (Câmera de Inspeção):</strong> Permite visualização interna de máquinas, motores, redutores, tubulações e outros componentes, sem desmontagem. Aplicações: Inspeção interna de engrenagens, mancais, motores, tanques e tubulações; Detecção de trincas, corrosão, desgaste; Avaliação de componentes em locais confinados. Benefícios: Redução de tempo e custo, diagnóstico visual preciso, maior assertividade.</li>
@@ -190,11 +454,11 @@
                 </ul>
                 <p>Ter um plano de inspeção estruturado é essencial para garantir a confiabilidade dos ativos e aumentar a disponibilidade operacional.</p>
             </section>
-            
+
             <section id="module-13" class="module">
                 <h2>Módulo Final: Quiz e Certificação</h2>
                 <p>Parabéns por chegar até aqui! Agora, teste seus conhecimentos para obter o certificado. Você precisa de 100% de acerto para ser aprovado.</p>
-                
+
                 <div id="quiz-container">
     <h3 id="pergunta-titulo"></h3>
     <div id="opcoes-quiz"></div>
@@ -204,7 +468,7 @@
 <div id="certificado-form-container" class="form-certificado" style="display: none;">
     <h3>✅ APROVADO! PARABÉNS! ✅</h3>
     <p>Você acertou todas as perguntas. Preencha seus dados abaixo para gerar seu certificado em PDF.</p>
-    
+
     <label for="nome-aluno">Seu Nome Completo:</label>
     <input type="text" id="nome-aluno" placeholder="Digite seu nome completo aqui">
 
