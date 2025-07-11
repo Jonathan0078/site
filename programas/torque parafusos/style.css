@@ -1,16 +1,20 @@
 /* Importando fontes do Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto+Mono&family=Roboto:wght@400;700&display=swap');
 
+/* Definindo a paleta de cores e variáveis */
 :root {
-    --cor-primaria: #003366;
-    --cor-secundaria: #005a9c;
-    --cor-destaque: #ffc107;
-    --cor-fundo: #f8f9fa;
-    --cor-texto: #212529;
-    --cor-sucesso: #28a745;
-    --cor-erro: #dc3545;
+    --cor-primaria: #003366;      /* Azul escuro para títulos e elementos principais */
+    --cor-secundaria: #005a9c;    /* Azul mais claro para gradientes e barras do gráfico */
+    --cor-destaque: #ffc107;      /* Amarelo/Ouro para a linha de percentual e destaques */
+    --cor-fundo: #f8f9fa;         /* Fundo da página levemente acinzentado */
+    --cor-texto: #212529;         /* Cor principal do texto */
+    --cor-sucesso: #28a745;      /* Verde para o botão de ação */
+    --cor-erro: #dc3545;          /* Vermelho para mensagens de erro */
+    --cor-branco: #ffffff;
+    --cor-borda: #dee2e6;
 }
 
+/* Reset básico e configurações globais */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -24,121 +28,139 @@ body {
     color: var(--cor-texto);
 }
 
+/* Estilo do Cabeçalho */
 header {
     background: linear-gradient(90deg, var(--cor-primaria), var(--cor-secundaria));
-    color: #ffffff;
-    padding: 1.5rem 1rem;
+    color: var(--cor-branco);
+    padding: 2rem 1rem;
     text-align: center;
     border-bottom: 5px solid var(--cor-destaque);
 }
 
 header h1 {
     font-family: 'Oswald', sans-serif;
-    font-size: 2.2rem;
+    font-size: 2.5rem;
+    font-weight: 700;
 }
 
 header p {
     font-family: 'Roboto Mono', monospace;
-    font-size: 1.1em;
+    font-size: 1.1rem;
     opacity: 0.9;
+    margin-top: 0.5rem;
 }
 
-.main-container {
-    max-width: 600px;
-    margin: 2rem auto;
-    padding: 0 1rem;
-}
-
-.calculator-container, .resultado-container {
-    background: #ffffff;
+/* Layout Principal com Grid */
+.container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
     padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    margin-bottom: 2rem;
+    max-width: 1400px;
+    margin: 2rem auto;
 }
 
-h2, h3 {
+/* Estilizando as seções de entrada e saída de dados */
+.input-section,
+.output-section {
+    background: var(--cor-branco);
+    padding: 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.output-section {
+    border-top: 5px solid var(--cor-sucesso);
+}
+
+h2 {
     font-family: 'Oswald', sans-serif;
     color: var(--cor-primaria);
     margin-bottom: 1.5rem;
-    text-align: center;
+    text-align: left;
+    font-size: 1.8rem;
+    border-bottom: 2px solid var(--cor-borda);
+    padding-bottom: 0.5rem;
 }
 
-.input-group {
-    margin-bottom: 1.5rem;
-}
-
-.input-group label {
+label {
     font-weight: bold;
-    color: var(--cor-texto);
     display: block;
     margin-bottom: 0.5rem;
 }
 
-.input-group select {
+textarea {
     width: 100%;
     padding: 0.8rem;
-    border: 1px solid #ccc;
+    border: 1px solid var(--cor-borda);
     border-radius: 5px;
-    font-size: 1.1rem;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1rem;
     background-color: #fff;
+    margin-bottom: 1rem;
 }
 
-.radio-group {
-    display: flex;
-    gap: 1.5rem;
-    background-color: #f0f6fc;
-    padding: 0.8rem;
-    border-radius: 5px;
-}
-
-.radio-group input[type="radio"] {
-    margin-right: 0.25rem;
-}
-
-#calcular-btn {
+button#generate-btn {
     width: 100%;
     padding: 1rem;
     font-size: 1.1rem;
+    font-family: 'Oswald', sans-serif;
     border-radius: 5px;
     cursor: pointer;
     border: none;
-    color: white;
+    color: var(--cor-branco);
     font-weight: bold;
+    text-transform: uppercase;
     background-color: var(--cor-sucesso);
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
     margin-top: 1rem;
 }
 
-#calcular-btn:hover {
-    transform: scale(1.02);
-    opacity: 0.9;
+button#generate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.resultado-container {
-    text-align: center;
-    border-top: 5px solid var(--cor-sucesso);
+/* Estilo para a área de resultados (Gráfico e Tabela) */
+.chart-container {
+    position: relative;
+    height: 400px;
+    margin-bottom: 2rem;
 }
 
-.resultado-display .torque-nm {
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: var(--cor-primaria);
-    line-height: 1.2;
-}
-.resultado-display .torque-lbf {
-    font-size: 1.2rem;
-    color: var(--cor-texto);
-    opacity: 0.8;
+.table-container {
+    max-height: 350px;
+    overflow-y: auto;
+    border: 1px solid var(--cor-borda);
+    border-radius: 5px;
 }
 
-.aviso-dados {
-    margin-top: 1rem;
-    font-size: 0.8rem;
-    color: #6c757d;
+table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.erro-container {
+th, td {
+    padding: 0.8rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--cor-borda);
+}
+
+thead th {
+    background-color: var(--cor-primaria);
+    color: var(--cor-branco);
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.1rem;
+    position: sticky;
+    top: 0;
+}
+
+tbody tr:nth-child(even) {
+    background-color: var(--cor-fundo);
+}
+
+/* Estilo para a mensagem de erro */
+.error {
     margin-top: 1.5rem;
     padding: 1rem;
     background-color: #f8d7da;
@@ -146,8 +168,30 @@ h2, h3 {
     color: var(--cor-erro);
     border-radius: 5px;
     text-align: center;
+    display: none; /* Inicia oculto */
 }
 
-.hidden {
-    display: none;
+/* Rodapé */
+footer {
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    background-color: var(--cor-texto);
+    color: #ccc;
+    font-size: 0.9rem;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 900px) {
+    .container {
+        grid-template-columns: 1fr;
+    }
+
+    header h1 {
+        font-size: 2rem;
+    }
+
+    header p {
+        font-size: 1rem;
+    }
 }
