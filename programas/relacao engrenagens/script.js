@@ -1,264 +1,151 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- 1. SELEÇÃO DE ELEMENTOS DO DOM ---
-    const directSearchInput = document.getElementById('bearing-spec');
-    const directSearchBtn = document.getElementById('direct-search-btn');
-    const boreSearchInput = document.getElementById('bore-diameter-search');
-    const outerSearchInput = document.getElementById('outer-diameter-search');
-    const widthSearchInput = document.getElementById('width-search');
-    const advancedSearchBtn = document.getElementById('advanced-search-btn');
-    const isoInput = document.getElementById('iso-spec-input');
-    const isoCalculateBtn = document.getElementById('iso-calculate-btn');
-    const clearBtn = document.getElementById('clear-btn');
-    const resultDisplay = document.getElementById('result-display');
-    const copyBtn = document.getElementById('copy-btn');
-    const themeToggle = document.getElementById('theme-toggle-checkbox');
-    const historyList = document.getElementById('history-list');
+    // 1. ELEMENT SELECTION
+    // Inputs
+    const dentesZ1Input = document.getElementById('dentes-z1');
+    const dentesZ2Input = document.getElementById('dentes-z2');
+    const rpmEntradaInput = document.getElementById('rpm-entrada');
+    const torqueEntradaInput = document.getElementById('torque-entrada');
+    const eficienciaInput = document.getElementById('eficiencia');
+    const allInputs = [dentesZ1Input, dentesZ2Input, rpmEntradaInput, torqueEntradaInput, eficienciaInput];
 
-    // --- 2. ESTADO DA APLICAÇÃO ---
-    let rolamentosDB = [];
-    let searchHistory = JSON.parse(localStorage.getItem('bearingSearchHistory')) || [];
-    const API_BASE_URL = 'http://127.0.0.1:5000';
+    // Buttons
+    const calcularBtn = document.getElementById('calcular-btn');
+    const resetBtn = document.getElementById('reset-btn');
 
-    // --- 3. INICIALIZAÇÃO ---
-    async function init() {
-        loadTheme();
-        renderHistory();
-        await loadData();
-        setupEventListeners();
-        showPlaceholder('Aguardando sua consulta...');
-    }
+    // Animation Elements
+    const gear1 = document.getElementById('gear1');
+    const gear2 = document.getElementById('gear2');
+    const gear1RotationIndicator = document.getElementById('gear1-rotation');
+    const gear2RotationIndicator = document.getElementById('gear2-rotation');
+    
+    // Result Display
+    const resultadoContainer = document.getElementById('resultado-container');
+    const resultadoTipo = document.getElementById('resultado-tipo');
+    const resultadoRelacao = document.getElementById('resultado-relacao');
+    const resultadoRpm = document.getElementById('resultado-rpm');
+    const resultadoTorque = document.getElementById('resultado-torque');
+    
+    // Error Display
+    const erroContainer = document.getElementById('erro-container');
 
-    // --- 4. FUNÇÕES DE DADOS E API ---
-    async function loadData() {
-        showLoading('Carregando base de dados...');
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/rolamentos`);
-            if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
-            rolamentosDB = await response.json();
-            showPlaceholder('Base de dados carregada. Pronto para consultar.');
-        } catch (error) {
-            console.error("Falha ao carregar dados da API:", error);
-            showError('Erro crítico ao conectar com a API. Verifique se o servidor `app.py` está em execução e tente recarregar a página.');
-        }
-    }
+    // 2. FUNCTIONS
+    /**
+     * Validates the essential inputs (number of teeth) and enables/disables the calculate button.
+     */
+    const validateInputs = () => {
+        const z1 = parseInt(dentesZ1Input.value, 10);
+        const z2 = parseInt(dentesZ2Input.value, 10);
 
-    // --- 5. FUNÇÕES DE LÓGICA PRINCIPAL ---
-    function handleDirectSearch() {
-        const spec = directSearchInput.value.trim().toUpperCase();
-        if (!spec) {
-            showWarning('Por favor, digite uma especificação.');
-            return;
-        }
-        showLoading(`Buscando por "${spec}"...`);
-        const bearingData = rolamentosDB.find(b => b.designacao.toUpperCase() === spec);
-        if (bearingData) {
-            displayBearingDetails(bearingData);
-            addToHistory(spec);
+        // Enable button only if both teeth inputs are positive numbers
+        if (z1 > 0 && z2 > 0) {
+            calcularBtn.disabled = false;
+            erroContainer.classList.add('hidden');
         } else {
-            showWarning(`Rolamento '${spec}' não encontrado na base de dados.`, 'Tente a busca por medidas ou a calculadora de furo ISO.');
+            calcularBtn.disabled = true;
         }
-    }
-    
-    function handleAdvancedSearch() {
-        const d = parseFloat(boreSearchInput.value);
-        const D = parseFloat(outerSearchInput.value);
-        const B = parseFloat(widthSearchInput.value);
+    };
 
-        if (isNaN(d) && isNaN(D) && isNaN(B)) {
-            showWarning('Preencha ao menos um campo para a busca avançada.');
+    /**
+     * Stops any running animations on the gears.
+     */
+    const stopAnimation = () => {
+        gear1.style.animation = 'none';
+        gear2.style.animation = 'none';
+    };
+
+    /**
+     * Resets the entire calculator to its initial state.
+     */
+    const handleReset = () => {
+        // Clear essential input fields
+        dentesZ1Input.value = '';
+        dentesZ2Input.value = '';
+        
+        // Restore default values for other fields
+        rpmEntradaInput.value = '1200';
+        torqueEntradaInput.value = '10';
+        eficienciaInput.value = '95';
+
+        // Hide result and error containers
+        resultadoContainer.classList.add('hidden');
+        erroContainer.classList.add('hidden');
+        
+        // Stop animations
+        stopAnimation();
+
+        // Reset rotation indicators
+        gear1RotationIndicator.textContent = 'Rotação: --';
+        gear2RotationIndicator.textContent = 'Rotação: --';
+
+        // Validate inputs to disable the button
+        validateInputs();
+    };
+
+    /**
+     * Reads inputs, performs calculations, updates the UI with results, and starts the animation.
+     */
+    const handleCalculateAndAnimate = () => {
+        // Stop any previous animation
+        stopAnimation();
+
+        // 1. Get and parse input values
+        const z1 = parseInt(dentesZ1Input.value, 10);
+        const z2 = parseInt(dentesZ2Input.value, 10);
+        const rpmEntrada = parseFloat(rpmEntradaInput.value) || 0;
+        const torqueEntrada = parseFloat(torqueEntradaInput.value) || 0;
+        const eficiencia = (parseFloat(eficienciaInput.value) || 100) / 100;
+
+        // 2. Validate inputs
+        if (z1 <= 0 || z2 <= 0) {
+            erroContainer.classList.remove('hidden');
+            resultadoContainer.classList.add('hidden');
             return;
         }
-        showLoading('Filtrando rolamentos...');
-        
-        const results = rolamentosDB.filter(b => {
-            const match_d = isNaN(d) || b.d === d;
-            const match_D = isNaN(D) || b.D === D;
-            const match_B = isNaN(B) || (b.B || b.T) === B;
-            return match_d && match_D && match_B;
-        });
+        erroContainer.classList.add('hidden');
 
-        if (results.length > 0) {
-            displaySearchResults(results);
-        } else {
-            showWarning('Nenhum rolamento encontrado com os critérios informados.');
-        }
-    }
+        // 3. Perform calculations
+        const relacao = z2 / z1;
+        const rpmSaida = rpmEntrada / relacao;
+        const torqueSaida = torqueEntrada * relacao * eficiencia;
 
-    function handleISOCalculation() {
-        const especificacao = isoInput.value.trim();
-        if (!especificacao || especificacao.length < 2) {
-            showWarning("Digite uma especificação com pelo menos 2 caracteres.", "Calculadora ISO");
-            return;
+        let tipoTransmissao = "1:1";
+        if (relacao > 1) {
+            tipoTransmissao = "Redutor";
+        } else if (relacao < 1) {
+            tipoTransmissao = "Multiplicador";
         }
-        try {
-            const codigo_furo_str = especificacao.slice(-2);
-            const codigo_furo_int = parseInt(codigo_furo_str, 10);
-            if (isNaN(codigo_furo_int)) {
-                throw new Error("Os dois últimos caracteres não são numéricos.");
-            }
-            let resultado;
-            if (codigo_furo_int === 0) resultado = "Furo de 10 mm (código 00)";
-            else if (codigo_furo_int === 1) resultado = "Furo de 12 mm (código 01)";
-            else if (codigo_furo_int === 2) resultado = "Furo de 15 mm (código 02)";
-            else if (codigo_furo_int === 3) resultado = "Furo de 17 mm (código 03)";
-            else if (4 <= codigo_furo_int && codigo_furo_int <= 96) {
-                const diametro = codigo_furo_int * 5;
-                resultado = `Furo de ${diametro} mm (código ${codigo_furo_str})`;
-            } else {
-                showWarning(`Código '${codigo_furo_str}' não segue a regra padrão.`, "Calculadora ISO");
-                return;
-            }
-            showInfo(`Resultado para '${especificacao}'`, resultado);
-        } catch (e) {
-            showError(`Erro ao calcular: ${e.message}`, "Calculadora ISO");
+
+        // 4. Update result display
+        resultadoTipo.textContent = tipoTransmissao;
+        resultadoRelacao.textContent = relacao.toFixed(2);
+        resultadoRpm.textContent = rpmSaida.toFixed(2);
+        resultadoTorque.textContent = torqueSaida.toFixed(2);
+        resultadoContainer.classList.remove('hidden');
+
+        // 5. Update rotation indicators
+        gear1RotationIndicator.textContent = `Rotação: ${rpmEntrada.toFixed(0)} RPM`;
+        gear2RotationIndicator.textContent = `Rotação: ${rpmSaida.toFixed(2)} RPM`;
+
+        // 6. Set and start animations
+        // Only animate if RPM > 0
+        if (rpmEntrada > 0) {
+            const duration1 = 60 / rpmEntrada;
+            gear1.style.animation = `rotate-cw ${duration1}s linear infinite`;
         }
-    }
+        if (rpmSaida > 0) {
+            const duration2 = 60 / rpmSaida;
+            gear2.style.animation = `rotate-ccw ${duration2}s linear infinite`;
+        }
+    };
+
+    // 3. EVENT LISTENERS
+    calcularBtn.addEventListener('click', handleCalculateAndAnimate);
+    resetBtn.addEventListener('click', handleReset);
     
-    // --- 6. FUNÇÕES DE UI / EXIBIÇÃO ---
-    function showPlaceholder(message) {
-        resultDisplay.innerHTML = `<div class="result-placeholder"><i class="fa-solid fa-magnifying-glass"></i><p>${message}</p></div>`;
-        copyBtn.style.display = 'none';
-    }
-    function showLoading(message) {
-        resultDisplay.innerHTML = `<div class="result-placeholder"><i class="fa-solid fa-spinner fa-spin"></i><p>${message}</p></div>`;
-        copyBtn.style.display = 'none';
-    }
-    function showWarning(message, subtext = 'Verifique os dados e tente novamente.') {
-        resultDisplay.innerHTML = `<div class="result-item warning"><span class="label">${message}</span><span class="value" style="font-size: 1rem;">${subtext}</span></div>`;
-        copyBtn.style.display = 'none';
-    }
-    function showError(message, subtext = 'Ocorreu um problema inesperado.') {
-        resultDisplay.innerHTML = `<div class="result-item error"><span class="label">${message}</span><span class="value" style="font-size: 1rem;">${subtext}</span></div>`;
-        copyBtn.style.display = 'none';
-    }
-    function showInfo(label, value) {
-        resultDisplay.innerHTML = `<div class="result-item info"><span class="label">${label}</span><span class="value">${value}</span></div>`;
-        copyBtn.style.display = 'none';
-    }
+    // Add input event listeners to the essential fields for real-time validation
+    dentesZ1Input.addEventListener('input', validateInputs);
+    dentesZ2Input.addEventListener('input', validateInputs);
 
-    function displayBearingDetails(data) {
-        const larguraLabel = data.T ? 'Largura Total (T)' : 'Largura (B)';
-        const larguraValue = data.T || data.B;
-        
-        resultDisplay.innerHTML = `
-            <div class="result-item success">
-                <span class="label">Rolamento Encontrado:</span>
-                <span class="value" id="result-value">${data.designacao}</span>
-            </div>
-            <div class="result-item"><span class="label">Tipo</span><span class="value" style="font-size: 1.2rem;">${data.tipo}</span></div>
-            <div class="results-grid-main">
-                <div class="result-item"><span class="label">Furo (d)</span><span class="value">${data.d} mm</span></div>
-                <div class="result-item"><span class="label">Externo (D)</span><span class="value">${data.D} mm</span></div>
-                <div class="result-item"><span class="label">${larguraLabel}</span><span class="value">${larguraValue} mm</span></div>
-                <div class="result-item"><span class="label">Massa</span><span class="value">${data.massa || '-'} kg</span></div>
-                <div class="result-item"><span class="label">Carga Din. (C)</span><span class="value">${data.C || '-'} N</span></div>
-                <div class="result-item"><span class="label">Carga Est. (C0)</span><span class="value">${data.C0 || '-'} N</span></div>
-                <div class="result-item"><span class="label">RPM (Graxa)</span><span class="value">${data.rpm_graxa || '-'}</span></div>
-                <div class="result-item"><span class="label">RPM (Óleo)</span><span class="value">${data.rpm_oleo || '-'}</span></div>
-            </div>
-            ${data.notas ? `<div class="result-item warning"><span class="label">Observação</span><span class="value" style="font-size: 1rem;">${data.notas}</span></div>` : ''}
-        `;
-        copyBtn.style.display = 'block';
-    }
-    
-    function displaySearchResults(results) {
-        resultDisplay.innerHTML = `
-            <div class="result-item success">
-                <span class="label">${results.length} resultado(s) encontrado(s):</span>
-            </div>
-            <div class="table-container">
-                <table>
-                    <thead><tr><th>Designação</th><th>Tipo</th><th>d</th><th>D</th><th>B/T</th></tr></thead>
-                    <tbody>
-                        ${results.map(b => `<tr>
-                            <td><strong>${b.designacao}</strong></td>
-                            <td>${b.tipo}</td>
-                            <td>${b.d}</td>
-                            <td>${b.D}</td>
-                            <td>${b.T || b.B}</td>
-                        </tr>`).join('')}
-                    </tbody>
-                </table>
-            </div>`;
-        copyBtn.style.display = 'none';
-    }
-
-    // --- 7. FUNÇÕES AUXILIARES ---
-    function clearAll() {
-        directSearchInput.value = '';
-        boreSearchInput.value = '';
-        outerSearchInput.value = '';
-        widthSearchInput.value = '';
-        isoInput.value = '';
-        showPlaceholder('Aguardando sua consulta...');
-        directSearchInput.focus();
-    }
-    
-    function loadTheme() {
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add('dark-theme');
-            themeToggle.checked = true;
-        }
-    }
-    
-    function addToHistory(spec) {
-        // Remove a especificação se já existir para movê-la para o topo
-        searchHistory = searchHistory.filter(item => item !== spec);
-        // Adiciona no início do array
-        searchHistory.unshift(spec);
-        // Limita o histórico a 10 itens
-        if (searchHistory.length > 10) {
-            searchHistory.pop();
-        }
-        localStorage.setItem('bearingSearchHistory', JSON.stringify(searchHistory));
-        renderHistory();
-    }
-    
-    function renderHistory() {
-        if (searchHistory.length === 0) {
-            historyList.innerHTML = '<li class="history-placeholder">Nenhuma busca recente.</li>';
-            return;
-        }
-        historyList.innerHTML = searchHistory.map(item => `<li data-spec="${item}">${item}</li>`).join('');
-    }
-
-    // --- 8. EVENT LISTENERS ---
-    function setupEventListeners() {
-        directSearchBtn.addEventListener('click', handleDirectSearch);
-        advancedSearchBtn.addEventListener('click', handleAdvancedSearch);
-        isoCalculateBtn.addEventListener('click', handleISOCalculation);
-        clearBtn.addEventListener('click', clearAll);
-        
-        directSearchInput.addEventListener('keyup', (e) => e.key === 'Enter' && handleDirectSearch());
-        boreSearchInput.addEventListener('keyup', (e) => e.key === 'Enter' && handleAdvancedSearch());
-        outerSearchInput.addEventListener('keyup', (e) => e.key === 'Enter' && handleAdvancedSearch());
-        widthSearchInput.addEventListener('keyup', (e) => e.key === 'Enter' && handleAdvancedSearch());
-        isoInput.addEventListener('keyup', (e) => e.key === 'Enter' && handleISOCalculation());
-        
-        copyBtn.addEventListener('click', () => {
-            const resultValue = document.getElementById('result-value')?.innerText;
-            if (resultValue) {
-                navigator.clipboard.writeText(resultValue).then(() => {
-                    copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
-                    setTimeout(() => { copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>'; }, 1500);
-                });
-            }
-        });
-
-        themeToggle.addEventListener('change', () => {
-            document.body.classList.toggle('dark-theme');
-            localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
-        });
-
-        historyList.addEventListener('click', (e) => {
-            if (e.target && e.target.matches('li[data-spec]')) {
-                const spec = e.target.getAttribute('data-spec');
-                directSearchInput.value = spec;
-                handleDirectSearch();
-            }
-        });
-    }
-
-    // --- INICIALIZAÇÃO ---
-    init();
+    // 4. INITIALIZATION
+    handleReset(); // Set the initial state of the page
 });
