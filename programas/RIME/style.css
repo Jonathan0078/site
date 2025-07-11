@@ -43,8 +43,8 @@ header {
     padding: 1.5rem 1rem;
     text-align: center;
     border-bottom: 5px solid var(--cor-destaque);
-    border-radius: 8px;
-    margin-bottom: 2rem;
+    /* border-radius: 8px;  <-- REMOVIDO para que os cantos fiquem retos */
+    /* margin-bottom: 2rem; <-- REMOVIDO pois o .container já tem a margem superior */
 }
 
 header h1 {
