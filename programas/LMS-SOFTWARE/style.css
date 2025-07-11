@@ -30,55 +30,57 @@ body {
     padding: 1rem;
 }
 
+/* [NOVO ESTILO] - Header com cor sólida e mais padding vertical */
 header {
-    background: linear-gradient(90deg, var(--cor-primaria), var(--cor-secundaria));
+    background-color: var(--cor-secundaria);
     color: #ffffff;
-    padding: 1.5rem 1rem 0 1rem; /* Padding inferior removido para dar espaço às abas */
+    padding: 1.5rem 1rem;
     text-align: center;
 }
 
 header h1 {
     font-family: 'Oswald', sans-serif;
     font-size: 2.2rem;
-    margin-bottom: 1rem;
+    margin: 0 0 1.5rem 0; /* Ajuste de margem */
 }
 
-/* --- ESTILOS DE NAVEGAÇÃO (ATUALIZADO PARA ABAS) --- */
+/* --- ESTILOS DE NAVEGAÇÃO (ATUALIZADO PARA LISTA VERTICAL) --- */
+/* [NOVO ESTILO] - Container do menu vertical */
 .main-nav {
     display: flex;
-    justify-content: center;
-    gap: 0.5rem; /* Espaço entre as abas */
-    flex-wrap: wrap;
-    border-bottom: 5px solid var(--cor-destaque); /* Linha de destaque movida para cá */
-    margin-top: 1rem; /* Adiciona espaço entre o título e as abas */
+    flex-direction: column; /* Itens empilhados verticalmente */
+    align-items: center;   /* Centraliza os links */
+    gap: 0;                /* Remove o espaço entre os links */
+    border-top: 2px solid var(--cor-destaque); /* Linha de destaque no topo */
 }
 
+/* [NOVO ESTILO] - Estilo para cada link do menu */
 .nav-link {
     color: white;
-    background-color: var(--cor-secundaria);
     text-decoration: none;
-    padding: 0.8rem 1.5rem;
+    padding: 1rem 0;
     font-weight: bold;
-    transition: background-color 0.2s;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    position: relative;
-    bottom: -5px; /* Alinha com a borda inferior */
-    border-bottom: 5px solid var(--cor-secundaria);
+    transition: background-color 0.2s, color 0.2s;
+    width: 100%; /* Ocupa toda a largura do container */
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15); /* Separador sutil */
 }
 
-.nav-link:hover {
-    background-color: #007acc; /* Um azul um pouco mais claro para o hover */
-    border-bottom-color: #007acc;
+/* [NOVO ESTILO] - Efeito hover para os links não ativos */
+.nav-link:not(.active):hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
+/* [NOVO ESTILO] - Estilo do link ativo (selecionado) */
 .nav-link.active {
     background-color: var(--cor-fundo); /* Cor de fundo da página */
     color: var(--cor-primaria);
-    border-bottom-color: var(--cor-fundo); /* Cria a ilusão de "corte" */
+    font-weight: 700; /* Mais destaque */
 }
 
 .hidden { display: none !important; }
+
+/* ... (o resto do CSS permanece o mesmo) ... */
 
 .input-group { margin-bottom: 1.5rem; }
 .input-group label { font-weight: bold; display: block; margin-bottom: 0.5rem; color: var(--cor-secundaria); }
@@ -111,7 +113,7 @@ select:focus, input:focus {
     margin-top: 2.5rem;
 }
 
-/* [IMPROVEMENT] - Bordas coloridas para cada seção */
+/* Bordas coloridas para cada seção */
 .search-box { border-top: 4px solid var(--cor-primaria); }
 .calculator-section { border-top: 4px solid var(--cor-secundaria); }
 .planner-section { border-top: 4px solid var(--cor-destaque); }
@@ -178,7 +180,7 @@ button#find-oils-button:hover { background-color: var(--cor-primaria); color: wh
 #calculator-result .recommended-vg { font-size: 2.5rem; font-weight: bold; color: var(--cor-sucesso); font-family: 'Oswald', sans-serif; }
 .justification-text { font-size: 0.95em; color: #495057; margin-top: 10px; border-top: 1px solid var(--cor-borda); padding-top: 10px; }
 
-/* [IMPROVEMENT] - Estilos para Calculadora de Mistura */
+/* Estilos para Calculadora de Mistura */
 .blend-calculator-section { border-top: 4px solid var(--cor-roxo-blend); }
 .blend-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
 .oil-input-card { border: 1px solid var(--cor-borda); padding: 1.5rem; border-radius: 6px; background-color: #f8f9fa; }
@@ -244,12 +246,12 @@ button#calculate-blend-button:hover { background-color: #5a3d90; }
 #plan-table { width: 100%; border-collapse: collapse; text-align: left; }
 #plan-table thead { background-color: #eaf3fa; }
 #plan-table th, #plan-table td { padding: 12px 15px; border-bottom: 1px solid var(--cor-borda); }
-/* [IMPROVEMENT] - Linhas zebradas e hover para melhor legibilidade */
+/* Linhas zebradas e hover para melhor legibilidade */
 #plan-table tbody tr:nth-child(even) { background-color: #f8f9fa; }
 #plan-table tbody tr:hover { background-color: #eaf3fa; }
 #plan-table .action-btn { background: none; border: none; cursor: pointer; color: var(--cor-erro); font-size: 1.2rem; }
 
-/* [NEW] SEÇÃO DE PROJETOS SALVOS */
+/* SEÇÃO DE PROJETOS SALVOS */
 .save-project-form, .load-project-form {
     background-color: #f8f9fa;
     padding: 1.5rem;
@@ -338,11 +340,11 @@ footer { text-align: center; margin-top: 3rem; padding: 1rem; color: #6c757d; }
         grid-template-columns: 1fr;
     }
     .main-nav {
-        gap: 0.2rem;
+        gap: 0;
     }
     .nav-link {
-        padding: 0.6rem 1rem;
-        font-size: 0.9rem;
+        padding: 0.8rem 0;
+        font-size: 1rem;
     }
     .load-project-form .button-group {
         flex-direction: column;
