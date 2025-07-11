@@ -215,3 +215,26 @@ h2, h3 {
         font-size: 0.9rem;
     }
 }
+/* Estilos para Notificações Toast */
+.toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(120%);
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    z-index: 9999;
+    opacity: 0;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+    text-align: center;
+}
+.toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+.toast-info { background-color: var(--cor-secundaria); }
+.toast-success { background-color: var(--cor-sucesso); }
+.toast-error { background-color: var(--cor-erro); }
