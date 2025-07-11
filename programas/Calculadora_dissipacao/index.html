@@ -3,238 +3,127 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculadora de Dissipação Térmica em Mancais</title>
+  <title>Calculadora Avançada de Dissipação Térmica em Mancais</title>
   <link rel="stylesheet" href="style.css">
-  <style>
-    html, body {
-      height: 100%;
-      min-height: 100vh;
-      width: 100vw;
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    .main-container {
-      min-height: 100vh;
-      min-width: 100vw;
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      justify-content: flex-start;
-      padding: 0;
-    }
-    .calculator-container {
-      flex: 1 1 auto;
-      width: 100%;
-      max-width: 700px;
-      margin: 0 auto;
-      padding: 32px 16px 0 16px;
-      box-sizing: border-box;
-    }
-    .menu-flutuante {
-      position: fixed;
-      top: 32px;
-      right: 32px;
-      z-index: 1001;
-    }
-    .menu-btn {
-      background: var(--cor-destaque, #ffc107);
-      color: var(--cor-primaria, #003366);
-      border: none;
-      border-radius: 8px;
-      padding: 12px 20px;
-      font-weight: 700;
-      font-size: 1.1rem;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      transition: background 0.2s, color 0.2s;
-    }
-    .menu-popup {
-      display: none;
-      position: absolute;
-      top: 48px;
-      right: 0;
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
-      min-width: 260px;
-      padding: 0;
-      z-index: 1002;
-    }
-    .menu-popup.open {
-      display: block;
-    }
-    .menu-popup ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-    .menu-popup li {
-      border-bottom: 1px solid #eee;
-    }
-    .menu-popup li:last-child {
-      border-bottom: none;
-    }
-    .menu-popup button {
-      width: 100%;
-      background: none;
-      border: none;
-      color: #222;
-      font-size: 1rem;
-      padding: 16px 20px;
-      text-align: left;
-      cursor: pointer;
-      border-radius: 0;
-      transition: background 0.2s;
-    }
-    .menu-popup button:hover {
-      background: #f5f5f5;
-    }
-    @media print {
-      body, html {
-        background: #fff !important;
-        color: #000 !important;
-        margin: 0;
-        padding: 0;
-        width: 100vw;
-        min-width: 0;
-        min-height: 0;
-      }
-      header, .menu-flutuante, #abrir-menu-btn, .menu-popup, .export-container, #erro-container, #historico-container, #multiplos-mancais-container {
-        display: none !important;
-      }
-      .main-container, .calculator-container, #resultado-container {
-        width: 100vw !important;
-        max-width: 100vw !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        box-shadow: none !important;
-        background: #fff !important;
-      }
-      #resultado-container {
-        display: block !important;
-        border: none !important;
-        box-shadow: none !important;
-        margin: 0 !important;
-        padding: 0 0 0 0 !important;
-      }
-      #resultado-display, .dissipacao-valor, .dissipacao-status {
-        color: #000 !important;
-        background: none !important;
-        border: none !important;
-        box-shadow: none !important;
-        font-size: 1.1em !important;
-        padding: 0 !important;
-      }
-      .aviso-dados {
-        color: #333 !important;
-        font-size: 0.95em !important;
-        margin-top: 12px !important;
-      }
-      input, select, button, label, form, .input-group {
-        display: none !important;
-      }
-    }
-  </style>
 </head>
 <body>
   <header>
     <h1>Calculadora de Dissipação Térmica em Mancais</h1>
-    <p>Estime a dissipação de calor em seus sistemas de mancais.</p>
+    <p>Estime e analise a dissipação de calor em seus sistemas de mancais.</p>
   </header>
 
   <div class="main-container">
-    <div class="calculator-container">
-      <h2>Dados do Mancal</h2>
-      <form id="form-mancal">
-        <div class="input-group">
-          <label for="tipo-mancal">Tipo de Mancal:</label>
-          <select id="tipo-mancal">
-            <option value="Rolamento">Rolamento</option>
-            <option value="Bucha">Bucha</option>
-          </select>
-        </div>
-
-        <div class="input-group">
-          <label for="carga">Carga (N):</label>
-          <input type="number" id="carga" required>
-        </div>
-
-        <div class="input-group">
-          <label for="velocidade">Velocidade (rpm):</label>
-          <input type="number" id="velocidade" required>
-        </div>
-
-        <div class="input-group">
-          <label for="temp-oper">Temperatura Operação (°C):</label>
-          <input type="number" id="temp-oper" required>
-        </div>
-
-        <div class="input-group">
-          <label for="temp-amb">Temperatura Ambiente (°C):</label>
-          <input type="number" id="temp-amb" required>
-        </div>
-
-        <div class="input-group">
-          <label for="tipo-lubrificacao">Tipo de Lubrificação:</label>
-          <select id="tipo-lubrificacao">
-            <option value="Óleo">Óleo</option>
-            <option value="Graxa">Graxa</option>
-          </select>
-        </div>
-
-        <div class="input-group">
-          <label for="diametro-eixo">Diâmetro do Eixo (mm):</label>
-          <input type="number" id="diametro-eixo" required>
-        </div>
-        <div class="input-group">
-          <label for="tempo-operacao">Tempo de Operação (horas):</label>
-          <input type="number" id="tempo-operacao" min="1" value="1" required>
-        </div>
-
-        <button type="submit" id="calcular-btn">Calcular Dissipação</button>
-      </form>
-    </div>
-
-    <div id="resultado-container" class="resultado-container hidden">
-      <h2>Resultado</h2>
-      <div id="resultado-display">
-        </div>
-      <p class="aviso-dados">Consulte o manual do fabricante para limites específicos do seu mancal.</p>
-
-      <div class="export-container" style="margin:16px 0 0 0;display:flex;gap:8px;">
-        <button id="export-pdf-btn" type="button" style="background:var(--cor-destaque);color:var(--cor-primaria);border:none;border-radius:8px;padding:8px 16px;font-weight:600;cursor:pointer;">Exportar PDF</button>
-        <button id="export-csv-btn" type="button" style="background:var(--cor-destaque);color:var(--cor-primaria);border:none;border-radius:8px;padding:8px 16px;font-weight:600;cursor:pointer;">Exportar CSV</button>
-      </div>
-    </div>
-
-    <div id="erro-container" class="erro-container hidden">
-      </div>
-
-    <div class="menu-flutuante" style="display:block !important;">
+    
+    <!-- Menu Flutuante -->
+    <div class="menu-flutuante">
       <button id="abrir-menu-btn" class="menu-btn">Menu</button>
       <div id="menu-popup" class="menu-popup">
         <ul>
-          <li><button id="abrir-historico-btn">Histórico de Cálculos</button></li>
-          <li><button id="abrir-multiplos-btn">Múltiplos Mancais</button></li>
-          <li><button id="limpar-historico-btn-menu">Limpar Histórico</button></li>
+          <li><button id="nav-calculadora">Calculadora Principal</button></li>
+          <li><button id="nav-multiplos">Múltiplos Mancais</button></li>
+          <li><button id="nav-historico">Histórico de Cálculos</button></li>
+          <li><button id="limpar-historico-btn">Limpar Histórico</button></li>
         </ul>
       </div>
     </div>
 
-    <div id="historico-container" class="historico-container" style="display:none;margin:24px 0 0 0;">
-      <h2>Histórico de Cálculos</h2>
-      <ul id="historico-list" style="padding-left:0;list-style:none;"></ul>
+    <!-- Seção da Calculadora Principal -->
+    <div id="view-calculadora" class="view-container">
+      <div class="calculator-container">
+        <h2>Dados do Mancal</h2>
+        <form id="form-mancal">
+          <div class="input-group">
+            <label for="tipo-mancal">Tipo de Mancal:</label>
+            <select id="tipo-mancal">
+              <option value="Rolamento">Rolamento</option>
+              <option value="Bucha">Bucha</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="carga">Carga (N):</label>
+            <input type="number" id="carga" required>
+          </div>
+          <div class="input-group">
+            <label for="velocidade">Velocidade (rpm):</label>
+            <input type="number" id="velocidade" required>
+          </div>
+          <div class="input-group">
+            <label for="temp-oper">Temperatura Operação (°C):</label>
+            <input type="number" id="temp-oper" required>
+          </div>
+          <div class="input-group">
+            <label for="temp-amb">Temperatura Ambiente (°C):</label>
+            <input type="number" id="temp-amb" required>
+          </div>
+          <div class="input-group">
+            <label for="tipo-lubrificacao">Tipo de Lubrificação:</label>
+            <select id="tipo-lubrificacao">
+              <option value="Óleo">Óleo</option>
+              <option value="Graxa">Graxa</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="diametro-eixo">Diâmetro do Eixo (mm):</label>
+            <input type="number" id="diametro-eixo" required>
+          </div>
+          <div class="input-group">
+            <label for="tempo-operacao">Tempo de Operação (horas):</label>
+            <input type="number" id="tempo-operacao" min="1" value="1" required>
+          </div>
+          <button type="submit" id="calcular-btn">
+            <span class="btn-text">Calcular Dissipação</span>
+            <span class="spinner hidden"></span>
+          </button>
+        </form>
+      </div>
+
+      <div id="resultado-container" class="resultado-container hidden">
+        <h2>Resultado</h2>
+        <div id="resultado-display"></div>
+        <p class="aviso-dados">Consulte o manual do fabricante para limites específicos do seu mancal.</p>
+        <div class="export-container">
+          <button id="export-pdf-btn">Exportar PDF</button>
+          <button id="export-csv-btn">Exportar CSV</button>
+        </div>
+      </div>
+      
+      <div id="grafico-whatif-container" class="grafico-container hidden">
+          <h2>Análise de Sensibilidade (Dissipação vs. Velocidade)</h2>
+          <canvas id="grafico-whatif"></canvas>
+      </div>
     </div>
-    <div id="multiplos-mancais-container" class="multiplos-mancais-container" style="display:none;margin:32px 0 0 0;">
-      <h2>Múltiplos Mancais</h2>
-      <button id="adicionar-mancal-btn" type="button" style="background:var(--cor-destaque);color:var(--cor-primaria);border:none;border-radius:8px;padding:8px 16px;font-weight:600;cursor:pointer;margin-bottom:10px;">Adicionar Mancal</button>
-      <div id="mancais-list"></div>
-      <div id="resultado-multiplos" style="margin-top:12px;"></div>
+
+    <!-- Seção de Histórico -->
+    <div id="view-historico" class="view-container hidden">
+      <div class="historico-container">
+        <h2>Histórico de Cálculos</h2>
+        <p class="info-text">Clique em um item para recarregar os dados no formulário.</p>
+        <ul id="historico-list"></ul>
+      </div>
     </div>
+
+    <!-- Seção de Múltiplos Mancais -->
+    <div id="view-multiplos" class="view-container hidden">
+      <div class="multiplos-mancais-container">
+        <h2>Análise de Múltiplos Mancais</h2>
+        <p class="info-text">Adicione mancais para comparar a dissipação de calor e ver o total.</p>
+        <div id="mancais-list"></div>
+        <button id="adicionar-mancal-btn">Adicionar Mancal</button>
+        <div id="resultado-multiplos" class="resultado-multiplos"></div>
+        <div class="grafico-container">
+            <canvas id="grafico-multiplos"></canvas>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Container de Erro Global -->
+    <div id="erro-container" class="erro-container hidden"></div>
   </div>
 
+  <!-- Bibliotecas JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="script.js"></script>
-  <script src="chart.min.js"></script>
 </body>
 </html>
