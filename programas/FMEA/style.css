@@ -1,36 +1,188 @@
-/* Seu CSS para estilizar o formulário e a tabela */
+/* Estilização geral e layout */
+:root {
+    --primary-color: #005f73;
+    --secondary-color: #0a9396;
+    --danger-color: #9b2226;
+    --light-gray: #f8f9fa;
+    --dark-gray: #6c757d;
+    --border-color: #dee2e6;
+    --card-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
 body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    background-color: var(--light-gray);
+    color: #333;
 }
-.form-container, .fmea-output {
-    background-color: #f0f0f0;
+
+header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 20px 40px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+h1 {
+    margin: 0;
+}
+
+.container {
     padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 8px;
 }
+
+.card {
+    background-color: white;
+    padding: 25px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+}
+
+h2 {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+    margin-top: 0;
+}
+
+/* Estilos do Formulário */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.rating-group {
+    max-width: 150px;
+}
+
+label {
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--dark-gray);
+}
+
+input[type="text"],
+input[type="number"] {
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(0, 95, 115, 0.2);
+}
+
+/* Estilos dos Botões */
+button, .button-primary, .button-secondary, .button-danger, .action-button {
+    padding: 10px 20px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 10px;
+}
+
+button:hover, .button-primary:hover, .button-secondary:hover, .button-danger:hover, .action-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+}
+
+.button-primary { background-color: var(--primary-color); }
+.button-secondary { background-color: var(--secondary-color); }
+.button-danger { background-color: var(--danger-color); }
+
+form button[type="submit"] { margin-right: 10px; }
+
+.output-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+}
+
+/* Estilos da Tabela */
+.table-wrapper {
+    overflow-x: auto; /* Garante que a tabela seja responsiva em telas pequenas */
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
 }
+
 th, td {
-    border: 1px solid #ccc;
-    padding: 8px;
+    border: 1px solid var(--border-color);
+    padding: 12px;
     text-align: left;
+    vertical-align: middle;
 }
+
 th {
-    background-color: #e2e2e2;
-}
-button {
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
+    background-color: #e9ecef;
+    color: #495057;
     cursor: pointer;
-    margin-top: 10px;
+    position: relative;
 }
-button:hover {
-    background-color: #0056b3;
+
+th:hover {
+    background-color: #ced4da;
 }
+
+th::after {
+    content: '';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 5px solid transparent;
+}
+
+th.sort-asc::after { border-bottom-color: var(--primary-color); }
+th.sort-desc::after { border-top-color: var(--primary-color); }
+
+tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+tr:hover {
+    background-color: #e2e6ea;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.action-button {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+}
+
+/* Codificação de Cores do RPN */
+.rpn-low { background-color: rgba(40, 167, 69, 0.1); }
+.rpn-medium { background-color: rgba(255, 193, 7, 0.2); }
+.rpn-high { background-color: rgba(220, 53, 69, 0.2); }
+.rpn-critical { background-color: rgba(155, 34, 38, 0.3); font-weight: bold; }
