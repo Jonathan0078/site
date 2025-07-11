@@ -1,137 +1,78 @@
-// js/plano.js
-
-// O caminho agora sobe um nível (../) para encontrar a pasta 'data'
-// import { tabelaSimilaridade } from '../data/database.js'; // A importação não é usada, pode ser removida se não for expandida
-
-// Usamos o objeto global jsPDF que foi carregado pelos scripts no HTML
-const { jsPDF } = window.jspdf;
+// js/mistura.js
 
 document.addEventListener('DOMContentLoaded', () => {
-    // [FIX] - Seletores corrigidos para corresponder ao HTML de plano.html
-    const planForm = document.getElementById('plan-form');
-    const equipamentoInput = document.getElementById('equipamento');
-    const oleoAplicadoInput = document.getElementById('oleo-aplicado');
-    const vidaUtilInput = document.getElementById('vida-util');
-    const dataUltimaTrocaInput = document.getElementById('data-ultima-troca');
-    const planTableBody = document.getElementById('plan-table-body');
-    const generateReportBtn = document.getElementById('generate-report-btn');
-    
-    // Carrega os itens do plano do localStorage ou inicializa um array vazio
-    let planItems = JSON.parse(localStorage.getItem('planItemsSGL')) || [];
+    // [FIX] - Seletores corrigidos para corresponder ao HTML de mistura.html
+    const visc1Input = document.getElementById('visc1');
+    const vol1Input = document.getElementById('vol1');
+    const visc2Input = document.getElementById('visc2');
+    const vol2Display = document.getElementById('vol2-display'); // [NEW] Campo de display para o volume 2
+    const calculateBlendButton = document.getElementById('calculate-blend-button');
+    const blendResultDiv = document.getElementById('blend-result');
+    const blendResultText = document.getElementById('blend-result-text');
 
-    // --- LÓGICA DO PLANNER ---
-    function persistItems() {
-        localStorage.setItem('planItemsSGL', JSON.stringify(planItems));
+    if (!visc1Input || !vol1Input || !visc2Input || !calculateBlendButton || !blendResultDiv || !blendResultText) {
+        console.error('Erro: Um ou mais elementos do DOM não foram encontrados.');
+        return;
     }
 
-    function adicionarItemAoPlano(event) {
-        event.preventDefault();
-        
-        const equipmentName = equipamentoInput.value.trim();
-        const oilApplied = oleoAplicadoInput.value.trim();
-        const oilLifetime = parseInt(vidaUtilInput.value);
-        const lastChangeDateStr = dataUltimaTrocaInput.value;
-        
-        if (!equipmentName || !oilApplied || isNaN(oilLifetime) || !lastChangeDateStr) {
-            alert('Por favor, preencha todos os campos do formulário.');
+    // [IMPROVEMENT] - Atualiza o campo de volume 2 automaticamente
+    vol1Input.addEventListener('input', () => {
+        const vol1 = parseFloat(vol1Input.value);
+        if (!isNaN(vol1) && vol1 >= 0 && vol1 <= 100) {
+            vol2Display.value = (100 - vol1).toFixed(0) + ' %';
+        } else {
+            vol2Display.value = 'Calculado automaticamente';
+        }
+    });
+
+    /**
+     * Calcula a viscosidade da mistura usando a equação de Arrhenius.
+     * v = Viscosidade Cinemática em centistokes (cSt)
+     */
+    function calculateBlendViscosity() {
+        const v1 = parseFloat(visc1Input.value);
+        const p1 = parseFloat(vol1Input.value) / 100; // Converte para decimal
+        const v2 = parseFloat(visc2Input.value);
+        const p2 = 1 - p1; // [IMPROVEMENT] Volume 2 é o restante
+
+        if (isNaN(v1) || isNaN(p1) || isNaN(v2)) {
+            alert('Por favor, preencha todos os campos com valores numéricos válidos.');
             return;
         }
 
-        const lastChangeDate = new Date(lastChangeDateStr + 'T00:00:00'); // Garante que a data é lida corretamente
-        const hoursPerDay = 8; // Assumimos um turno de 8 horas por dia
-        const daysToNextChange = Math.round(oilLifetime / hoursPerDay);
-        
-        const nextChangeDate = new Date(lastChangeDate);
-        nextChangeDate.setDate(lastChangeDate.getDate() + daysToNextChange);
-        
-        const newItem = {
-            id: Date.now(),
-            equipamento: equipmentName,
-            oleo: oilApplied,
-            ultimaTroca: lastChangeDate.toLocaleDateString('pt-BR'),
-            proximaTroca: nextChangeDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })
-        };
-        planItems.push(newItem);
-        persistItems();
-        renderizarTabelaPlano();
-        planForm.reset();
-    }
-
-    function removerItemDoPlano(itemId) {
-        if (confirm('Tem a certeza que deseja remover este item do plano?')) {
-            planItems = planItems.filter(item => item.id !== itemId);
-            persistItems();
-            renderizarTabelaPlano();
-        }
-    }
-
-    function renderizarTabelaPlano() {
-        planTableBody.innerHTML = '';
-        if (planItems.length === 0) {
-            planTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Nenhum item no plano ainda. Adicione um acima.</td></tr>`;
-            return;
-        }
-        // Ordena por data da próxima troca
-        planItems.sort((a, b) => new Date(a.proximaTroca.split('/').reverse().join('-')) - new Date(b.proximaTroca.split('/').reverse().join('-')));
-        
-        planItems.forEach(item => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${item.equipamento}</td>
-                <td>${item.oleo}</td>
-                <td>${item.ultimaTroca}</td>
-                <td>${item.proximaTroca}</td>
-                <td>
-                    <button class="action-btn" data-id="${item.id}" title="Remover Item">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </td>
-            `;
-            row.querySelector('.action-btn').addEventListener('click', () => removerItemDoPlano(item.id));
-            planTableBody.appendChild(row);
-        });
-    }
-
-    // --- LÓGICA DE GERAÇÃO DE PDF ---
-    function generatePDF() {
-        if (planItems.length === 0) {
-            alert("Não há dados na tabela para gerar um relatório.");
+        if (p1 < 0.01 || p1 > 0.99) {
+            alert('A percentagem do Óleo 1 deve estar entre 1 e 99.');
             return;
         }
 
-        const doc = new jsPDF();
-        
-        doc.setFontSize(18);
-        doc.text("Relatório do Plano de Lubrificação Preditivo", 14, 22);
-        doc.setFontSize(11);
-        doc.text(`Data de Emissão: ${new Date().toLocaleDateString('pt-BR')}`, 14, 30);
-        
-        const tableColumn = ["Equipamento", "Óleo", "Última Troca", "Próxima Troca"];
-        const tableRows = planItems.map(item => [item.equipamento, item.oleo, item.ultimaTroca, item.proximaTroca]);
+        // A equação de Arrhenius para mistura de viscosidades usa uma escala log-log.
+        // log(log(v+0.8)) = p1 * log(log(v1+0.8)) + p2 * log(log(v2+0.8))
+        // Onde 'v' é a viscosidade cinemática em cSt. A constante 0.8 é um fator de correção empírico.
 
-        doc.autoTable({
-            head: [tableColumn],
-            body: tableRows,
-            startY: 40,
-            theme: 'grid',
-            headStyles: { fillColor: [0, 51, 102] } 
-        });
+        // Passo 1: Calcular os termos log-log para cada óleo
+        const logLogV1 = Math.log(Math.log(v1 + 0.8));
+        const logLogV2 = Math.log(Math.log(v2 + 0.8));
 
-        const pageCount = doc.internal.getNumberOfPages();
-        for(let i = 1; i <= pageCount; i++) {
-            doc.setPage(i);
-            doc.setFontSize(9);
-            doc.text('Sistema de Gestão de Lubrificação (SGL)', 14, doc.internal.pageSize.height - 10);
-            doc.text('Página ' + String(i) + ' de ' + String(pageCount), doc.internal.pageSize.width - 40, doc.internal.pageSize.height - 10);
-        }
+        // Passo 2: Calcular a média ponderada na escala log-log
+        const weightedLogLog = (p1 * logLogV1) + (p2 * logLogV2);
 
-        doc.save(`Plano_Lubrificacao_${new Date().toISOString().slice(0,10)}.pdf`);
+        // Passo 3: Reverter o cálculo para obter a viscosidade da mistura
+        const innerValue = Math.exp(weightedLogLog);
+        const blendViscosity = Math.exp(innerValue) - 0.8;
+
+        displayResult(blendViscosity);
     }
 
-    // --- EVENT LISTENERS ---
-    if (planForm) planForm.addEventListener('submit', adicionarItemAoPlano);
-    if (generateReportBtn) generateReportBtn.addEventListener('click', generatePDF);
+    function displayResult(viscosity) {
+        if (isNaN(viscosity) || !isFinite(viscosity)) {
+            blendResultText.textContent = 'Erro no cálculo.';
+            blendResultDiv.classList.remove('hidden');
+        } else {
+            blendResultText.textContent = `~ ${viscosity.toFixed(2)} cSt`;
+            blendResultDiv.classList.remove('hidden');
+        }
+    }
 
-    // --- INICIALIZAÇÃO ---
-    renderizarTabelaPlano();
+    // --- EVENT LISTENER ---
+    calculateBlendButton.addEventListener('click', calculateBlendViscosity);
 });
