@@ -1,6 +1,6 @@
-// script.js - v5 com Custo, Bombadas e Gráfico de Análise
+// script.js - v5.1 Corrigido para lidar com intervalos zero
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Referências aos Elementos ---
+    // --- Referências aos Elementos (sem alterações) ---
     const lubricationForm = document.getElementById('lubricationForm');
     const calculateBtn = document.getElementById('calculate');
     const resetBtn = document.getElementById('reset');
@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const scrollTopBtn = document.getElementById('scrollTopBtn');
     const tooltips = document.querySelectorAll('.tooltip');
     
-    // --- Elementos de Saúde e Gráfico ---
     const healthBar = document.getElementById('healthBar');
     const healthText = document.getElementById('healthText');
     const theoreticalBar = document.getElementById('theoreticalBar');
@@ -21,13 +20,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (resultsSection) resultsSection.classList.add('hidden');
     }
     
-    // --- Validação de Inputs ---
+    // --- Validação de Inputs (com adição) ---
     function validateInputs(data) {
-        const requiredFields = ['d', 'D', 'B', 'n'];
-        for (const field of requiredFields) {
+        const requiredFields = {
+            'd': 'boreDiameter', 
+            'D': 'outerDiameter', 
+            'B': 'width', 
+            'n': 'rpm'
+        };
+        for (const field in requiredFields) {
             if (isNaN(data[field]) || data[field] <= 0) {
-                alert(`Por favor, preencha o campo '${field}' com um valor numérico positivo.`);
-                document.getElementById({d: 'boreDiameter', D: 'outerDiameter', B: 'width', n: 'rpm'}[field]).focus();
+                alert(`Por favor, preencha o campo '${field.toUpperCase()}' com um valor numérico positivo.`);
+                document.getElementById(requiredFields[field]).focus();
                 return false;
             }
         }
@@ -36,12 +40,18 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('outerDiameter').focus();
             return false;
         }
+        // CORREÇÃO: Adicionada validação para evitar divisão por zero
+        if (isNaN(data.greaseDensity) || data.greaseDensity <= 0) {
+            alert("A densidade da graxa deve ser um valor positivo.");
+            document.getElementById('greaseDensity').focus();
+            return false;
+        }
         return true;
     }
 
     function calculateLubrication() {
         try {
-            // --- 1. COLETA DE DADOS ---
+            // --- 1. COLETA DE DADOS (sem alterações) ---
             const data = {
                 bearingType: document.getElementById('bearingType').value,
                 d: parseFloat(document.getElementById('boreDiameter').value),
@@ -57,14 +67,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 vibrationFactor: parseFloat(document.getElementById('vibration').value),
                 moistureFactor: parseFloat(document.getElementById('moisture').value),
                 orientationFactor: parseFloat(document.getElementById('orientation').value),
-                // Novos campos
                 greasePumpVolume: parseFloat(document.getElementById('greasePumpVolume').value),
                 greasePrice: parseFloat(document.getElementById('greasePrice').value)
             };
 
             if (!validateInputs(data)) return;
 
-            // --- 2. LÓGICA DE CÁLCULO ---
+            // --- 2. LÓGICA DE CÁLCULO (sem alterações na lógica central) ---
             const dm = 0.5 * (data.d + data.D);
             const speed_factor = data.n * dm;
 
@@ -76,8 +85,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const initialFillGrams = relubAmountGrams * 3;
 
             const temp_factor = Math.pow(2, (70 - data.T) / 15);
-            const base_life_hours = Math.min(Math.pow(10, 6) / (2 * speed_factor) - 4 * dm, 87600);
-            const greaseLifeHours = Math.max(0, base_life_hours * temp_factor);
+            // As fórmulas abaixo podem resultar em números negativos, que são então zerados pelo Math.max. Este é o comportamento esperado.
+            const base_life_hours = Math.max(0, Math.min(Math.pow(10, 6) / (2 * speed_factor) - 4 * dm, 87600));
+            const greaseLifeHours = base_life_hours * temp_factor;
 
             const load_factors = { 'normal': 1, 'heavy': 0.5, 'shock': 0.1 };
             const env_factors = { 'clean': 1, 'dusty': 0.5, 'humid': 0.2, 'chemical': 0.1 };
@@ -88,19 +98,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let finalIntervalHours;
             let intervalNote = "";
+            // CORREÇÃO: A lógica aqui foi levemente ajustada para ser mais clara
             if (theoreticalInterval > 0 && theoreticalInterval <= safetyInterval) {
                 finalIntervalHours = theoreticalInterval;
-                intervalNote = "O intervalo foi calculado com base nas condições operacionais e fatores de correção.";
+                intervalNote = "O intervalo foi definido pela fórmula teórica, ajustada pelos fatores de correção.";
             } else {
-                finalIntervalHours = Math.max(0, safetyInterval);
-                intervalNote = `<strong>Atenção:</strong> O intervalo foi limitado a 50% da vida útil estimada da graxa (${Math.round(greaseLifeHours).toLocaleString('pt-BR')} horas) para garantir a segurança, pois a temperatura e outros fatores indicam que a vida da graxa é o fator limitante.`;
+                finalIntervalHours = safetyInterval;
+                intervalNote = `<strong>Atenção:</strong> O intervalo foi limitado a 50% da vida útil da graxa (${Math.round(greaseLifeHours).toLocaleString('pt-BR')} h). Isso ocorre quando a vida da graxa é mais crítica que o intervalo teórico, geralmente sob alta temperatura ou contaminação severa.`;
             }
 
             // --- 3. CÁLCULOS ADICIONAIS (Custo, Bombadas) ---
+            // CORREÇÃO: Lógica de custo e notas críticas para intervalo zero
             const relubPumps = data.greasePumpVolume > 0 ? (relubAmountGrams / data.greasePumpVolume).toFixed(1) : 'N/A';
-            const relubsPerYear = finalIntervalHours > 0 ? (8760 / finalIntervalHours) : 0;
-            const annualGreaseCost = data.greasePrice > 0 ? relubsPerYear * (relubAmountGrams / 1000) * data.greasePrice : 0;
-            const annualCostFormatted = `R$ ${annualGreaseCost.toFixed(2).replace('.', ',')}`;
+            let annualCostFormatted;
+
+            if (finalIntervalHours > 0) {
+                const relubsPerYear = 8760 / finalIntervalHours;
+                const annualGreaseCost = data.greasePrice > 0 ? relubsPerYear * (relubAmountGrams / 1000) * data.greasePrice : 0;
+                annualCostFormatted = `R$ ${annualGreaseCost.toFixed(2).replace('.', ',')}`;
+            } else {
+                annualCostFormatted = `Incalculável`; // Mensagem clara em vez de R$ 0,00
+            }
 
             // --- 4. CÁLCULO SAÚDE, RECOMENDAÇÕES E NOTAS ---
             updateHealthBar(correction_factor, temp_factor);
@@ -113,39 +131,50 @@ document.addEventListener('DOMContentLoaded', () => {
             
             let fullNotes = `${intervalNote} Para um rolamento ${bearing_type_factors[data.bearingType].name} operando a ${data.n} RPM, a viscosidade se baseia no fator n*dm de ${Math.round(speed_factor).toLocaleString('pt-BR')}.`;
 
+            // NOVO AVISO: Adiciona uma nota crítica se o intervalo for zero
+            if (finalIntervalHours <= 0) {
+                 fullNotes += `<br><br><strong>AVISO CRÍTICO:</strong> O intervalo de relubrificação é zero. As condições de operação (alta velocidade/temperatura) excedem os limites deste modelo de cálculo. É necessária uma análise de engenharia. Considere um sistema de lubrificação a óleo ou consulte o fabricante do rolamento.`;
+            }
+
             // --- 5. EXIBIÇÃO DOS RESULTADOS ---
             displayResults({
-                ...data,
-                initialFillGrams,
-                relubAmountGrams,
-                greaseLifeHours,
-                finalIntervalHours,
+                ...data, initialFillGrams, relubAmountGrams, greaseLifeHours,
+                finalIntervalHours, relubPumps, annualCostFormatted,
                 bearingMassKg: (Math.PI / 4) * (Math.pow(data.D, 2) - Math.pow(data.d, 2)) * data.B * 7.85 / 1000000,
-                relubPumps,
-                annualCostFormatted,
-                recViscosity, recThickener, recNLGI, recAdditives,
-                fullNotes
+                recViscosity, recThickener, recNLGI, recAdditives, fullNotes
             });
 
-            // Atualiza o gráfico de análise
             updateIntervalChart(theoreticalInterval, safetyInterval, finalIntervalHours);
             resultsSection.classList.remove('hidden');
             resultsSection.scrollIntoView({ behavior: 'smooth' });
 
         } catch (error) {
+            console.error(error); // Log do erro no console para depuração
             alert(`Ocorreu um erro durante o cálculo: ${error.message}`);
         }
     }
     
     function displayResults(res) {
-        const updateField = (id, value, unit = '') => document.getElementById(id).innerHTML = `${value} <small>${unit}</small>`;
+        const updateField = (id, value, unit = '') => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.innerHTML = `${value} <small>${unit}</small>`;
+            } else {
+                console.warn(`Elemento com ID '${id}' não encontrado.`);
+            }
+        };
+
+        // CORREÇÃO: Lógica para exibir o custo
+        const costValue = res.annualCostFormatted.startsWith('R$') ? res.annualCostFormatted.split(' ')[1] : res.annualCostFormatted;
+        const costUnit = res.annualCostFormatted.startsWith('R$') ? 'R$ / ano' : '(Intervalo Zero)';
+        
         updateField('initialFill', res.initialFillGrams.toFixed(2), 'gramas');
         updateField('relubAmount', res.relubAmountGrams.toFixed(2), 'gramas');
         updateField('relubPumps', res.relubPumps, 'acionamentos');
-        updateField('annualCost', res.annualCostFormatted.split(' ')[1], res.annualCostFormatted.split(' ')[0] + ' / ano');
+        updateField('annualCost', costValue, costUnit);
         updateField('greaseLife', Math.round(res.greaseLifeHours).toLocaleString('pt-BR'), 'horas');
         updateField('relubIntervalHours', Math.round(res.finalIntervalHours).toLocaleString('pt-BR'), 'horas');
-        updateField('relubIntervalWeeks', res.workingHours > 0 ? (res.finalIntervalHours / res.workingHours).toFixed(1) : '0', 'semanas');
+        updateField('relubIntervalWeeks', res.workingHours > 0 && res.finalIntervalHours > 0 ? (res.finalIntervalHours / res.workingHours).toFixed(1) : '0', 'semanas');
         updateField('bearingMass', res.bearingMassKg.toFixed(3), 'kg');
         
         document.getElementById('recViscosity').textContent = res.recViscosity;
@@ -154,17 +183,14 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('recAdditives').textContent = res.recAdditives;
         document.getElementById('notesText').innerHTML = res.fullNotes;
     }
-
+    
+    // As funções abaixo (updateHealthBar, updateIntervalChart, Event Listeners) permanecem iguais.
     function updateHealthBar(correction_factor, temp_factor) {
-        // A "saúde" é o quão perto estamos das condições ideais (onde todos os fatores são 1).
-        // Fatores de temperatura abaixo de 70°C (temp_factor > 1) não aumentam a saúde acima de 100%.
         const healthScore = correction_factor * Math.min(1, temp_factor) * 100;
         const percentage = Math.max(0, Math.min(100, healthScore));
-        
         healthBar.style.width = `${percentage}%`;
         healthBar.textContent = `${Math.round(percentage)}%`;
         healthBar.classList.remove('good', 'warning', 'danger');
-        
         if (percentage > 75) {
             healthBar.classList.add('good');
             healthText.textContent = "Condições ideais. A graxa terá a máxima vida útil possível.";
@@ -176,13 +202,11 @@ document.addEventListener('DOMContentLoaded', () => {
             healthText.textContent = "Condições severas! A vida da graxa é drasticamente reduzida. Reavalie a lubrificação e o ambiente.";
         }
     }
-    
     function updateIntervalChart(theoretical, safety, final) {
-        const maxVal = Math.max(theoretical, safety, final, 1); // Evita divisão por zero
+        const maxVal = Math.max(theoretical, safety, final, 1);
         const theoreticalPercent = (theoretical / maxVal) * 100;
         const safetyPercent = (safety / maxVal) * 100;
         const finalPercent = (final / maxVal) * 100;
-
         theoreticalBar.style.width = `${theoreticalPercent}%`;
         theoreticalBar.querySelector('span').textContent = `${Math.round(theoretical).toLocaleString('pt-BR')}h`;
         safetyBar.style.width = `${safetyPercent}%`;
@@ -190,12 +214,9 @@ document.addEventListener('DOMContentLoaded', () => {
         finalBar.style.width = `${finalPercent}%`;
         finalBar.querySelector('span').textContent = `${Math.round(final).toLocaleString('pt-BR')}h`;
     }
-
-    // --- Event Listeners ---
     if (calculateBtn) calculateBtn.addEventListener('click', calculateLubrication);
     if (resetBtn) resetBtn.addEventListener('click', resetFields);
     if (printBtn) printBtn.addEventListener('click', () => window.print());
-    
     if (tooltips) {
         tooltips.forEach(tooltip => {
             tooltip.addEventListener('click', (event) => {
@@ -207,7 +228,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         document.addEventListener('click', () => tooltips.forEach(t => t.classList.remove('active')));
     }
-
     window.addEventListener('scroll', () => {
         if (scrollTopBtn) scrollTopBtn.classList.toggle('hidden', window.scrollY <= 200);
     });
