@@ -23,8 +23,8 @@
 
     <div class="container">
         <main>
-            <div class="search-box">
-                <h2>Buscador de Equivalentes</h2>
+            <section class="search-box">
+                <h2><i class="fas fa-search"></i> Buscador de Equivalentes</h2>
                 <div class="input-group">
                     <label for="application-select">Tipo de Aplicação:</label>
                     <select id="application-select">
@@ -43,13 +43,15 @@
                         <option value="">-- Primeiro selecione uma marca --</option>
                     </select>
                 </div>
-                <button id="search-button">Encontrar Equivalentes</button>
-            </div>
+                <button id="search-button"><i class="fas fa-sync-alt"></i> Encontrar Equivalentes</button>
+            </section>
             <div id="results-container"></div>
 
+            <!-- [NEW] Seção da Base de Conhecimento ativada -->
             <section class="knowledge-base-section">
-                <h2>Base de Conhecimento Técnico</h2>
+                <h2><i class="fas fa-book-open"></i> Base de Conhecimento Técnico</h2>
                 <div class="accordion">
+                    <!-- Conteúdo será preenchido pelo script.js -->
                 </div>
             </section>
         </main>
@@ -57,7 +59,7 @@
 
     <div id="compatibility-modal" class="modal-backdrop hidden">
         <div class="modal-content">
-            <button id="modal-close-button" class="modal-close">&times;</button>
+            <button id="modal-close-button" class="modal-close">×</button>
             <h3 id="modal-title"></h3>
             <p id="modal-description"></p>
         </div>
@@ -67,7 +69,6 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                // Caminho Absoluto Corrigido para o Service Worker
                 navigator.serviceWorker.register('/site/sw.js').then(reg => console.log('Service worker registado.', reg));
             });
         }
