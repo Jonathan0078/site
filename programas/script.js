@@ -1,5 +1,4 @@
 // script.js
-
 import { tabelaSimilaridade, matrizCompatibilidade } from './data/database.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -27,12 +26,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const equipmentOilSelect = document.getElementById('equipment-oil');
     const planTableBody = document.querySelector('#plan-table tbody');
 
+    // =======================================================
+    //          SISTEMA DE NOTIFICAÇÃO (TOAST)
+    // =======================================================
+    function showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 100);
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                document.body.removeChild(toast);
+            }, 500);
+        }, 3000);
+    }
 
     // =======================================================
     //          LÓGICA DA MODAL DE COMPATIBILIDADE
     // =======================================================
     function exibirModalCompatibilidade(info) {
-        modalTitle.textContent = info.status;
+        modalTitle.textContent = info.status.replace("_", " ");
         modalTitle.className = `status-${info.status.toLowerCase()}`;
         modalDescription.textContent = info.descricao;
         modal.classList.remove('hidden');
@@ -42,7 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.classList.add('hidden');
     }
 
-
     // =======================================================
     //          LÓGICA DA CALCULADORA DE VISCOSIDADE
     // =======================================================
@@ -50,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const temp = parseFloat(tempOperacaoInput.value);
         const tipo = tipoEquipamentoSelect.value;
         if (isNaN(temp) || !tipo) {
-            alert('Por favor, preencha todos os campos da calculadora.');
+            showToast('Por favor, preencha todos os campos da calculadora.', 'error');
             return;
         }
         let vgRecomendado = 'N/A';
@@ -118,43 +134,30 @@ document.addEventListener('DOMContentLoaded', () => {
     //          LÓGICA DO BUSCADOR DE EQUIVALENTES
     // =======================================================
     function popularMarcas() {
-        const marcas = new Set();
-        tabelaSimilaridade.forEach(grupo => Object.keys(grupo.PRODUTOS).forEach(marca => marcas.add(marca)));
-        const marcasOrdenadas = Array.from(marcas).sort();
-        marcasOrdenadas.forEach(marca => {
-            const option = document.createElement('option');
-            option.value = marca;
-            option.textContent = marca;
-            marcaSelect.appendChild(option);
+        const marcas = new Set(tabelaSimilaridade.flatMap(grupo => Object.keys(grupo.PRODUTOS)));
+        Array.from(marcas).sort().forEach(marca => {
+            marcaSelect.add(new Option(marca, marca));
         });
     }
 
     function popularProdutosPorMarca(marcaSelecionada) {
         oleoSelect.innerHTML = '';
-        oleoSelect.disabled = true;
-        if (!marcaSelecionada) {
-            const option = document.createElement('option');
-            option.textContent = "-- Primeiro selecione uma marca --";
-            oleoSelect.appendChild(option);
-            return;
-        }
-        oleoSelect.disabled = false;
-        const defaultOption = document.createElement('option');
-        defaultOption.textContent = "-- Selecione o Produto --";
-        defaultOption.value = "";
-        oleoSelect.appendChild(defaultOption);
-        const produtos = [];
-        tabelaSimilaridade.forEach((grupo, index) => {
-            if (grupo.PRODUTOS[marcaSelecionada]) {
-                produtos.push({ nome: grupo.PRODUTOS[marcaSelecionada].NOME, grupoIndex: index });
-            }
-        });
-        produtos.sort((a, b) => a.nome.localeCompare(b.nome));
+        oleoSelect.disabled = !marcaSelecionada;
+        oleoSelect.add(new Option(marcaSelecionada ? "-- Selecione o Produto --" : "-- Primeiro selecione uma marca --", ""));
+
+        if (!marcaSelecionada) return;
+
+        const produtos = tabelaSimilaridade
+            .map((grupo, index) => ({ grupo, index }))
+            .filter(({ grupo }) => grupo.PRODUTOS[marcaSelecionada])
+            .map(({ grupo, index }) => ({
+                nome: grupo.PRODUTOS[marcaSelecionada].NOME,
+                grupoIndex: index
+            }))
+            .sort((a, b) => a.nome.localeCompare(b.nome));
+
         produtos.forEach(produto => {
-            const opt = document.createElement('option');
-            opt.value = produto.grupoIndex;
-            opt.textContent = produto.nome;
-            oleoSelect.appendChild(opt);
+            oleoSelect.add(new Option(produto.nome, produto.grupoIndex));
         });
     }
     
@@ -164,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const marcaSelecionada = marcaSelect.value;
         const grupoIndex = oleoSelect.value;
         if (!marcaSelecionada || !grupoIndex) {
-            resultsContainer.innerHTML = `<p class="error-message">Por favor, selecione uma marca e um produto.</p>`;
+            showToast('Por favor, selecione uma marca e um produto.', 'error');
             return;
         }
         const grupoEncontrado = tabelaSimilaridade[parseInt(grupoIndex)];
@@ -172,6 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function exibirResultados(grupo, marcaOriginal) {
+        // ... (o conteúdo desta função permanece o mesmo, pois já é bem estruturado)
         const produtoOriginal = grupo.PRODUTOS[marcaOriginal];
         const substitutos = { ...grupo.PRODUTOS };
         delete substitutos[marcaOriginal];
@@ -225,10 +229,11 @@ document.addEventListener('DOMContentLoaded', () => {
         
         htmlResultados += `</ul><div class="warning-message"><strong>ATENÇÃO:</strong> A compatibilidade de mistura é uma referência. Sempre confirme na ficha técnica (TDS).</div>`;
         resultsContainer.innerHTML = htmlResultados;
+        resultsContainer.scrollIntoView({ behavior: 'smooth' });
 
         document.querySelectorAll('.info-icon').forEach(icon => {
             icon.addEventListener('click', (e) => {
-                const info = JSON.parse(e.target.getAttribute('data-compat-info'));
+                const info = JSON.parse(e.currentTarget.getAttribute('data-compat-info'));
                 exibirModalCompatibilidade(info);
             });
         });
@@ -237,23 +242,22 @@ document.addEventListener('DOMContentLoaded', () => {
     // =======================================================
     //          LÓGICA DO PLANO DE LUBRIFICAÇÃO
     // =======================================================
-    let planItems = [];
+    let planItems = JSON.parse(localStorage.getItem('lubPlanItems')) || [];
 
     function popularOleosDoPlano() {
         const todosOsOleos = new Set();
         tabelaSimilaridade.forEach(grupo => {
             for (const marca in grupo.PRODUTOS) {
-                const oleoId = `${grupo.PRODUTOS[marca].NOME} (${marca})`;
-                todosOsOleos.add(oleoId);
+                todosOsOleos.add(`${grupo.PRODUTOS[marca].NOME} (${marca})`);
             }
         });
-        const oleosOrdenados = Array.from(todosOsOleos).sort();
-        oleosOrdenados.forEach(oleo => {
-            const option = document.createElement('option');
-            option.value = oleo;
-            option.textContent = oleo;
-            equipmentOilSelect.appendChild(option);
+        Array.from(todosOsOleos).sort().forEach(oleo => {
+            equipmentOilSelect.add(new Option(oleo, oleo));
         });
+    }
+
+    function salvarPlano() {
+        localStorage.setItem('lubPlanItems', JSON.stringify(planItems));
     }
 
     function adicionarItemAoPlano(event) {
@@ -262,17 +266,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const equipmentOil = document.getElementById('equipment-oil').value;
         const changeInterval = parseInt(document.getElementById('change-interval').value);
         const startDateString = document.getElementById('start-date').value;
-        const startDate = new Date(startDateString + 'T00:00:00');
-
-        if (!equipmentName || !equipmentOil || isNaN(changeInterval) || isNaN(startDate.getTime())) {
-            alert('Por favor, preencha todos os campos do plano de lubrificação.');
+        
+        if (!equipmentName || !equipmentOil || isNaN(changeInterval) || !startDateString) {
+            showToast('Por favor, preencha todos os campos do plano.', 'error');
             return;
         }
-
+        
+        const startDate = new Date(startDateString + 'T00:00:00');
         const hoursPerDay = 8;
         const daysToNextChange = changeInterval / hoursPerDay;
         const nextChangeDate = new Date(startDate);
         nextChangeDate.setDate(startDate.getDate() + Math.round(daysToNextChange));
+        
         const newItem = {
             id: Date.now(),
             name: equipmentName,
@@ -280,40 +285,49 @@ document.addEventListener('DOMContentLoaded', () => {
             nextChange: nextChangeDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })
         };
         planItems.push(newItem);
+        salvarPlano();
         renderizarTabelaPlano();
         equipmentForm.reset();
+        showToast('Equipamento adicionado ao plano!', 'success');
     }
 
     function removerItemDoPlano(itemId) {
         planItems = planItems.filter(item => item.id !== itemId);
+        salvarPlano();
         renderizarTabelaPlano();
+        showToast('Item removido do plano.', 'info');
     }
 
     function renderizarTabelaPlano() {
-        planTableBody.innerHTML = '';
+        planTableBody.innerHTML = ''; // Limpa a tabela
         if (planItems.length === 0) {
-            planTableBody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Nenhum equipamento no plano ainda.</td></tr>`;
+            const row = planTableBody.insertRow();
+            const cell = row.insertCell();
+            cell.colSpan = 4;
+            cell.textContent = 'Nenhum equipamento no plano ainda.';
+            cell.style.textAlign = 'center';
             return;
         }
-        planItems.forEach(item => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${item.name}</td>
-                <td>${item.oil}</td>
-                <td>${item.nextChange}</td>
-                <td>
-                    <button class="action-btn" data-id="${item.id}">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </td>
-            `;
-            planTableBody.appendChild(row);
-        });
-        document.querySelectorAll('#plan-table .action-btn').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const id = parseInt(e.currentTarget.getAttribute('data-id'));
-                removerItemDoPlano(id);
-            });
+
+        // REATORADO: Usa document.createElement para mais segurança e performance
+        planItems
+          .sort((a, b) => new Date(a.nextChange.split('/').reverse().join('-')) - new Date(b.nextChange.split('/').reverse().join('-')))
+          .forEach(item => {
+            const row = planTableBody.insertRow();
+            row.insertCell().textContent = item.name;
+            row.insertCell().textContent = item.oil;
+            row.insertCell().textContent = item.nextChange;
+            
+            const actionCell = row.insertCell();
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'action-btn';
+            deleteButton.dataset.id = item.id;
+            // ACESSIBILIDADE: Adiciona um rótulo claro para leitores de tela
+            deleteButton.setAttribute('aria-label', `Remover ${item.name}`);
+            deleteButton.innerHTML = '<i class="fas fa-trash-alt" aria-hidden="true"></i>';
+            deleteButton.addEventListener('click', () => removerItemDoPlano(item.id));
+            
+            actionCell.appendChild(deleteButton);
         });
     }
 
