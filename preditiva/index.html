@@ -668,84 +668,116 @@
         <section id="module-5" class="module">
             <h2>Módulo 5: Estudos de Caso Reais</h2>
             
-        <p>Até agora, construímos sua base de conhecimento. Você sabe <strong>por que</strong>, <strong>com o que</strong> e <strong>como</strong> inspecionar. Agora, é hora da verdade. A manutenção industrial raramente apresenta problemas de forma organizada. Muitas vezes, você enfrentará múltiplos alertas ao mesmo tempo, com recursos limitados. Sua capacidade de tomar a decisão certa, sob pressão, é o que define um profissional de elite. Nada substitui a experiência prática, então vamos analisar situações reais que você encontrará no dia a dia.</p>
+<p>Até agora, construímos sua base de conhecimento. Você sabe <strong>por que</strong>, <strong>com o que</strong> e <strong>como</strong> inspecionar. Agora, é hora da verdade. A manutenção industrial raramente apresenta problemas de forma organizada. Muitas vezes, você enfrentará múltiplos alertas ao mesmo tempo, com recursos limitados. Sua capacidade de tomar a decisão certa, sob pressão, é o que define um profissional de elite. Nada substitui a experiência prática, então vamos analisar situações reais que você encontrará no dia a dia.</p>
 
-        <h3>Os Três Pilares da Tomada de Decisão</h3>
-        <p>Antes de saltarmos para os casos, você precisa entender os três fatores que guiam toda decisão de manutenção. Um erro comum é tratar todos os problemas como iguais.</p>
-        <div class="dica-destaque">
-            <h4>🧠 A Fórmula da Prioridade</h4>
-            <p>Uma forma simples de pensar é: <strong>Criticidade do Ativo</strong> (Qual o impacto se ele falhar?) + <strong>Severidade da Anomalia</strong> (Qual a gravidade do problema agora?) = <strong>Urgência da Ação</strong> (O quão rápido eu preciso agir?).</p>
-            <ul>
-                <li><strong>Criticidade:</strong> É uma característica <strong>do equipamento</strong>. Uma bomba que para a fábrica é mais crítica que um ventilador de escritório.</li>
-                <li><strong>Severidade:</strong> É uma característica <strong>da condição atual</strong>. Um rolamento a 90°C é mais severo que um a 65°C.</li>
-            </ul>
-            <p>Um problema severo em um equipamento de baixa criticidade pode ser menos urgente que um problema moderado em um equipamento supercrítico.</p>
-        </div>
+<h3>Os Três Pilares da Tomada de Decisão</h3>
+<p>Antes de saltarmos para os casos, você precisa entender os fatores que guiam toda decisão de manutenção. Um erro comum é tratar todos os problemas como iguais.</p>
+<div class="dica-destaque">
+    <h4>🧠 A Fórmula da Prioridade</h4>
+    <p>Uma forma simples de pensar é: (<strong>Criticidade do Ativo</strong> x <strong>Severidade da Anomalia</strong>) = <strong>Nível de Risco</strong>, que define a <strong>Urgência da Ação</strong>.</p>
+    <ul>
+        <li><strong>Criticidade:</strong> É uma característica <strong>do equipamento</strong> e seu impacto no processo. Uma bomba que para a fábrica é mais crítica que um ventilador de escritório.</li>
+        <li><strong>Severidade:</strong> É uma característica <strong>da condição atual</strong>. Um rolamento a 90°C é mais severo que um a 65°C. A severidade também aumenta com a <strong>tendência</strong> (a velocidade com que o problema piora).</li>
+    </ul>
+    <p>Lembre-se: um problema severo em um equipamento de baixa criticidade pode ser menos urgente que um problema moderado em um equipamento supercrítico.</p>
+</div>
 
-        <div class="caso-interativo">
-            <h3>📋 Caso 1: O Dilema da Bomba Crítica</h3>
-            <div class="cenario-caso">
-                <p>Durante sua rota de inspeção, você se aproxima do motor <strong>M-05</strong>, que aciona a bomba principal de alimentação de matéria-prima. Este é um ativo de <strong>criticidade AAA</strong>: se ele parar, a produção para completamente em menos de 10 minutos.</p>
-                <p>Seu medidor de vibração portátil mostra um valor de <strong>7.8 mm/s</strong> na vertical, bem acima do limite de alarme (4.5 mm/s). A temperatura está em 75°C, também elevada. O som está mais agudo do que na semana passada.</p>
-            </div>
-            <h4>🤔 Qual sua decisão imediata?</h4>
-            <div class="opcoes-caso">
-                <button class="opcao-caso" data-caso="1" data-correta="false" data-feedback="Incorreto. Dada a alta criticidade e a severidade da anomalia (dados quantitativos de vibração e temperatura), esperar é um risco altíssimo. A falha pode ocorrer a qualquer momento.">📝 Anotar detalhadamente e agendar análise completa para a próxima semana.</button>
-                <button class="opcao-caso" data-caso="1" data-correta="true" data-feedback="Correto! A combinação de criticidade máxima e severidade alta exige ação imediata. Você precisa de um diagnóstico preciso (análise espectral de vibração) para entender a falha e dar à equipe de planejamento tempo para preparar a intervenção.">🚨 Parar a inspeção, comunicar imediatamente o PCM e a Operação, e solicitar uma análise de vibração de emergência no mesmo dia.</button>
-            </div>
-            <div id="feedback-caso-1" class="feedback-caso" style="display: none;"></div>
-            <div id="consequencias-1" class="consequencias" style="display: none;">
-                <h4>Análise de Consequências:</h4>
-                <p>✅ <strong>Opção Correta:</strong> A análise de emergência confirma um defeito no rolamento. O reparo é programado para o fim de semana. <strong>Custo: R$ 8.000</strong> (peças + mão de obra planejada).</p>
-                <p>💥 <strong>Opção Incorreta:</strong> Dois dias depois, o motor falha catastroficamente. A produção para por 8 horas. <strong>Custo: R$ 80.000</strong> (perda de produção + peças de emergência + horas extras).</p>
-            </div>
-        </div>
+<div class="caso-interativo">
+    <h3>📋 Caso 1: O Dilema da Bomba Crítica</h3>
+    <div class="cenario-caso">
+        <p>Durante sua rota de inspeção, você se aproxima do motor <strong>M-05</strong>, que aciona a bomba principal de alimentação de matéria-prima. Este é um ativo de <strong>criticidade AAA</strong>: se ele parar, a produção para completamente em menos de 10 minutos.</p>
+        <p>Seu medidor de vibração portátil mostra um valor de <strong>7.8 mm/s</strong> na vertical, bem acima do limite de alarme (4.5 mm/s). A temperatura está em 75°C, também elevada. O som está mais agudo do que na semana passada.</p>
+    </div>
+    <h4>🤔 Qual sua decisão imediata?</h4>
+    <div class="opcoes-caso">
+        <button class="opcao-caso" data-caso="1" data-correta="false" data-feedback="Incorreto. Dada a alta criticidade e a severidade da anomalia (dados quantitativos de vibração e temperatura), esperar é um risco altíssimo. A falha pode ocorrer a qualquer momento.">📝 Anotar detalhadamente e agendar análise completa para a próxima semana.</button>
+        <button class="opcao-caso" data-caso="1" data-correta="true" data-feedback="Correto! A combinação de criticidade máxima e severidade alta exige ação imediata. Você precisa de um diagnóstico preciso (análise espectral de vibração) para entender a falha e dar à equipe de planejamento tempo para preparar a intervenção.">🚨 Parar a inspeção, comunicar imediatamente o PCM e a Operação, e solicitar uma análise de vibração de emergência no mesmo dia.</button>
+    </div>
+    <div id="feedback-caso-1" class="feedback-caso" style="display: none;"></div>
+    <div id="consequencias-1" class="consequencias" style="display: none;">
+        <h4>Análise de Consequências:</h4>
+        <p>✅ <strong>Opção Correta:</strong> A análise de emergência confirma um defeito no rolamento. O reparo é programado para o fim de semana. <strong>Custo: R$ 8.000</strong> (peças + mão de obra planejada).</p>
+        <p>💥 <strong>Opção Incorreta:</strong> Dois dias depois, o motor falha catastroficamente. A produção para por 8 horas. <strong>Custo: R$ 80.000</strong> (perda de produção + peças de emergência + horas extras).</p>
+    </div>
+</div>
 
-        <div class="simulador-decisoes">
-            <h3>🎯 Simulador de Triagem: O Desafio do Plantão</h3>
-            <div class="situacao-simulador">
-                <p>São 10h da manhã e você, como único inspetor do dia, recebe três chamados simultâneos da operação. Você só tem tempo e recursos para uma análise aprofundada imediata.</p>
-                <ul>
-                    <li><strong>(A) Motor da Esteira de Embalagem:</strong> Ativo <strong>não crítico</strong>. A operação relata um "ruído estranho".</li>
-                    <li><strong>(B) Bomba de Recirculação de Água:</strong> Ativo <strong>crítico</strong>. A vibração medida pela operação foi de <strong>6.5 mm/s</strong>.</li>
-                    <li><strong>(C) Compressor de Ar de Instrumento:</strong> Ativo <strong>semi-crítico</strong> (o reserva assume, mas com perda de eficiência). A temperatura na descarga está <strong>15°C acima do normal</strong>.</li>
-                </ul>
-                <h5>💰 Qual sua estratégia de priorização?</h5>
-            </div>
-            <div class="opcoes-simulador-gestao">
-                <button class="opcao-gestao" data-risco="alto" data-feedback="Estratégia de altíssimo risco. Você ignora a criticidade e os dados preliminares. Uma falha na bomba (B) pode parar a fábrica, tornando a economia inicial irrelevante.">💸 Foco na Economia: Inspecionar o motor (A) primeiro por ser mais rápido e deixar os outros para depois.</button>
-                <button class="opcao-gestao" data-risco="baixo" data-feedback="A melhor decisão! Você usou a fórmula 'Criticidade + Severidade'. A bomba (B) é o maior risco para o negócio. Você age nela primeiro e depois planeja as ações para (C) e (A), em ordem de importância.">🛡️ Foco na Confiabilidade: Priorizar a bomba (B) para análise imediata, depois o compressor (C) e por último o motor (A).</button>
-                <button class="opcao-gestao" data-risco="medio" data-feedback="Decisão razoável, mas não ótima. Você acertou em não priorizar o ativo não crítico, mas a vibração alta na bomba crítica (B) representa um risco maior e mais iminente do que a temperatura no compressor semi-crítico (C).">⚖️ Foco na Severidade: Priorizar o compressor (C) porque o aumento de temperatura parece mais alarmante.</button>
-            </div>
-            <div id="resultado-gestao" class="resultado-gestao" style="display: none;"></div>
-        </div>
+<div class="simulador-decisoes">
+    <h3>🎯 Simulador de Triagem: O Desafio do Plantão</h3>
+    <div class="situacao-simulador">
+        <p>São 10h da manhã e você, como único inspetor do dia, recebe três chamados simultâneos da operação. Você só tem tempo e recursos para uma análise aprofundada imediata.</p>
+        <ul>
+            <li><strong>(A) Motor da Esteira de Embalagem:</strong> Ativo <strong>não crítico</strong>. A operação relata um "ruído estranho".</li>
+            <li><strong>(B) Bomba de Recirculação de Água:</strong> Ativo <strong>crítico</strong>. A vibração medida pela operação foi de <strong>6.5 mm/s</strong>.</li>
+            <li><strong>(C) Compressor de Ar de Instrumento:</strong> Ativo <strong>semi-crítico</strong> (o reserva assume, mas com perda de eficiência). A temperatura na descarga está <strong>15°C acima do normal</strong>.</li>
+        </ul>
+        <h5>💰 Qual sua estratégia de priorização?</h5>
+    </div>
+    <div class="opcoes-simulador-gestao">
+        <button class="opcao-gestao" data-risco="alto" data-feedback="Estratégia de altíssimo risco. Você ignora a criticidade e os dados preliminares. Uma falha na bomba (B) pode parar a fábrica, tornando a economia inicial irrelevante.">💸 Foco na Economia: Inspecionar o motor (A) primeiro por ser mais rápido e deixar os outros para depois.</button>
+        <button class="opcao-gestao" data-risco="baixo" data-feedback="A melhor decisão! Você usou a fórmula 'Criticidade x Severidade'. A bomba (B) é o maior risco para o negócio. Você age nela primeiro e depois planeja as ações para (C) e (A), em ordem de importância.">🛡️ Foco na Confiabilidade: Priorizar a bomba (B) para análise imediata, depois o compressor (C) e por último o motor (A).</button>
+        <button class="opcao-gestao" data-risco="medio" data-feedback="Decisão razoável, mas não ótima. Você acertou em não priorizar o ativo não crítico, mas a vibração alta na bomba crítica (B) representa um risco maior e mais iminente do que a temperatura no compressor semi-crítico (C).">⚖️ Foco na Severidade: Priorizar o compressor (C) porque o aumento de temperatura parece mais alarmante.</button>
+    </div>
+    <div id="resultado-gestao" class="resultado-gestao" style="display: none;"></div>
+</div>
 
-        <div class="matriz-decisao">
-            <h3>📊 A Matriz de Decisão Inteligente (Ferramenta de Priorização)</h3>
-            <p>Vamos transformar a intuição em um processo lógico. Use esta matriz para quantificar a prioridade de uma anomalia, ajudando a justificar suas decisões para a equipe de planejamento e gestão.</p>
-            <div class="fatores-matriz">
-                <div>
-                    <label>Criticidade do Ativo (1-10): <span id="valor-criticidade">5</span></label>
-                    <input type="range" id="criticidade" min="1" max="10" value="5" oninput="document.getElementById('valor-criticidade').textContent = this.value">
-                </div>
-                <div>
-                    <label>Severidade da Anomalia (1-10): <span id="valor-severidade">5</span></label>
-                    <input type="range" id="severidade" min="1" max="10" value="5" oninput="document.getElementById('valor-severidade').textContent = this.value">
-                </div>
-                <div>
-                    <label>Potencial de Evolução (Urgência, 1-10): <span id="valor-urgencia">5</span></label>
-                    <input type="range" id="urgencia" min="1" max="10" value="5" oninput="document.getElementById('valor-urgencia').textContent = this.value">
-                </div>
-            </div>
-            <button class="calc-button" onclick="calcularMatrizDecisao()">🎯 Calcular Índice de Prioridade</button>
-            <div id="resultado-matriz" class="resultado-matriz" style="display: none;"></div>
+<div class="matriz-decisao">
+    <h3>📊 A Matriz de Decisão Inteligente (Ferramenta de Priorização)</h3>
+    <p>Vamos transformar a intuição em um processo lógico. Use esta matriz para quantificar a prioridade de uma anomalia, ajudando a justificar suas decisões para a equipe de planejamento e gestão, removendo a subjetividade.</p>
+    <div class="fatores-matriz">
+        <div>
+            <label>Criticidade do Ativo (1-10): <span id="valor-criticidade">5</span></label>
+            <input type="range" id="criticidade" min="1" max="10" value="5" oninput="document.getElementById('valor-criticidade').textContent = this.value">
         </div>
+        <div>
+            <label>Severidade da Anomalia (1-10): <span id="valor-severidade">5</span></label>
+            <input type="range" id="severidade" min="1" max="10" value="5" oninput="document.getElementById('valor-severidade').textContent = this.value">
+        </div>
+        <div>
+            <label>Tendência / Urgência (1-10): <span id="valor-urgencia">5</span></label>
+            <input type="range" id="urgencia" min="1" max="10" value="5" oninput="document.getElementById('valor-urgencia').textContent = this.value">
+        </div>
+    </div>
+    <button class="calc-button" onclick="calcularMatrizDecisao()">🎯 Calcular Índice de Prioridade de Risco</button>
+    <div id="resultado-matriz" class="resultado-matriz" style="display: none;"></div>
+</div>
 
-        <div class="dica-destaque">
-            <h4>🏆 Parabéns, Inspetor de Confiabilidade!</h4>
-            <p>Ao completar este módulo, você concluiu a jornada fundamental da inspeção industrial. Você não é mais alguém que apenas "olha máquinas", mas um profissional que entende de estratégia, tecnologia, análise de dados e, o mais importante, tomada de decisão baseada em risco.</p>
-            <p>O caminho da excelência é contínuo. Continue praticando, seja curioso e nunca perca a oportunidade de aprender com cada falha e cada sucesso. Você agora tem as ferramentas para fazer a diferença na segurança e na lucratividade da sua empresa.</p>
-        </div>
+<h3>Da Decisão à Ação: A Arte da Comunicação</h3>
+<p>Tomar a decisão certa é apenas metade do trabalho. A outra metade é comunicá-la de forma eficaz para que a ação correta seja tomada. Seu relatório ou comunicação verbal precisa ser claro e convincente.</p>
+<div class="dica-destaque">
+    <h4>Os 5 C's de uma Comunicação de Impacto</h4>
+    <ol>
+        <li><strong>Claro:</strong> Use linguagem simples e direta. Evite jargões excessivos.</li>
+        <li><strong>Conciso:</strong> Vá direto ao ponto. Ninguém tem tempo para ler um romance.</li>
+        <li><strong>Contextualizado:</strong> Explique o "porquê". Qual o impacto no negócio se nada for feito?</li>
+        <li><strong>Convincente:</strong> Apresente os dados! Mostre o gráfico, a imagem térmica. A evidência é sua maior aliada.</li>
+        <li><strong>Conclusivo:</strong> Termine com uma recomendação clara. "Recomendo a troca do rolamento na próxima parada" é melhor que "Precisamos fazer algo".</li>
+    </ol>
+</div>
+
+<div class="caso-final">
+    <h3>🏆 Desafio Final: A Manhã de Segunda-Feira</h3>
+    <p>Você chega na segunda-feira e encontra 4 anomalias aguardando sua avaliação. Seus recursos são limitados. Sua tarefa é <strong>criar a ordem de prioridade correta</strong> para investigação e ação.</p>
+    <ul>
+        <li><strong>Anomalia 1:</strong> Vazamento de óleo pequeno no redutor do transportador de produto acabado (Criticidade Média).</li>
+        <li><strong>Anomalia 2:</strong> Temperatura de 85°C no mancal do exaustor principal da caldeira (Criticidade Altíssima).</li>
+        <li><strong>Anomalia 3:</strong> Ruído em um motor reserva de uma bomba que está parado (Criticidade Baixa).</li>
+        <li><strong>Anomalia 4:</strong> Vibração de 5.0 mm/s em uma bomba secundária de água (Criticidade Média).</li>
+    </ul>
+    <h4>Qual é a ordem correta de prioridade (do mais ao menos urgente)?</h4>
+    <div class="opcoes-caso-final">
+         <button class="opcao-caso-final" data-correta="false" data-feedback="Incorreto. Embora o vazamento (1) e a vibração (4) sejam importantes, a temperatura altíssima no exaustor da caldeira (2) representa o maior risco iminente para a operação e segurança.">1, 4, 2, 3</button>
+         <button class="opcao-caso-final" data-correta="true" data-feedback="Perfeito! Você priorizou corretamente o maior risco (Criticidade Altíssima + Severidade Alta), seguido pelos problemas em ativos importantes e, por último, o ativo de baixo risco que não está em operação.">2, 4, 1, 3</button>
+         <button class="opcao-caso-final" data-correta="false" data-feedback="Incorreto. O ruído em um motor reserva parado (3) tem a menor prioridade de todas, pois não representa risco imediato. A prioridade deve ser sempre focada nos equipamentos em operação, seguindo a matriz de risco.">3, 1, 4, 2</button>
+    </div>
+     <div id="feedback-caso-final" class="feedback-caso" style="display: none;"></div>
+</div>
+
+<div class="dica-destaque final">
+    <h4>🏆 De Inspetor a Agente de Confiabilidade: Parabéns!</h4>
+    <p>Ao completar este módulo, você concluiu a jornada fundamental da inspeção industrial. Você não é mais alguém que apenas "olha máquinas", mas um profissional que entende de estratégia, tecnologia, análise de dados e, o mais importante, tomada de decisão baseada em risco.</p>
+    <p>O caminho da excelência é contínuo. Continue praticando, seja curioso e nunca perca a oportunidade de aprender com cada falha e cada sucesso. Você agora tem as ferramentas para fazer a diferença real na segurança e na lucratividade da sua empresa.</p>
+    <p><strong>Próximos Passos na sua Carreira:</strong> Pesquise sobre Análise de Causa Raiz (RCA), Manutenção Centrada em Confiabilidade (RCM) e Planejamento e Controle de Manutenção (PCM).</p>
+</div>
     </section>
         </section>
 
@@ -753,93 +785,210 @@
         <section id="module-6" class="module">
             <h2>Módulo 6: Principais Falhas Mecânicas</h2>
             
-            <p>60% das paradas não programadas são de origem mecânica. Aprenda a interpretar os sinais que as máquinas dão antes de falhar.</p>
+<p>Bem-vindo à espinha dorsal da manutenção industrial. Estatísticas mostram que até <strong>60% das paradas não programadas são de origem mecânica</strong>. Aprender a identificar e interpretar os sinais que as máquinas dão antes de quebrar é a habilidade mais valiosa de um inspetor. É aqui que você aprende a "falar a língua" dos equipamentos.</p>
 
-            <h3>🔧 Os "Big 5" das Falhas Mecânicas</h3>
-            <p>Rolamentos (40%), Desbalanceamento (25%), Desalinhamento (20%), Folgas (10%), Lubrificação (5%).</p>
+<h3>🔧 Os "Big 5" das Falhas Mecânicas</h3>
+<p>Embora existam inúmeras causas de falhas, um pequeno grupo é responsável pela grande maioria dos problemas. Conhecê-los é como saber os principais suspeitos de um crime. Focamos nossa atenção neles:</p>
 
-            <div class="simulador-diagnostico">
-                <h3>🔍 Simulador de Diagnóstico</h3>
-                <p><strong>Sintomas:</strong> Vibração forte em 1x RPM, aquecimento do mancal (75°C), ruído crescente, corrente normal.</p>
-                <p><strong>Qual sua suspeita principal?</strong></p>
-                <div class="opcoes-diagnostico">
-                    <button class="opcao-diag" data-correto="true">🟡 Desbalanceamento do rotor</button>
-                    <button class="opcao-diag" data-correto="false">🔵 Falha no rolamento</button>
-                    <button class="opcao-diag" data-correto="false">🔴 Desalinhamento</button>
-                </div>
-                <div id="resultado-diagnostico" class="resultado-diagnostico" style="display: none;"></div>
-            </div>
+<div class="falhas-mecanicas-grid">
+    <div class="card-falha">
+        <h4>1. Rolamentos (Causa ~40% das falhas)</h4>
+        <p><strong>O que é:</strong> Desgaste das pistas ou elementos rolantes devido a sobrecarga, contaminação ou falta de lubrificação.</p>
+        <p><strong>Sinais Clássicos:</strong> Ruído de alta frequência (chiado, zumbido), aquecimento localizado no mancal, vibração em frequências específicas de falha de rolamento (BPFO, BPFI, etc.).</p>
+    </div>
+    <div class="card-falha">
+        <h4>2. Desbalanceamento (Causa ~25% das falhas)</h4>
+        <p><strong>O que é:</strong> Distribuição desigual de massa em um componente giratório, como um "pneu desbalanceado".</p>
+        <p><strong>Sinais Clássicos:</strong> Vibração forte na mesma frequência da rotação (1x RPM), principalmente na direção radial (horizontal/vertical). A estrutura parece "sacudir".</p>
+    </div>
+    <div class="card-falha">
+        <h4>3. Desalinhamento (Causa ~20% das falhas)</h4>
+        <p><strong>O que é:</strong> Quando os eixos de duas máquinas conectadas (ex: motor e bomba) não estão perfeitamente alinhados.</p>
+        <p><strong>Sinais Clássicos:</strong> Aquecimento excessivo no acoplamento, parafusos da base ou acoplamento quebrando, alta vibração na direção axial (paralela ao eixo) e, frequentemente, em 2x RPM.</p>
+    </div>
+    <div class="card-falha">
+        <h4>4. Folgas Mecânicas (Causa ~10% das falhas)</h4>
+        <p><strong>O que é:</strong> Componentes que deveriam ser firmes estão soltos. Pode ser na base (pé frouxo), entre eixos e rolamentos, etc.</p>
+        <p><strong>Sinais Clássicos:</strong> Ruídos de impacto ("batidas"), vibração em múltiplas frequências (vários harmônicos de RPM), leituras de vibração instáveis.</p>
+    </div>
+    <div class="card-falha">
+        <h4>5. Falhas de Lubrificação (Causa ~5%, mas INDUZ muitas outras)</h4>
+        <p><strong>O que é:</strong> Lubrificante em excesso, em falta, contaminado ou incorreto para a aplicação.</p>
+        <p><strong>Sinais Clássicos:</strong> Aquecimento generalizado, vazamentos, cheiro de óleo queimado, degradação prematura de rolamentos e engrenagens. É um "assassino silencioso".</p>
+    </div>
+</div>
 
-            <div class="calculadora-custo-falha">
-                <h3>💰 Calculadora de Custo de Falhas</h3>
-                <div class="calc-inputs">
-                    <div>
-                        <label>Tipo de Falha:</label>
-                        <select id="tipo-falha-calc">
-                            <option value="rolamento">Rolamento</option>
-                            <option value="desbalanceamento">Desbalanceamento</option>
-                            <option value="desalinhamento">Desalinhamento</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label>Potência (HP):</label>
-                        <input type="number" id="potencia-motor" value="25">
-                    </div>
-                    <div>
-                        <label>Custo Parada (R$/h):</label>
-                        <input type="number" id="custo-parada-hora" value="5000">
-                    </div>
-                    <div>
-                        <label>Horas Reparo:</label>
-                        <input type="number" id="horas-reparo" value="8">
-                    </div>
-                </div>
-                <button class="calc-button" onclick="calcularCustoFalha()">💸 Calcular Custo</button>
-                <div id="resultado-custo-falha" class="resultado-calc" style="display: none;"></div>
-            </div>
-            
-            <div class="checklist-inspecao-mecanica">
-                <h3>✅ Checklist Master de Inspeção Mecânica</h3>
-                <div class="checklist-categorizado">
-                    <h4>🔧 Aspectos Gerais</h4>
-                    <div class="itens-checklist">
-                        <label><input type="checkbox"> Limpeza geral</label>
-                        <label><input type="checkbox"> Vazamentos</label>
-                        <label><input type="checkbox"> Fixação da base</label>
-                    </div>
-                    <h4>📳 Vibrações e Ruídos</h4>
-                    <div class="itens-checklist">
-                        <label><input type="checkbox"> Vibração (sensitiva)</label>
-                        <label><input type="checkbox"> Ruídos anormais</label>
-                        <label><input type="checkbox"> Estado do acoplamento</label>
-                    </div>
-                </div>
-                <button class="action-button" onclick="avaliarChecklist()">📊 Avaliar Inspeção</button>
-                <div id="resultado-checklist-mecanica" class="resultado-calc" style="display: none;"></div>
-            </div>
+<div class="simulador-diagnostico">
+    <h3>🔍 Simulador de Diagnóstico Mecânico</h3>
+    <p>Você é chamado para analisar um grande ventilador de tiragem. A equipe de operação relata que a estrutura de suporte está "tremendo muito".</p>
+    <p><strong>Sintomas Coletados:</strong></p>
+    <ul>
+        <li>Vibração muito forte, que parece acompanhar a rotação da máquina.</li>
+        <li>A análise de vibração mostra um pico enorme em 1x RPM, principalmente na direção radial.</li>
+        <li>A temperatura dos mancais está levemente elevada (75°C), mas o acoplamento está frio.</li>
+        <li>A corrente elétrica do motor está normal.</li>
+    </ul>
+    <p><strong>Com base nas evidências, qual sua suspeita principal?</strong></p>
+    <div class="opcoes-diagnostico">
+        <button class="opcao-diag" data-correto="true" data-feedback="Correto! Vibração alta e dominante em 1x RPM na direção radial é a assinatura clássica de desbalanceamento. É como se um peso estivesse 'puxando' o rotor para um lado a cada giro.">🟡 Desbalanceamento do rotor</button>
+        <button class="opcao-diag" data-correto="false" data-feedback="Incorreto. Falhas de rolamento geralmente geram vibrações em frequências mais altas, não necessariamente em 1x RPM, e o aquecimento seria mais localizado e intenso no mancal defeituoso.">🔵 Falha no rolamento</button>
+        <button class="opcao-diag" data-correto="false" data-feedback="Incorreto. Embora cause vibração, o desalinhamento costuma apresentar picos em 2x RPM e uma forte componente na direção axial, além de aquecimento no acoplamento, o que não foi observado aqui.">🔴 Desalinhamento entre motor e ventilador</button>
+    </div>
+    <div id="resultado-diagnostico" class="resultado-diagnostico" style="display: none;"></div>
+</div>
+
+<div class="calculadora-custo-falha">
+    <h3>💰 Calculadora Rápida: O Custo Real da Falha Mecânica</h3>
+    <p>Use esta ferramenta para estimar o impacto financeiro de uma falha não detectada e justificar a importância da sua inspeção.</p>
+    <div class="calc-inputs">
+        <div>
+            <label>Tipo de Falha:</label>
+            <select id="tipo-falha-calc">
+                <option value="rolamento">Falha de Rolamento</option>
+                <option value="desbalanceamento">Parada para Balanceamento</option>
+                <option value="desalinhamento">Parada para Alinhamento</option>
+            </select>
+        </div>
+        <div>
+            <label>Potência do Motor (HP):</label>
+            <input type="number" id="potencia-motor" value="25">
+        </div>
+        <div>
+            <label>Custo da Parada (R$/h):</label>
+            <input type="number" id="custo-parada-hora" value="5000">
+        </div>
+        <div>
+            <label>Horas de Reparo (Parada Total):</label>
+            <input type="number"id="horas-reparo" value="8">
+        </div>
+    </div>
+    <button class="calc-button" onclick="calcularCustoFalha()">💸 Calcular Custo Total da Falha</button>
+    <div id="resultado-custo-falha" class="resultado-calc" style="display: none;"></div>
+</div>
+
+<div class="checklist-inspecao-mecanica">
+    <h3>✅ Checklist do Inspetor Mecânico Profissional</h3>
+    <p>Uma inspeção mecânica completa segue uma lógica. Use este checklist como guia para suas rotas.</p>
+    <div class="checklist-categorizado">
+        <h4>1. Inspeção Geral e de Segurança (Equipamento em Operação)</h4>
+        <div class="itens-checklist">
+            <label><input type="checkbox"> Verificar limpeza geral e ausência de obstruções nas aletas de ventilação.</label>
+            <label><input type="checkbox"> Procurar por vazamentos de óleo/graxa nos mancais e vedações.</label>
+            <label><input type="checkbox"> Inspecionar visualmente a integridade das guardas de proteção (acoplamento, polias).</label>
+            <label><input type="checkbox"> Checar se há parafusos da base ou estrutura soltos/faltando.</label>
+        </div>
+        <h4>2. Inspeção Sensitiva Dinâmica</h4>
+        <div class="itens-checklist">
+            <label><input type="checkbox"> Sentir a vibração na carcaça do motor e do equipamento (comparar lados).</label>
+            <label><input type="checkbox"> Sentir a temperatura dos mancais e da carcaça do motor (usar dorso da mão ou pirômetro).</label>
+            <label><input type="checkbox"> Ouvir ruídos anormais (chiados, batidas, zumbidos) usando estetoscópio industrial.</label>
+            <label><input type="checkbox"> Inspecionar a região do acoplamento/polias: há ruído, aquecimento ou cheiro de borracha queimada?</label>
+        </div>
+        <h4>3. Inspeção Instrumentada (se aplicável na rota)</h4>
+        <div class="itens-checklist">
+            <label><input type="checkbox"> Coletar medições de vibração nos pontos definidos.</label>
+            <label><input type="checkbox"> Medir temperatura com termômetro infravermelho ou câmera termográfica.</label>
+            <label><input type="checkbox"> Verificar nível e aspecto do óleo no visor (se houver).</label>
+        </div>
+    </div>
+    <button class="action-button" onclick="avaliarChecklist()">📊 Avaliar Cobertura da Inspeção</button>
+    <div id="resultado-checklist-mecanica" class="resultado-calc" style="display: none;"></div>
+</div>
+
+<div class="dica-destaque">
+    <h4>Próximo Passo: Inspeção Elétrica</h4>
+    <p>Agora que você domina os sinais das falhas mecânicas, está pronto para desvendar os mistérios do "coração" da máquina: o motor elétrico. No próximo módulo, aprenderemos a identificar problemas elétricos que muitas vezes são confundidos com defeitos mecânicos.</p>
+</div>
         </section>
 
         <!-- MÓDULO 7: PRINCIPAIS FALHAS ELÉTRICAS -->
         <section id="module-7" class="module">
             <h2>Módulo 7: Principais Falhas Elétricas</h2>
             
-            <p>30% das falhas industriais são elétricas, e costumam ser as mais perigosas. Dominar a inspeção elétrica é essencial.</p>
+<p>Cerca de <strong>30% das falhas industriais são de origem elétrica</strong> e, frequentemente, são as mais perigosas e com potencial devastador. Diferente das falhas mecânicas que costumam dar sinais audíveis, os problemas elétricos são muitas vezes invisíveis e silenciosos até o momento da falha catastrófica, que pode envolver incêndios e arcos elétricos. Dominar a inspeção elétrica é uma competência essencial para a segurança e confiabilidade da planta.</p>
 
-            <div class="alerta-seguranca">
-                <h4>⚠️ ATENÇÃO: SEGURANÇA ELÉTRICA</h4>
-                <p>Inspeção elétrica requer <strong>treinamento específico (NR-10)</strong> e <strong>autorização formal</strong>.</p>
-            </div>
+<div class="alerta-seguranca">
+    <h4>⚠️ ATENÇÃO: SEGURANÇA ELÉTRICA É INEGOCIÁVEL</h4>
+    <p>A inspeção em painéis e componentes elétricos energizados é uma atividade de altíssimo risco. Ela só pode ser realizada por <strong>profissionais qualificados, com treinamento específico (NR-10 no Brasil)</strong> e <strong>autorização formal</strong> da empresa. O uso de Equipamentos de Proteção Individual (EPIs) adequados, como vestimentas antichama, luvas isolantes e protetor facial contra arco elétrico, é <strong>obrigatório</strong>. Nunca realize uma inspeção elétrica sem atender a todos esses requisitos.</p>
+</div>
 
-            <div class="simulador-termografia">
-                <h3>🌡️ Simulador de Termografia Elétrica</h3>
-                <p><strong>Cenário:</strong> Painel de 440V. Temperatura ambiente 28°C. Medições: Contator C1: 45°C, <strong>Contator C2: 78°C</strong>, Disjuntor D1: 52°C.</p>
-                <p><strong>Qual sua análise?</strong></p>
-                <div class="opcoes-termografia">
-                    <button class="opcao-termo" data-correto="false">🟢 Tudo normal</button>
-                    <button class="opcao-termo" data-correto="true">🟡 Contator C2 crítico</button>
-                </div>
-                <div id="resultado-termografia" class="resultado-analise" style="display: none;"></div>
-            </div>
+<h3>Os "Big 3" das Falhas Elétricas em Motores e Painéis</h3>
+<p>Assim como na mecânica, um pequeno grupo de problemas causa a maioria das falhas elétricas. Fique atento a eles:</p>
+<div class="falhas-eletricas-grid">
+    <div class="card-falha">
+        <h4>1. Mau Contato (Conexões Frouxas)</h4>
+        <p><strong>O que é:</strong> Parafusos, bornes ou conectores que não estão devidamente apertados. Isso cria uma resistência no ponto de conexão.</p>
+        <p><strong>Sinais Clássicos:</strong> <strong>Aquecimento localizado intenso</strong>, detectável com termografia. É a principal causa de incêndios em painéis elétricos. Pode também causar variações de tensão que afetam o equipamento.</p>
+    </div>
+    <div class="card-falha">
+        <h4>2. Desbalanceamento de Fases</h4>
+        <p><strong>O que é:</strong> Quando a corrente elétrica não é distribuída igualmente entre as três fases de um sistema trifásico.</p>
+        <p><strong>Sinais Clássicos:</strong> Vibração e ruído no motor (parece um problema mecânico!), superaquecimento do motor e redução da sua vida útil. Detectado medindo a corrente em cada fase com um alicate amperímetro. Uma diferença maior que 10% entre as fases é um sinal de alerta grave.</p>
+    </div>
+    <div class="card-falha">
+        <h4>3. Sobrecarga</h4>
+        <p><strong>O que é:</strong> O motor ou circuito está consumindo mais corrente do que foi projetado para suportar, geralmente devido a um esforço mecânico excessivo.</p>
+        <p><strong>Sinais Clássicos:</strong> Aquecimento geral do motor e dos cabos, desarme de disjuntores e relés térmicos, cheiro de verniz queimado. A medição de corrente mostrará valores acima da corrente nominal (placa do motor).</p>
+    </div>
+</div>
+
+<div class="simulador-termografia">
+    <h3>🌡️ Simulador de Inspeção Termográfica</h3>
+    <p><strong>Cenário:</strong> Você está inspecionando o Painel de Distribuição PD-04 (440V), que alimenta a linha de produção crítica. A temperatura ambiente na sala elétrica é de 28°C.</p>
+    <p><strong>Medições com a Câmera Termográfica:</strong></p>
+    <ul>
+        <li>Contator C1 (Fase R): 45°C</li>
+        <li><strong>Contator C2 (Fase S): 78°C</strong></li>
+        <li>Contator C3 (Fase T): 46°C</li>
+        <li>Disjuntor Geral D1: 52°C</li>
+    </ul>
+    <p><strong>Qual sua análise imediata?</strong></p>
+    <div class="opcoes-termografia">
+        <button class="opcao-termo" data-correto="false" data-feedback="Incorreto! Uma diferença de mais de 30°C entre componentes similares sob a mesma carga (C1, C2, C3) é um sinal crítico de falha iminente. O Contator C2 está perigosamente quente.">🟢 Tudo normal, as temperaturas estão operando.</button>
+        <button class="opcao-termo" data-correto="true" data-feedback="Correto! A temperatura do C2 está muito acima dos outros contatores e do ambiente. Isso indica um mau contato interno ou excesso de resistência, um ponto de falha gravíssimo que precisa de correção urgente.">🟡 O Contator C2 apresenta um ponto quente crítico e requer atenção imediata.</button>
+    </div>
+    <div id="resultado-termografia" class="resultado-analise" style="display: none;"></div>
+</div>
+
+<div class="simulador-corrente">
+    <h3>⚡ Simulador de Medição de Corrente</h3>
+    <p><strong>Cenário:</strong> Um motor trifásico de 30HP está apresentando um ruído anormal, similar a um zumbido, e uma leve vibração. Você suspeita de um problema elétrico.</p>
+    <p><strong>Medições com o Alicate Amperímetro:</strong></p>
+    <ul>
+        <li>Fase R: 35 A</li>
+        <li>Fase S: 32 A</li>
+        <li><strong>Fase T: 48 A</strong></li>
+    </ul>
+    <p><strong>Qual o diagnóstico mais provável?</strong></p>
+    <div class="opcoes-corrente">
+        <button class="opcao-corr" data-correto="false" data-feedback="Incorreto. Um desbalanceamento de corrente acima de 10% já é considerado severo. A diferença entre a Fase T (48A) e a Fase S (32A) é de 50%, um valor alarmante que explica o ruído e a vibração.">🟢 Desbalanceamento leve, dentro do aceitável.</button>
+        <button class="opcao-corr" data-correto="true" data-feedback="Correto! A corrente na Fase T está significativamente mais alta que as outras. Esse desequilíbrio gera um campo magnético irregular no motor, causando ruído, vibração e superaquecimento, o que pode destruí-lo em pouco tempo.">🔴 Desbalanceamento de corrente severo.</button>
+        <button class="opcao-corr" data-correto="false" data-feedback="Incorreto. Se fosse sobrecarga, todas as três fases estariam com corrente elevada, acima do valor nominal de placa do motor. O problema aqui é a diferença entre elas.">🟡 Sobrecarga no motor.</button>
+    </div>
+    <div id="resultado-corrente" class="resultado-analise" style="display: none;"></div>
+</div>
+
+<div class="checklist-inspecao-eletrica">
+    <h3>✅ Checklist do Inspetor Elétrico</h3>
+    <p>Use este guia para garantir uma inspeção elétrica completa e segura em painéis e CCMs.</p>
+    <div class="checklist-categorizado">
+        <h4>1. Inspeção Visual e Sensitiva (Externa)</h4>
+        <div class="itens-checklist">
+            <label><input type="checkbox"> Verificar limpeza e ausência de poeira/obstrução nas aberturas de ventilação do painel.</label>
+            <label><input type="checkbox"> Checar se todas as lâmpadas de sinalização do painel estão funcionando.</label>
+            <label><input type="checkbox"> Ouvir por ruídos anormais (zumbidos altos, estalos) vindos de dentro do painel.</label>
+            <label><input type="checkbox"> Sentir (com cuidado) se há aquecimento excessivo na porta do painel.</label>
+        </div>
+        <h4>2. Inspeção Interna (Após abertura segura e com EPIs)</h4>
+        <div class="itens-checklist">
+            <label><input type="checkbox"> (Visual) Procurar por sinais de superaquecimento: cabos ou componentes escurecidos/derretidos.</label>
+            <label><input type="checkbox"> (Visual) Verificar a presença de poeira condutiva ou umidade dentro do painel.</label>
+            <label><input type="checkbox"> (Olfato) Sentir por cheiro de verniz queimado ou plástico superaquecido.</label>
+            <label><input type="checkbox"> (Termografia) Realizar varredura termográfica em todos os bornes, contatores, disjuntores e barramentos.</label>
+            <label><input type="checkbox"> (Medição) Medir a corrente de todas as fases nos principais circuitos.</label>
+        </div>
+    </div>
+</div>
 
             
         </section>
@@ -848,22 +997,52 @@
         <section id="module-8" class="module">
             <h2>Módulo 8: Ferramentas Avançadas de Inspeção</h2>
             
-            <p>Vamos dominar as tecnologias que "veem" o invisível e "ouvem" o inaudível, com um ROI médio de 300-500%.</p>
+<p>Se a inspeção sensitiva e a instrumentada básica são os primeiros passos, as tecnologias preditivas avançadas são o que separa os amadores dos profissionais de classe mundial. Elas nos dão "superpoderes" para ver o invisível e ouvir o inaudível. O investimento nessas ferramentas tem um retorno sobre o investimento (ROI) médio de 300-500%, pois elas permitem detectar falhas com meses de antecedência, transformando paradas catastróficas em reparos planejados e baratos.</p>
 
-            <div class="ferramentas-avancadas">
-                <div class="ferramenta-card"><h4>🔊 Detector Ultrassônico</h4><p>Detecta vazamentos, arco elétrico e problemas de lubrificação.</p></div>
-                <div class="ferramenta-card"><h4>🌡️ Câmera Termográfica</h4><p>Identifica pontos quentes em sistemas elétricos e mecânicos.</p></div>
-                <div class="ferramenta-card"><h4>📳 Analisador de Vibração FFT</h4><p>Diagnóstico preciso de falhas mecânicas através da análise de frequências.</p></div>
-                <div class="ferramenta-card"><hyle="display: none;"></div>
-            </div>
+<h3>As Tecnologias Preditivas Essenciais</h3>
+<p>Vamos dominar as quatro principais tecnologias que formam a base da manutenção preditiva moderna.</p>
 
-            <div class="analise-corrente">
-    <h3>⚡ Análise de Assinatura de Corrente (MCSA)</h3>
-    <p><strong>Leituras:</strong> Fase R: 28,5A, Fase S: 31,2A, Fase T: 29,8A. Nominal: 30A.</p>
+<div class="ferramentas-avancadas">
+    <div class="ferramenta-card">
+        <h4>🔊 Detector Ultrassônico Acústico</h4>
+        <p><strong>O que é:</strong> Um microfone especial que "ouve" sons de alta frequência (ultrassom), inaudíveis para o ser humano, e os traduz para uma frequência que podemos ouvir.</p>
+        <p><strong>O que detecta:</strong> Vazamentos de ar comprimido/gases (que custam fortunas), vácuo, arco elétrico em painéis (altamente perigoso) e falhas iniciais de lubrificação em rolamentos.</p>
+        <p><strong>Por que é poderoso:</strong> É versátil, relativamente barato e identifica problemas que nenhuma outra técnica consegue pegar com a mesma facilidade.</p>
+    </div>
+    <div class="ferramenta-card">
+        <h4>🌡️ Câmera Termográfica</h4>
+        <p><strong>O que é:</strong> Uma câmera que enxerga o calor (radiação infravermelha) em vez da luz visível, criando um mapa de temperatura do equipamento.</p>
+        <p><strong>O que detecta:</strong> Pontos quentes em painéis elétricos (maus contatos), circuitos sobrecarregados, desalinhamentos (aquecimento no acoplamento), atrito excessivo em componentes mecânicos e problemas de isolamento térmico.</p>
+        <p><strong>Por que é poderoso:</strong> É uma inspeção rápida, segura (sem contato) e extremamente visual, tornando fácil identificar e comunicar problemas.</p>
+    </div>
+    <div class="ferramenta-card">
+        <h4>📳 Analisador de Vibração (FFT)</h4>
+        <p><strong>O que é:</strong> O "eletrocardiograma" das máquinas. Ele mede a vibração e a decompõe em suas frequências individuais (usando a Transformada Rápida de Fourier - FFT), permitindo um diagnóstico preciso.</p>
+        <p><strong>O que detecta:</strong> A assinatura exata de falhas como desbalanceamento (1x RPM), desalinhamento (2x RPM), folgas e defeitos específicos em rolamentos muito antes de serem audíveis ou gerarem calor.</p>
+        <p><strong>Por que é poderoso:</strong> É a ferramenta mais precisa para diagnosticar a saúde de equipamentos rotativos, permitindo acompanhar a evolução da falha e planejar a intervenção no momento certo.</p>
+    </div>
+    <div class="ferramenta-card">
+        <h4>🔬 Análise de Óleo</h4>
+        <p><strong>O que é:</strong> O "exame de sangue" do equipamento. Uma amostra do lubrificante é enviada a um laboratório para analisar suas propriedades e buscar por partículas de desgaste.</p>
+        <p><strong>O que detecta:</strong> Contaminação por água, poeira ou outros fluidos; degradação do óleo (perda de viscosidade); e a presença de partículas metálicas que indicam o desgaste interno de engrenagens, mancais e outros componentes.</p>
+        <p><strong>Por que é poderoso:</strong> É a única técnica que vê o que está acontecendo DENTRO do equipamento, revelando o "DNA" do desgaste.</p>
+    </div>
+</div>
+
+<div class="analise-corrente">
+    <h3>⚡ Análise da Assinatura Elétrica do Motor (MCSA)</h3>
+    <p>A MCSA é uma técnica avançada que usa o próprio motor como um sensor. Ao analisar pequenas flutuações na corrente elétrica, podemos diagnosticar problemas mecânicos e elétricos no próprio motor e, às vezes, até na carga que ele aciona. Uma das análises mais básicas e importantes é o desequilíbrio de corrente entre as fases.</p>
+    <p><strong>Leituras em um Motor de 30A:</strong> Fase R: 28,5A, Fase S: 31,2A, Fase T: 29,8A.</p>
+    <p>Um desequilíbrio acima de 5% já é um sinal de alerta; acima de 10% é crítico e pode reduzir a vida útil do motor pela metade!</p>
     <div class="calculadora-desequilibrio">
-        <button class="calc-button" onclick="calcularDesequilibrio()"><span class="btn-icon">🧮</span> Calcular Desequilíbrio</button>
+        <button class="calc-button" onclick="calcularDesequilibrio()"><span class="btn-icon">🧮</span> Calcular Desequilíbrio de Corrente</button>
     </div>
     <div id="classificacao-desequilibrio" class="resultado-calc" style="display: none;"></div>
+</div>
+
+<div class="dica-destaque">
+    <h4>A Ferramenta é só o Começo</h4>
+    <p>Lembre-se: essas tecnologias são incrivelmente poderosas, mas são apenas ferramentas. O verdadeiro valor está na <strong>habilidade do analista de interpretar os dados</strong>, entender o contexto do equipamento e transformar a informação em uma recomendação de ação clara e precisa. O melhor equipamento na mão de um analista sem treinamento tem pouco valor.</p>
 </div>
         </section>
 
@@ -924,223 +1103,395 @@
         <section id="module-9" class="module">
             <h2>Módulo 9: Desgaste, Lubrificação e Vida Útil</h2>
             
-            <p>90% das falhas mecânicas têm relação direta com lubrificação inadequada. Dominar este tema é fundamental.</p>
-            
-            <div class="calculadora-viscosidade">
-                <h3>🌡️ Calculadora de Viscosidade Ideal</h3>
-                <div class="inputs-viscosidade">
-                    <label>Velocidade (RPM):</label> <input type="number" id="velocidade-rpm" value="1750">
-                    <label>Carga (N/mm²):</label> <input type="number" id="carga-especifica" value="10">
-                    <label>Temp. (°C):</label> <input type="number" id="temperatura-operacao" value="70">
-                    <label>Aplicação:</label> <select id="tipo-aplicacao"><option value="motor">Motor</option></select>
-                </div>
-                <button class="calc-button" onclick="calcularViscosidadeIdeal()">🧮 Calcular</button>
-                <div id="resultado-viscosidade" class="resultado-calc" style="display: none;"></div>
-            </div>
-            
-            <div class="interpretador-analise">
-                <h3>🔍 Interpretador de Análise de Óleo</h3>
-                <div class="laudo-simulado">
-                    <label>Viscosidade (Ref: 320):</label> <input type="number" id="visc-atual" value="380">
-                    <label>Água (ppm):</label> <input type="number" id="agua-atual" value="850">
-                    <label>Ferro (ppm):</label> <input type="number" id="ferro-atual" value="75">
-                    <label>TAN:</label> <input type="number" id="tan-atual" value="1.8">
-                    <button class="action-button" onclick="interpretarAnalise()">🧠 Interpretar</button>
-                    <div id="interpretacao-analise" class="resultado-calc" style="display: none;"></div>
-                </div>
-            </div>
+<p>Bem-vindo ao tema que é, literalmente, o sangue vital da maquinaria. Embora as estimativas variem, é amplamente aceito que problemas de lubrificação são um fator principal em até <strong>70% das falhas mecânicas prematuras</strong>. Ignorar a lubrificação é a forma mais rápida de destruir um ativo. Dominar este tema não é apenas uma habilidade, é uma estratégia de confiabilidade fundamental.</p>
 
-            <div class="calculadora-intervalo">
-                <h3>⏱️ Calculadora de Intervalo de Lubrificação</h3>
-                <div class="inputs-calculo-intervalo">
-                    <label>RPM:</label> <input type="number" id="rpm-rolamento" value="1750">
-                    <label>Diâmetro (mm):</label> <input type="number" id="diametro-rolamento" value="110">
-                    <label>Temp.:</label> <select id="temperatura-trabalho"><option value="1.0">≤70°C</option><option value="0.5">>70°C</option></select>
-                    <label>Ambiente:</label> <select id="ambiente-contaminacao"><option value="0.7">Normal</option><option value="0.4">Sujo</option></select>
-                    <label>Umidade:</label> <select id="umidade-ambiente"><option value="1.0">Baixa</option><option value="0.7">Média</option></select>
-                    <label>Orientação:</label> <select id="orientacao-eixo"><option value="1.0">Horizontal</option><option value="0.5">Vertical</option></select>
-                </div>
-                <button class="calc-button" onclick="calcularIntervaloLubrificacao()">⏱️ Calcular</button>
-                <div id="resultado-intervalo" class="resultado-calc" style="display: none;"></div>
-            </div>
+<h3>Os "5 Direitos" da Lubrificação: A Base de Tudo</h3>
+<p>Para garantir que a lubrificação seja uma solução e não um problema, seguimos um mantra simples e poderoso. Tudo que você precisa saber se resume a garantir os 5 "direitos" do lubrificante:</p>
+<ul>
+    <li>1. O Lubrificante <strong>Certo</strong> (Tipo e Viscosidade)</li>
+    <li>2. A Quantidade <strong>Certa</strong></li>
+    <li>3. No Ponto <strong>Certo</strong> (Localização)</li>
+    <li>4. Na Hora <strong>Certa</strong> (Frequência)</li>
+    <li>5. Na Condição <strong>Certa</strong> (Livre de Contaminação)</li>
+</ul>
 
-            <div class="calculadora-vida-util">
-                <h3>🧮 Calculadora de Vida Útil L₁₀</h3>
-                <div class="inputs-vida-util">
-                    <label>Carga dinâmica C (kN):</label> <input type="number" id="carga-dinamica" value="31.5">
-                    <label>Carga aplicada P (kN):</label> <input type="number" id="carga-aplicada" value="8.2">
-                    <label>Velocidade (RPM):</label> <input type="number" id="velocidade-vida" value="1750">
-                    <label>Horas/dia:</label> <input type="number" id="horas-operacao-dia" value="20">
-                </div>
-                <button class="calc-button" onclick="calcularVidaUtil()">📊 Calcular</button>
-                <div id="resultado-vida-util" class="resultado-calc" style="display: none;"></div>
-            </div>
+<h3>Direito #1: O Lubrificante Certo (Viscosidade)</h3>
+<p>A viscosidade é a propriedade mais importante de um óleo: sua resistência ao fluxo. Fina demais, e o filme protetor se rompe, causando contato metal-metal. Grossa demais, e gera calor, resistência e consome mais energia. A escolha ideal depende da velocidade, carga e temperatura.</p>
+
+<div class="calculadora-viscosidade">
+    <h4>🌡️ Calculadora de Viscosidade Ideal (Modelo Simplificado)</h4>
+    <p>Use esta calculadora para ter uma ideia inicial da viscosidade necessária. <em>(Nota: a seleção real envolve gráficos e fatores de correção do fabricante.)</em></p>
+    <div class="inputs-viscosidade">
+        <label>Velocidade (RPM):</label> <input type="number" id="velocidade-rpm" value="1750">
+        <label>Carga (N/mm²):</label> <input type="number" id="carga-especifica" value="10">
+        <label>Temp. (°C):</label> <input type="number" id="temperatura-operacao" value="70">
+        <label>Aplicação:</label> <select id="tipo-aplicacao"><option value="motor">Rolamento</option></select>
+    </div>
+    <button class="calc-button" onclick="calcularViscosidadeIdeal()">🧮 Calcular Viscosidade (ISO VG)</button>
+    <div id="resultado-viscosidade" class="resultado-calc" style="display: none;"></div>
+</div>
+
+<h3>Direito #4: Na Hora Certa (Frequência de Relubrificação)</h3>
+<p>Lubrificar "a cada 3 meses" é uma prática ultrapassada. O intervalo correto depende drasticamente das condições de operação. Um rolamento quente, em ambiente sujo e úmido, precisa de atenção muito mais frequente do que um em uma sala limpa.</p>
+
+<div class="calculadora-intervalo">
+    <h3>⏱️ Calculadora de Intervalo de Relubrificação para Graxa</h3>
+    <p>Calcule o intervalo de relubrificação em horas, baseado nos fatores de correção SKF.</p>
+    <div class="inputs-calculo-intervalo">
+        <label>RPM:</label> <input type="number" id="rpm-rolamento" value="1750">
+        <label>Diâmetro do Rolamento (mm):</label> <input type="number" id="diametro-rolamento" value="110">
+        <label>Temp.:</label> <select id="temperatura-trabalho"><option value="1.0">≤70°C (Normal)</option><option value="0.5">>70°C (Quente)</option></select>
+        <label>Ambiente:</label> <select id="ambiente-contaminacao"><option value="1.0">Limpo</option><option value="0.7">Normal</option><option value="0.4">Sujo/Poeira</option></select>
+        <label>Umidade:</label> <select id="umidade-ambiente"><option value="1.0">Baixa/Seco</option><option value="0.7">Média/Úmido</option></select>
+        <label>Orientação:</label> <select id="orientacao-eixo"><option value="1.0">Horizontal</option><option value="0.5">Vertical</option></select>
+    </div>
+    <button class="calc-button" onclick="calcularIntervaloLubrificacao()">⏱️ Calcular Intervalo (em Horas)</button>
+    <div id="resultado-intervalo" class="resultado-calc" style="display: none;"></div>
+</div>
+
+<h3>Direito #5: Na Condição Certa (Análise de Óleo)</h3>
+<p>Como saber se o "sangue" da máquina está saudável? Através da análise de óleo. É a única forma de ver o que está acontecendo DENTRO do equipamento. Ela nos diz se o óleo está degradado e se há sinais de desgaste interno.</p>
+
+<div class="interpretador-analise">
+    <h3>🔍 Interpretador Rápido de Análise de Óleo</h3>
+    <p>Insira os dados do seu laudo para um diagnóstico preliminar.</p>
+    <div class="laudo-simulado">
+        <label>Viscosidade (Ref: 320 cSt):</label> <input type="number" id="visc-atual" value="280">
+        <label>Água (ppm, Limite: 500):</label> <input type="number" id="agua-atual" value="850">
+        <label>Partículas de Ferro (ppm, Limite: 50):</label> <input type="number" id="ferro-atual" value="75">
+        <label>TAN (Acidez, Limite: 2.0):</label> <input type="number" id="tan-atual" value="1.8">
+        <button class="action-button" onclick="interpretarAnalise()">🧠 Interpretar Laudo</button>
+        <div id="interpretacao-analise" class="resultado-calc" style="display: none;"></div>
+    </div>
+</div>
+
+<h3>A Consequência Final: O Impacto na Vida Útil do Rolamento (L₁₀)</h3>
+<p>Toda a teoria da lubrificação se resume a um objetivo: maximizar a vida útil dos componentes. A vida de um rolamento (L₁₀) é calculada com base na carga que ele suporta. Uma lubrificação inadequada aumenta drasticamente a carga efetiva, destruindo o rolamento muito antes do previsto.</p>
+
+<div class="calculadora-vida-util">
+    <h3>🧮 Calculadora de Vida Útil do Rolamento L₁₀</h3>
+    <p>Veja como a carga aplicada impacta a vida esperada de um rolamento em horas e anos.</p>
+    <div class="inputs-vida-util">
+        <label>Carga Dinâmica C (do catálogo, em kN):</label> <input type="number" id="carga-dinamica" value="31.5">
+        <label>Carga Aplicada P (real, em kN):</label> <input type="number" id="carga-aplicada" value="8.2">
+        <label>Velocidade (RPM):</label> <input type="number" id="velocidade-vida" value="1750">
+        <label>Horas de Operação por Dia:</label> <input type="number" id="horas-operacao-dia" value="20">
+    </div>
+    <button class="calc-button" onclick="calcularVidaUtil()">📊 Calcular Vida Útil</button>
+    <div id="resultado-vida-util" class="resultado-calc" style="display: none;"></div>
+</div>
+
+<div class="dica-destaque">
+    <h4>Lubrificação não é uma tarefa, é uma ciência.</h4>
+    <p>Tratar a lubrificação com a importância que ela merece é a forma mais barata e eficaz de aumentar a confiabilidade de uma planta. Como inspetor, seu papel é garantir que os 5 "direitos" estão sendo respeitados e usar a análise de óleo para verificar a saúde dos seus ativos.</p>
+</div>
         </section>
 
         <!-- MÓDULO 10: SISTEMAS PNEUMÁTICOS E HIDRÁULICOS -->
         <section id="module-10" class="module">
-            <h2>Módulo 10: Inspeção de Sistemas Pneumáticos e Hidráulicos</h2>
-            <p>70% das máquinas industriais dependem de sistemas pneumáticos ou hidráulicos. Dominar sua inspeção é vital.</p>
-            
-            <div class="checklist-pneumatico">
-                <h4>🎯 Pontos Críticos de Inspeção - Pneumática</h4>
-                <div class="categoria-inspecao">
-                    <h5>🔧 Compressor de Ar</h5>
-                    <div class="itens-inspecao">
-                        <label><input type="checkbox" data-criticidade="alta"> Temperatura de descarga</label>
-                        <label><input type="checkbox" data-criticidade="alta"> Vibração anormal</label>
-                    </div>
-                </div>
-                <button class="action-button" onclick="avaliarInspecaoPneumatica()">📊 Avaliar</button>
-                <div id="resultado-inspecao-pneumatica" class="resultado-calc" style="display: none;"></div>
-            </div>
+        	<h2>Módulo 10: Inspeção de Sistemas Pneumáticos e Hidráulicos</h2>
+<p>Bem-vindo ao mundo da potência fluida! Cerca de <strong>70% de todas as máquinas industriais</strong> dependem de sistemas pneumáticos (ar comprimido) ou hidráulicos (óleo sob pressão) para realizar trabalho. Embora ambos usem um fluido para transmitir força, suas características e, portanto, seus pontos de inspeção, são muito diferentes. Dominar ambos é vital para qualquer inspetor.</p>
+<div class="dica-destaque">
+    <h4>Pneumática vs. Hidráulica: A Diferença Chave</h4>
+    <ul>
+        <li><strong>Pneumática (Ar):</strong> Rápida, limpa, ideal para movimentos rápidos e de força moderada. <strong>Seu maior inimigo: Vazamentos e umidade.</strong></li>
+        <li><strong>Hidráulica (Óleo):</strong> Precisa, potente, ideal para altas cargas e controle de posição. <strong>Seu maior inimigo: Contaminação do fluido e calor.</strong></li>
+    </ul>
+</div>
 
-            <div class="diagnostico-vazamentos">
-    <h3>🔍 Detector de Vazamentos - Simulador</h3>
-    <p>Você ouve um som de vazamento. Qual técnica usar para localizar?</p>
+<h3>Parte 1: Inspeção de Sistemas Pneumáticos (A Força do Ar)</h3>
+<p>A inspeção pneumática segue o fluxo do ar: da geração (compressor) ao trabalho (atuadores).</p>
+<div class="checklist-pneumatico">
+    <h4>🎯 Pontos Críticos de Inspeção - Pneumática</h4>
+    <div class="categoria-inspecao">
+        <h5>🔧 O Coração: O Compressor de Ar</h5>
+        <div class="itens-inspecao">
+            <label><input type="checkbox" data-criticidade="alta"> Temperatura de descarga (muito alta indica problema).</label>
+            <label><input type="checkbox" data-criticidade="alta"> Vibração anormal no motor ou compressor.</label>
+            <label><input type="checkbox" data-criticidade="media"> Nível de óleo (se aplicável).</label>
+            <label><input type="checkbox" data-criticidade="media"> Funcionamento dos drenos automáticos (purgas).</label>
+            <label><input type="checkbox" data-criticidade="alta"> Saturação do filtro de admissão.</label>
+        </div>
+        <h5>🌬️ O Pulmão: Tratamento de Ar (Filtros, Secadores)</h5>
+        <div class="itens-inspecao">
+            <label><input type="checkbox" data-criticidade="alta"> Saturação dos filtros coalescentes (indicador de troca).</label>
+            <label><input type="checkbox" data-criticidade="media"> Purgar água acumulada nos filtros.</label>
+            <label><input type="checkbox" data-criticidade="alta"> Ponto de orvalho do secador de ar (se houver medidor).</label>
+        </div>
+        <h5>🏃 Os Músculos: Atuadores (Válvulas e Cilindros)</h5>
+        <div class="itens-inspecao">
+            <label><input type="checkbox" data-criticidade="media"> Velocidade de atuação (lenta pode indicar vazamento ou restrição).</label>
+            <label><input type="checkbox" data-criticidade="baixa"> Ruído de exaustão das válvulas (silenciador obstruído?).</label>
+            <label><input type="checkbox" data-criticidade="alta"> Vazamentos audíveis nas conexões e vedações do cilindro.</label>
+        </div>
+    </div>
+    <button class="action-button" onclick="avaliarInspecaoPneumatica()">📊 Avaliar Cobertura da Inspeção</button>
+    <div id="resultado-inspecao-pneumatica" class="resultado-calc" style="display: none;"></div>
+</div>
+
+<div class="diagnostico-vazamentos">
+    <h3>🔍 Detecção de Vazamentos: A Caça ao Desperdício</h3>
+    <p>Um vazamento de ar é, literalmente, dinheiro indo para o ralo. A detecção é uma das atividades de maior retorno financeiro para um inspetor. Você ouve um som de vazamento em uma área ruidosa. Qual técnica usar para localizar com precisão?</p>
     <div class="opcoes-deteccao">
         <button class="opcao-deteccao" data-metodo="ultrassom" data-eficacia="95">
-            <span class="btn-icon">🔊</span> Detector Ultrassônico
+            <span class="btn-icon">🔊</span> Detector Ultrassônico: Isola o som de alta frequência do vazamento do ruído ambiente.
         </button>
-        <button class="opcao-deteccao" data-metodo="espuma" data-eficacia="85">
-            <span class="btn-icon">🧼</span> Solução de Espuma
+        <button class="opcao-deteccao" data-metodo="espuma" data-eficacia="60">
+            <span class="btn-icon">🧼</span> Solução de Espuma: Eficaz, mas difícil de aplicar em toda a tubulação e inútil em áreas de difícil acesso.
         </button>
     </div>
     <div id="resultado-deteccao" class="resultado-deteccao" style="display: none;"></div>
 </div>
 
-            <div class="calculadora-vazamento">
-                <h3>💰 Custo de Vazamentos de Ar</h3>
-                <div class="inputs-vazamento">
-                    <label>Pressão (bar):</label> <input type="number" id="pressao-sistema" value="7">
-                    <label>Furo (mm):</label> <input type="number" id="diametro-furo" value="3">
-                    <label>Horas/dia:</label> <input type="number" id="horas-operacao" value="16">
-                    <label>Custo Ar (R$/m³):</label> <input type="number" id="custo-ar" value="0.12">
-                </div>
-                <button class="calc-button" onclick="calcularCustoVazamento()">💸 Calcular Perda</button>
-                <div id="resultado-custo-vazamento" class="resultado-calc" style="display: none;"></div>
-            </div>
+<div class="calculadora-vazamento">
+    <h3>💰 O Custo do "Ar Invisível"</h3>
+    <p>Calcule o custo anual de um único vazamento de ar comprimido para entender o impacto do seu trabalho.</p>
+    <div class="inputs-vazamento">
+        <label>Pressão (bar):</label> <input type="number" id="pressao-sistema" value="7">
+        <label>Diâmetro do Furo (mm):</label> <input type="number" id="diametro-furo" value="3">
+        <label>Horas/dia:</label> <input type="number" id="horas-operacao" value="16">
+        <label>Custo do Ar (R$/m³):</label> <input type="number" id="custo-ar" value="0.12">
+    </div>
+    <button class="calc-button" onclick="calcularCustoVazamento()">💸 Calcular Perda Anual</button>
+    <div id="resultado-custo-vazamento" class="resultado-calc" style="display: none;"></div>
+</div>
+
+<hr style="margin: 40px 0;">
+
+<h3>Parte 2: Inspeção de Sistemas Hidráulicos (A Força do Óleo)</h3>
+<p>Sistemas hidráulicos exigem um olhar focado na contenção do fluido, na sua limpeza e na temperatura.</p>
+
+<div class="checklist-hidraulico">
+    <h4>🎯 Pontos Críticos de Inspeção - Hidráulica</h4>
+    <div class="categoria-inspecao">
+        <h5>💧 A Fonte: Unidade de Potência Hidráulica (HPU)</h5>
+        <div class="itens-inspecao">
+            <label><input type="checkbox" data-criticidade="altissima"> Nível e aparência do fluido no visor (está leitoso ou escuro?).</label>
+            <label><input type="checkbox" data-criticidade="alta"> Temperatura do fluido no reservatório (acima de 60-70°C é alerta).</label>
+            <label><input type="checkbox" data-criticidade="alta"> Indicador de saturação do filtro (precisa trocar?).</label>
+            <label><input type="checkbox" data-criticidade="alta"> Ruído da bomba (cavitação, chiado).</label>
+            <label><input type="checkbox" data-criticidade="media"> Pressão do sistema no manômetro.</label>
+        </div>
+        <h5>🧬 O Sangue: Mangueiras e Conexões</h5>
+        <div class="itens-inspecao">
+            <label><input type="checkbox" data-criticidade="alta"> Procurar por vazamentos em todas as conexões e vedações.</label>
+            <label><input type="checkbox" data-criticidade="alta"> Inspecionar mangueiras quanto a ressecamento, trincas ou abrasão.</label>
+            <label><input type="checkbox" data-criticidade="media"> Verificar se as mangueiras não estão muito esticadas ou dobradas.</label>
+        </div>
+        <h5>💪 Os Músculos: Cilindros e Motores Hidráulicos</h5>
+        <div class="itens-inspecao">
+            <label><input type="checkbox" data-criticidade="alta"> Vazamento nas vedações das hastes dos cilindros.</label>
+            <label><input type="checkbox" data-criticidade="media"> Movimento suave e sem "engasgos" dos atuadores.</label>
+            <label><input type="checkbox" data-criticidade="media"> Temperatura do corpo dos atuadores.</label>
+        </div>
+    </div>
+</div>
+
+<div class="simulador-saude-fluido">
+    <h3>🩺 Check-up do Fluido Hidráulico</h3>
+    <p>A aparência do fluido diz muito sobre a saúde do sistema. Qual o diagnóstico para cada sintoma?</p>
+    <select id="sintoma-fluido" onchange="diagnosticarFluido()">
+        <option value="selecione">Selecione um sintoma...</option>
+        <option value="leitoso">Fluido com aparência leitosa/esbranquiçada</option>
+        <option value="espuma">Fluido com muita espuma no reservatório</option>
+        <option value="escuro">Fluido escurecido e com cheiro de queimado</option>
+        <option value="particulas">Partículas brilhantes visíveis no fluido</option>
+    </select>
+    <div id="diagnostico-fluido" class="resultado-calc" style="display: none;"></div>
+</div>
         </section>
 
         <!-- MÓDULO 11: INSPEÇÃO ESTRUTURAL E DE SEGURANÇA -->
         <section id="module-11" class="module">
             <h2>Módulo 11: Inspeção Estrutural e de Segurança</h2>
-            <p>Uma falha estrutural pode ser catastrófica. Este módulo pode salvar vidas!</p>
-            
-            <div class="simulador-inspecao-estrutural">
-                <h3>🔍 Simulador de Inspeção Estrutural</h3>
-                <p>Você encontra uma trinca de 15cm em uma viga principal que suporta uma ponte rolante. Qual sua ação?</p>
-                <div class="opcoes-estrutural">
-                    <button class="opcao-estrutural" data-correto="false">⚠️ Reduzir carga e monitorar</button>
-                    <button class="opcao-estrutural" data-correto="true">🛑 Interditar e chamar engenheiro</button>
-                </div>
-                <div id="resultado-estrutural" class="resultado-estrutural" style="display: none;"></div>
-            </div>
+<p>Este módulo aborda a base de toda a operação industrial: a integridade das estruturas e a segurança do ambiente de trabalho. Diferente de uma falha de máquina que para a produção, <strong>uma falha estrutural pode ser catastrófica</strong>, envolvendo riscos imensos à vida. Sua atenção aos detalhes aqui não apenas garante a confiabilidade, mas pode, literalmente, salvar vidas.</p>
 
-            <div class="calculadora-vida-fadiga">
-                <h3>📊 Calculadora de Vida à Fadiga</h3>
-                <div class="inputs-fadiga">
-                    <label>Tensão máx (MPa):</label> <input type="number" id="tensao-maxima" value="180">
-                    <label>Tensão mín (MPa):</label> <input type="number" id="tensao-minima" value="50">
-                    <label>Ciclos/dia:</label> <input type="number" id="ciclos-dia" value="500">
-                    <label>Material:</label> <select id="material-tipo"><option value="aco-carbono">Aço Carbono</option></select>
-                </div>
-                <button class="calc-button" onclick="calcularVidaFadiga()">⏱️ Calcular</button>
-                <div id="resultado-vida-fadiga" class="resultado-calc" style="display: none;"></div>
-            </div>
+<h3>Os Inimigos Silenciosos das Estruturas</h3>
+<p>As estruturas não falham da noite para o dia. Elas são atacadas lentamente por inimigos que um bom inspetor deve saber identificar:</p>
+<ul>
+    <li><strong>Corrosão:</strong> A "ferrugem" que come o metal, reduzindo sua espessura e capacidade de carga. É o inimigo número um.</li>
+    <li><strong>Fadiga:</strong> O "cansaço" do material, causado por ciclos repetidos de carga e descarga (ex: pontes rolantes, prensas). Causa trincas que crescem com o tempo.</li>
+    <li><strong>Sobrecarga:</strong> Utilizar a estrutura além do seu limite de projeto, seja por um evento único ou por mudanças no processo.</li>
+    <li><strong>Impactos:</strong> Danos causados por colisões de veículos, empilhadeiras ou outros equipamentos.</li>
+</ul>
 
-            <div class="avaliacao-risco-estrutural">
-                <h3>⚖️ Matriz de Risco Estrutural</h3>
-                <div class="fatores-risco">
-                    <label>Idade (anos): <span id="valor-idade">10</span></label>
-                    <input type="range" id="idade-estrutura" value="10" oninput="document.getElementById('valor-idade').textContent = this.value">
-                    <label>Carga (%): <span id="valor-carga">80%</span></label>
-                    <input type="range" id="carga-operacional" value="80" oninput="document.getElementById('valor-carga').textContent = this.value + '%'">
-                    <label>Ambiente (1-5): <span id="valor-ambiente">3</span></label>
-                    <input type="range" id="ambiente-agressividade" value="3" oninput="document.getElementById('valor-ambiente').textContent = this.value">
-                    <label>Manutenção (1-5): <span id="valor-manutencao">4</span></label>
-                    <input type="range" id="manutencao-qualidade" value="4" oninput="document.getElementById('valor-manutencao').textContent = this.value">
-                </div>
-                <button class="calc-button" onclick="calcularRiscoEstrutural()">🎯 Avaliar</button>
-                <div id="resultado-risco-estrutural" class="resultado-calc" style="display: none;"></div>
-            </div>
+<h3>Parte 1: Inspeção Estrutural</h3>
+<p>Aqui, buscamos por sinais de que os "inimigos" estão vencendo a batalha.</p>
+<div class="simulador-inspecao-estrutural">
+    <h3>🔍 Simulador de Inspeção Crítica</h3>
+    <p>Durante a inspeção anual, você está avaliando as vigas de sustentação de uma ponte rolante de 20 toneladas. Em uma viga principal, perto de um ponto de solda, você encontra uma <strong>trinca de aproximadamente 15 cm de comprimento</strong>.</p>
+    <p><strong>Qual é a sua ação imediata e inegociável?</strong></p>
+    <div class="opcoes-estrutural">
+        <button class="opcao-estrutural" data-correto="false" data-feedback="Incorreto. Uma trinca em um componente estrutural crítico é um defeito gravíssimo. 'Monitorar' transfere um risco inaceitável para a operação e para as pessoas. A falha pode ser súbita.">⚠️ Isolar a área, reduzir a carga da ponte para 50% e monitorar a trinca diariamente.</button>
+        <button class="opcao-estrutural" data-correto="true" data-feedback="Correto! Esta é a única ação segura. O inspetor identifica o risco; um engenheiro civil/mecânico qualificado é quem deve diagnosticar a causa, avaliar a segurança e prescrever a solução. Sua responsabilidade é parar o risco.">🛑 Interditar imediatamente a área abaixo e o uso da ponte rolante, e comunicar formalmente a engenharia e a gerência.</button>
+    </div>
+    <div id="resultado-estrutural" class="resultado-estrutural" style="display: none;"></div>
+</div>
+
+<div class="calculadora-vida-fadiga">
+    <h3>📊 Calculadora Simplificada de Vida à Fadiga</h3>
+    <p>A fadiga ocorre quando o material é "dobrado" repetidamente. Esta ferramenta estima quantos ciclos uma peça pode suportar antes de iniciar uma trinca, com base na variação de tensão que ela sofre.</p>
+    <div class="inputs-fadiga">
+        <label>Tensão Máxima (MPa):</label> <input type="number" id="tensao-maxima" value="180">
+        <label>Tensão Mínima (MPa):</label> <input type="number" id="tensao-minima" value="50">
+        <label>Ciclos por Dia:</label> <input type="number" id="ciclos-dia" value="500">
+        <label>Material:</label> <select id="material-tipo"><option value="aco-carbono">Aço Carbono Comum</option></select>
+    </div>
+    <button class="calc-button" onclick="calcularVidaFadiga()">⏱️ Estimar Vida Útil (em Anos)</button>
+    <div id="resultado-vida-fadiga" class="resultado-calc" style="display: none;"></div>
+</div>
+
+<h3>Parte 2: Inspeção de Segurança do Ambiente</h3>
+<p>Uma planta segura é uma planta confiável. A inspeção de segurança foca nos itens que protegem as pessoas no dia a dia.</p>
+<div class="checklist-seguranca">
+    <h4>✅ Checklist Essencial de Segurança</h4>
+    <div class="categoria-checklist">
+        <h5>Pisos e Passagens</h5>
+        <label><input type="checkbox"> Pisos livres de óleo, água ou outros materiais escorregadios.</label>
+        <label><input type="checkbox"> Passagens e saídas de emergência desobstruídas.</label>
+        <label><input type="checkbox"> Grades de piso metálico em bom estado, sem corrosão ou barras soltas.</label>
+    </div>
+    <div class="categoria-checklist">
+        <h5>Acessos (Escadas e Plataformas)</h5>
+        <label><input type="checkbox"> Guarda-corpos e corrimãos firmes e sem danos.</label>
+        <label><input type="checkbox"> Degraus de escadas em bom estado, sem desgaste excessivo.</label>
+        <label><input type="checkbox"> Rodapés presentes em todas as plataformas.</label>
+    </div>
+    <div class="categoria-checklist">
+        <h5>Sistemas de Emergência</h5>
+        <label><input type="checkbox"> Extintores de incêndio dentro da validade e com acesso livre.</label>
+        <label><input type="checkbox"> Chuveiros de emergência e lava-olhos desobstruídos e sinalizados.</label>
+        <label><input type="checkbox"> Sinalização de segurança visível e em bom estado.</label>
+    </div>
+</div>
+
+<h3>Juntando Tudo: A Matriz de Risco Estrutural</h3>
+<p>Como decidir qual estrutura inspecionar primeiro? Usamos uma matriz de risco que combina as condições do ativo com seu ambiente e histórico.</p>
+<div class="avaliacao-risco-estrutural">
+    <h3>⚖️ Matriz de Risco Estrutural</h3>
+    <div class="fatores-risco">
+        <label>Idade da Estrutura (anos): <span id="valor-idade">10</span></label>
+        <input type="range" id="idade-estrutura" min="1" max="50" value="10" oninput="document.getElementById('valor-idade').textContent = this.value">
+        <label>Carga Operacional (% do Projeto): <span id="valor-carga">80%</span></label>
+        <input type="range" id="carga-operacional" min="20" max="120" value="80" oninput="document.getElementById('valor-carga').textContent = this.value + '%'">
+        <label>Agressividade do Ambiente (1-5: Seco a Marítimo): <span id="valor-ambiente">3</span></label>
+        <input type="range" id="ambiente-agressividade" min="1" max="5" value="3" oninput="document.getElementById('valor-ambiente').textContent = this.value">
+        <label>Histórico de Manutenção (1-5: Ruim a Excelente): <span id="valor-manutencao">4</span></label>
+        <input type="range" id="manutencao-qualidade" min="1" max="5" value="4" oninput="document.getElementById('valor-manutencao').textContent = this.value">
+    </div>
+    <button class="calc-button" onclick="calcularRiscoEstrutural()">🎯 Avaliar Nível de Risco</button>
+    <div id="resultado-risco-estrutural" class="resultado-calc" style="display: none;"></div>
+</div>
+
+<div class="dica-destaque">
+    <h4>Seu Olhar é a Primeira Linha de Defesa</h4>
+    <p>Como inspetor, você é os olhos da engenharia e da segurança no campo. Nunca subestime um pequeno vazamento, uma mancha de ferrugem ou uma pequena trinca. Documentar e reportar esses achados com clareza é uma das suas responsabilidades mais importantes. Sua atenção pode ser a diferença entre um dia normal de trabalho e um acidente grave.</p>
+</div>
         </section>
 
         <!-- MÓDULO 12: PLANO DE INSPEÇÃO E MELHORIA CONTÍNUA -->
         <section id="module-12" class="module">
             <h2>Módulo 12: Plano de Inspeção e Melhoria Contínua</h2>
-            <p>Aqui você aprenderá a criar o DNA da excelência operacional, transformando inspeções em um programa de classe mundial.</p>
-            <div class="calculadora-criticidade">
+<p>Bem-vindo ao módulo final, onde deixamos de ser apenas executores para nos tornarmos arquitetos da confiabilidade. Todos os módulos anteriores nos deram as ferramentas e o conhecimento técnico. Aqui, você aprenderá a usar esse conhecimento para desenhar, gerenciar e otimizar um programa de inspeção completo. É aqui que você aprende a criar o <strong>DNA da excelência operacional</strong>, transformando inspeções reativas em uma estratégia preditiva de classe mundial.</p>
+
+<h3>Passo 1: Onde Focar? A Matriz de Criticidade ABC</h3>
+<p>Nenhuma planta tem recursos infinitos. O primeiro passo de um programa inteligente é saber onde concentrar seus esforços. A Análise de Criticidade ABC é a ferramenta que nos permite fazer isso de forma objetiva, classificando cada ativo com base no seu impacto para o negócio.</p>
+<ul>
+    <li><strong>Ativos A (Críticos):</strong> A falha causa parada de produção, risco de segurança ou ambiental grave. Devem estar no programa de manutenção preditiva mais rigoroso (termografia, vibração, etc.).</li>
+    <li><strong>Ativos B (Importantes):</strong> A falha causa perda de eficiência ou custos de reparo elevados. Ideal para planos de manutenção preventiva e inspeções instrumentadas periódicas.</li>
+    <li><strong>Ativos C (Suporte):</strong> Baixo impacto. Geralmente, a manutenção é corretiva ou baseada em oportunidade, com inspeções sensitivas básicas.</li>
+</ul>
+
+<div class="calculadora-criticidade">
     <h3>⚖️ Calculadora de Criticidade ABC</h3>
+    <p>Use esta ferramenta para remover o "achismo" e classificar seus ativos com base em dados.</p>
     <div class="fatores-criticidade">
-        <label>Impacto Produção (1-10): <span id="valor-impacto">5</span></label>
+        <label>Impacto na Produção (1-10): <span id="valor-impacto">5</span></label>
         <input type="range" id="impacto-producao" min="1" max="10" value="5" oninput="document.getElementById('valor-impacto').textContent = this.value">
-        <label>Impacto Segurança (1-10): <span id="valor-seguranca">3</span></label>
+        <label>Impacto na Segurança (1-10): <span id="valor-seguranca">3</span></label>
         <input type="range" id="impacto-seguranca" min="1" max="10" value="3" oninput="document.getElementById('valor-seguranca').textContent = this.value">
-        <label>Custo Manutenção (1-10): <span id="valor-custo">4</span></label>
+        <label>Custo de Manutenção (1-10): <span id="valor-custo">4</span></label>
         <input type="range" id="custo-manutencao" min="1" max="10" value="4" oninput="document.getElementById('valor-custo').textContent = this.value">
         <label>Impacto Ambiental (1-10): <span id="valor-ambiental">2</span></label>
         <input type="range" id="impacto-ambiental" min="1" max="10" value="2" oninput="document.getElementById('valor-ambiental').textContent = this.value">
     </div>
-    <button class="calc-button" onclick="calcularCriticidade()"><span class="btn-icon">🎯</span> Calcular</button>
+    <button class="calc-button" onclick="calcularCriticidade()"><span class="btn-icon">🎯</span> Calcular Criticidade</button>
     <div id="resultado-criticidade" class="resultado-calc" style="display: none;"></div>
-            </div>
-            
-            <div class="gerador-rotas">
+</div>
+
+<h3>Passo 2: Como Organizar? A Criação de Rotas Inteligentes</h3>
+<p>Com os ativos críticos identificados, precisamos criar rotas de inspeção eficientes. Uma rota não é um passeio aleatório; é um percurso otimizado que maximiza a cobertura de ativos importantes no menor tempo possível, garantindo que nenhum ponto crítico seja esquecido.</p>
+
+<div class="gerador-rotas">
     <h3>🗺️ Gerador de Rotas de Inspeção</h3>
+    <p>Simule a criação de uma rota otimizada com base nas suas restrições de tempo, equipe e prioridades.</p>
     <div class="inputs-rota">
-        <label for="area-inspecao">Área:</label> <select id="area-inspecao"><option value="producao">Produção</option></select>
+        <label for="area-inspecao">Área:</label> <select id="area-inspecao"><option value="producao">Área de Produção</option><option value="utilidades">Utilidades</option></select>
         <label for="tempo-disponivel">Tempo (h):</label> <input type="number" id="tempo-disponivel" value="4">
-        <label for="equipe-size">Equipe:</label> <input type="number" id="equipe-size" value="2">
-        <label for="prioridade-rota">Priorizar por:</label> <select id="prioridade-rota"><option value="criticidade">Criticidade</option></select>
+        <label for="equipe-size">Técnicos:</label> <input type="number" id="equipe-size" value="2">
+        <label for="prioridade-rota">Priorizar por:</label> <select id="prioridade-rota"><option value="criticidade">Criticidade</option><option value="geografia">Proximidade Geográfica</option></select>
     </div>
-    <button class="action-button" onclick="gerarRota()"><span class="btn-icon">🗺️</span> Gerar Rota</button>
+    <button class="action-button" onclick="gerarRota()"><span class="btn-icon">🗺️</span> Gerar Plano de Rota</button>
     <div id="rota-gerada" class="resultado-calc" style="display: none;"></div>
 </div>
 
-            <div class="calculadora-kpis-avancada">
-                <h3>🧮 Calculadora de KPIs Avançados</h3>
-                <div class="inputs-kpis-avancada">
-                    <label>Horas op/mês:</label> <input type="number" id="horas-operacao-mes" value="720">
-                    <label>Falhas/mês:</label> <input type="number" id="falhas-mes" value="3">
-                    <label>Tempo reparo (h):</label> <input type="number" id="tempo-reparo-total" value="24">
-                    <label>Insp. plan/mês:</label> <input type="number" id="inspecoes-planejadas-mes" value="150">
-                    <label>Insp. real/mês:</label> <input type="number" id="inspecoes-realizadas-mes" value="142">
-                    <label>Falhas previstas:</label> <input type="number" id="falhas-previstas" value="8">
-                    <label>Falhas súbitas:</label> <input type="number" id="falhas-subitas" value="2">
-                </div>
-                <button class="calc-button" onclick="calcularKPIsAvancados()">📊 Calcular KPIs</button>
-                <div id="resultado-kpis-avancados" class="resultado-calc" style="display: none;"></div>
-            </div>
+<h3>Passo 3: Como Medir o Sucesso? KPIs de Classe Mundial</h3>
+<p>Você não pode gerenciar o que não mede. Indicadores-Chave de Performance (KPIs) são o painel de controle do seu programa de manutenção. Eles traduzem suas ações em resultados que a gestão entende.</p>
+<ul>
+    <li><strong>MTBF (Tempo Médio Entre Falhas):</strong> Quanto tempo, em média, um equipamento funciona sem quebrar? (Meta: Aumentar).</li>
+    <li><strong>MTTR (Tempo Médio Para Reparo):</strong> Quanto tempo, em média, levamos para consertar uma falha? (Meta: Diminuir).</li>
+    <li><strong>Disponibilidade:</strong> Qual percentual do tempo o equipamento está disponível para produzir? (MTBF / (MTBF + MTTR)). (Meta: >95%).</li>
+    <li><strong>Aderência ao Plano de Inspeção:</strong> Qual percentual das inspeções planejadas foi realmente executado? (Meta: >95%).</li>
+</ul>
 
-            <div class="ciclo-melhoria">
-                <h3>🔄 Ciclo PDCA</h3>
-                <div class="pdca-interativo">
-                    <div class="fase-pdca plan"><button class="btn-fase" onclick="expandirFase('plan')">📋 PLAN</button></div>
-                    <div class="fase-pdca do"><button class="btn-fase" onclick="expandirFase('do')">⚡ DO</button></div>
-                    <div class="fase-pdca check"><button class="btn-fase" onclick="expandirFase('check')">🔍 CHECK</button></div>
-                    <div class="fase-pdca act"><button class="btn-fase" onclick="expandirFase('act')">🎯 ACT</button></div>
-                </div>
-                <div id="ferramentas-fase" class="ferramentas-pdca" style="display: none;"></div>
-            </div>
+<div class="calculadora-kpis-avancada">
+    <h3>🧮 Calculadora de KPIs de Confiabilidade</h3>
+    <div class="inputs-kpis-avancada">
+        <label>Horas op. planejadas/mês:</label> <input type="number" id="horas-operacao-mes" value="720">
+        <label>Nº de Falhas/mês:</label> <input type="number" id="falhas-mes" value="3">
+        <label>Tempo total parado para reparo (h):</label> <input type="number" id="tempo-reparo-total" value="24">
+        <label>Insp. plan./mês:</label> <input type="number" id="inspecoes-planejadas-mes" value="150">
+        <label>Insp. real./mês:</label> <input type="number" id="inspecoes-realizadas-mes" value="142">
+        <label>Falhas previstas pela inspeção:</label> <input type="number" id="falhas-previstas" value="8">
+        <label>Falhas súbitas (quebras):</label> <input type="number" id="falhas-subitas" value="2">
+    </div>
+    <button class="calc-button" onclick="calcularKPIsAvancados()">📊 Calcular KPIs</button>
+    <div id="resultado-kpis-avancados" class="resultado-calc" style="display: none;"></div>
+</div>
 
-            <div class="simulador-roi-programa">
-                <h3>💰 Simulador de ROI do Programa</h3>
-                <div class="inputs-roi-programa">
-                    <label>Ferramentas (R$):</label> <input type="number" id="custo-ferramentas-prog" value="120000">
-                    <label>Treinamento (R$):</label> <input type="number" id="custo-treinamento-prog" value="25000">
-                    <label>Software (R$/ano):</label> <input type="number" id="custo-software-prog" value="30000">
-                    <label>Custo op. (R$/ano):</label> <input type="number" id="custo-operacional-prog" value="80000">
-                    <label>Redução paradas (%): <span id="valor-reducao-paradas">60%</span></label>
-                    <input type="range" id="reducao-paradas-prog" value="60" oninput="document.getElementById('valor-reducao-paradas').textContent = this.value + '%'">
-                    <label>Custo paradas/ano (R$):</label> <input type="number" id="custo-parada-atual" value="800000">
-                    <label>Redução estoque (%): <span id="valor-reducao-estoque">25%</span></label>
-                    <input type="range" id="reducao-estoque" value="25" oninput="document.getElementById('valor-reducao-estoque').textContent = this.value + '%'">
-                    <label>Estoque emerg. (R$):</label> <input type="number" id="estoque-atual" value="200000">
-                </div>
-                <button class="calc-button" onclick="calcularROIPrograma()">📊 Calcular ROI</button>
-                <div id="resultado-roi-programa" class="resultado-calc" style="display: none;"></div>
-            </div>
+<h3>Passo 4: Como Melhorar Sempre? O Ciclo PDCA</h3>
+<p>Um programa de excelência nunca está "pronto". Ele está em constante evolução. O Ciclo PDCA (Plan-Do-Check-Act) é a metodologia clássica para a melhoria contínua aplicada à manutenção.</p>
+<div class="ciclo-melhoria">
+    <h3>🔄 O Ciclo PDCA da Inspeção</h3>
+    <div class="pdca-interativo">
+        <div class="fase-pdca plan"><button class="btn-fase" onclick="expandirFase('plan')">📋 PLAN (Planejar)</button></div>
+        <div class="fase-pdca do"><button class="btn-fase" onclick="expandirFase('do')">⚡ DO (Executar)</button></div>
+        <div class="fase-pdca check"><button class="btn-fase" onclick="expandirFase('check')">🔍 CHECK (Verificar)</button></div>
+        <div class="fase-pdca act"><button class="btn-fase" onclick="expandirFase('act')">🎯 ACT (Agir)</button></div>
+    </div>
+    <div id="ferramentas-fase" class="ferramentas-pdca" style="display: none;"></div>
+</div>
+
+<h3>A Prova Final: Justificando o Investimento com ROI</h3>
+<p>Para obter recursos e apoio da gestão, você precisa falar a língua deles: a linguagem financeira. O Retorno sobre o Investimento (ROI) mostra como cada real investido em preditiva (ferramentas, treinamento, software) se traduz em múltiplos reais economizados em paradas, peças e mão de obra de emergência.</p>
+
+<div class="simulador-roi-programa">
+    <h3>💰 Simulador de ROI do Programa de Manutenção Preditiva</h3>
+    <div class="inputs-roi-programa">
+        <label>Investimento em Ferramentas (R$):</label> <input type="number" id="custo-ferramentas-prog" value="120000">
+        <label>Investimento em Treinamento (R$):</label> <input type="number" id="custo-treinamento-prog" value="25000">
+        <label>Custo do Software (R$/ano):</label> <input type="number" id="custo-software-prog" value="30000">
+        <label>Custo Operacional (salários, etc./ano):</label> <input type="number" id="custo-operacional-prog" value="80000">
+        <label>Custo Anual Atual com Paradas (R$):</label> <input type="number" id="custo-parada-atual" value="800000">
+        <label>Redução de Paradas Esperada (%): <span id="valor-reducao-paradas">60%</span></label>
+        <input type="range" id="reducao-paradas-prog" value="60" oninput="document.getElementById('valor-reducao-paradas').textContent = this.value + '%'">
+        <label>Valor do Estoque de Emergência (R$):</label> <input type="number" id="estoque-atual" value="200000">
+        <label>Redução de Estoque Esperada (%): <span id="valor-reducao-estoque">25%</span></label>
+        <input type="range" id="reducao-estoque" value="25" oninput="document.getElementById('valor-reducao-estoque').textContent = this.value + '%'">
+    </div>
+    <button class="calc-button" onclick="calcularROIPrograma()">📊 Calcular ROI do Programa</button>
+    <div id="resultado-roi-programa" class="resultado-calc" style="display: none;"></div>
+</div>
         </section>
 
         <!-- MÓDULO 13: QUIZ E CERTIFICAÇÃO -->
