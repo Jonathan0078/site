@@ -1,5 +1,8 @@
+// Variável global para a instância do gráfico, permitindo que seja destruída e recriada.
+let tendenciasChart = null;
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Medida de segurança para garantir que a biblioteca de PDF não trave o script
+    // Medida de segurança para garantir que as bibliotecas não travem o script
     const { jsPDF } = window.jspdf || {};
 
     // =================================================================================
@@ -36,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (nextBtn) {
             nextBtn.disabled = (currentModuleIndex === totalModules - 1);
         }
-        // Oculta a navegação no último módulo (Quiz)
         if (floatingNav) {
             floatingNav.style.display = (currentModuleIndex >= totalModules - 1) ? 'none' : 'flex';
         }
@@ -49,7 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // LISTENER DE EVENTOS DE CLIQUE CENTRALIZADO (EVENT DELEGATION)
     // =================================================================================
     document.addEventListener('click', (e) => {
-        const target = e.target;
+        const target = e.target.closest('button'); // Captura o botão mesmo que clique no ícone
+        if (!target) return;
 
         // Módulo 1: Identificar Tipo de Manutenção
         if (target.classList.contains('opcao-exercicio')) {
@@ -72,11 +75,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const sentido = target.dataset.sentido;
             const detalhes = document.getElementById('detalhes-sentido');
             const conteudo = {
-                visao: `<h5>👀 Inspeção Visual</h5><ul><li>🔍 Vazamentos de óleo, graxa ou fluidos</li><li>🔩 Parafusos soltos ou faltando</li><li>⚡ Cabos elétricos danificados</li><li>🌡️ Sinais de aquecimento (descoloração)</li><li>💨 Acúmulo de sujeira ou corrosão</li></ul><div class="dica-pratica">💡 Dica: Use lanterna e espelho para áreas difíceis</div>`,
-                audicao: `<h5>👂 Inspeção Auditiva</h5><ul><li>🔊 Ruídos metálicos (desgaste)</li><li>📳 Vibração anormal</li><li>💨 Vazamentos de ar (assovio)</li><li>⚡ Arco elétrico (crepitação)</li><li>🔧 Batidas ou impactos</li></ul><div class="dica-pratica">💡 Dica: Use estetoscópio mecânico para amplificar</div>`,
-                tato: `<h5>✋ Inspeção Tátil</h5><ul><li>🌡️ Temperatura anormal (dorso da mão)</li><li>📳 Vibração excessiva</li><li>🔧 Folgas em conexões</li><li>💧 Umidade ou vazamentos</li><li>⚡ Aquecimento em cabos</li></ul><div class="alerta-seguranca">⚠️ ATENÇÃO: Nunca toque em partes energizadas ou em movimento!</div>`,
-                olfato: `<h5>👃 Inspeção Olfativa</h5><ul><li>🔥 Cheiro de queimado (superaquecimento)</li><li>⚡ Ozônio (arco elétrico)</li><li>🛢️ Óleo deteriorado (acidez)</li><li>🧪 Produtos químicos (vazamentos)</li><li>🦨 Gases tóxicos</li></ul><div class="dica-pratica">💡 Dica: O nariz detecta problemas antes de muitos instrumentos</div>`,
-                intuicao: `<h5>❤️ Intuição e Experiência</h5><ul><li>🧠 "Algo não está como antes"</li><li>📊 Comparação com o comportamento padrão</li><li>🕐 Identificação de mudanças sutis ao longo do tempo</li><li>🔍 Detalhes que "chamam a atenção"</li></ul><div class="dica-pratica">💡 Dica: Confie na experiência, mas sempre confirme com dados</div>`
+                visao: `<h5>👀 Inspeção Visual</h5><ul><li>🔍 Vazamentos de óleo, graxa ou fluidos</li><li>🔩 Parafusos soltos ou faltando</li><li>⚡ Cabos elétricos danificados</li><li>🌡️ Sinais de aquecimento (descoloração)</li><li>💨 Acúmulo de sujeira ou corrosão</li></ul>`,
+                audicao: `<h5>👂 Inspeção Auditiva</h5><ul><li>🔊 Ruídos metálicos (desgaste)</li><li>📳 Vibração anormal</li><li>💨 Vazamentos de ar (assovio)</li><li>⚡ Arco elétrico (crepitação)</li></ul>`,
+                tato: `<h5>✋ Inspeção Tátil</h5><ul><li>🌡️ Temperatura anormal</li><li>📳 Vibração excessiva</li><li>🔧 Folgas em conexões</li></ul><div class="alerta-seguranca">⚠️ ATENÇÃO: Nunca toque em partes energizadas ou em movimento!</div>`,
+                olfato: `<h5>👃 Inspeção Olfativa</h5><ul><li>🔥 Cheiro de queimado (superaquecimento)</li><li>⚡ Ozônio (arco elétrico)</li><li>🛢️ Óleo deteriorado (acidez)</li></ul>`,
+                intuicao: `<h5>❤️ Intuição e Experiência</h5><ul><li>🧠 "Algo não está como antes"</li><li>📊 Comparação com o comportamento padrão</li><li>🔍 Identificação de mudanças sutis</li></ul>`
             };
             if (detalhes) detalhes.innerHTML = conteudo[sentido] || '';
         }
@@ -87,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const resultado = document.getElementById('resultado-simulador');
             if (resultado) {
                 resultado.style.display = 'block';
-                resultado.innerHTML = correto ? `<div class="feedback-correto">✅ Escolha correta! Análise de vibração combinada com termografia é ideal para detectar a causa raiz (desbalanceamento, desalinhamento, falha de rolamento) e problemas elétricos associados.</div>` : `<div class="feedback-incorreto">❌ Essa abordagem pode não ser suficiente. Apenas sensitiva é pouco para um diagnóstico preciso em um equipamento de 50 HP, e análise de óleo não detectaria a origem do ruído mecânico.</div>`;
+                resultado.innerHTML = correto ? `<div class="feedback-correto">✅ Escolha correta! Análise de vibração + termografia é a abordagem mais completa para diagnosticar a causa raiz.</div>` : `<div class="feedback-incorreto">❌ Essa abordagem pode não ser suficiente ou adequada para a situação.</div>`;
             }
         }
         
@@ -103,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const feedback = document.getElementById('feedback-seguranca');
             if(feedback) {
                 feedback.style.display = 'block';
-                feedback.innerHTML = correto ? `<div class="feedback-correto">✅ Correto! Segurança em primeiro lugar sempre. A comunicação, autorização e o uso de EPIs corretos são inegociáveis.</div>` : `<div class="feedback-incorreto">❌ Procedimento inadequado e perigoso. Esperar parar nem sempre é uma opção (o motor precisa estar em carga), e medir sem preparo é um risco enorme.</div>`;
+                feedback.innerHTML = correto ? `<div class="feedback-correto">✅ Correto! Segurança em primeiro lugar sempre. Comunicação, autorização e EPIs são inegociáveis.</div>` : `<div class="feedback-incorreto">❌ Procedimento inadequado e perigoso.</div>`;
             }
         }
 
@@ -115,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const consequencias = document.getElementById(`consequencias-${caso}`);
             if (feedback) {
                 feedback.style.display = 'block';
-                feedback.innerHTML = correta ? `<div class="feedback-correto">✅ Decisão correta! Em equipamentos críticos, a ação imediata previne paradas catastróficas.</div>` : `<div class="feedback-incorreto">❌ Abordagem arriscada. Deixar para depois poderia resultar em uma falha grave e parada de produção.</div>`;
+                feedback.innerHTML = correta ? `<div class="feedback-correto">✅ Decisão correta! Em equipamentos críticos, a ação imediata previne paradas catastróficas.</div>` : `<div class="feedback-incorreto">❌ Abordagem arriscada. Deixar para depois poderia resultar em uma falha grave.</div>`;
             }
             if (consequencias) consequencias.style.display = 'block';
         }
@@ -126,9 +129,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const risco = target.dataset.risco;
             const resultado = document.getElementById('resultado-gestao');
             const analises = {
-                alto: "<strong>ALTO RISCO:</strong> Economia hoje, mas grande chance de uma falha catastrófica na bomba crítica, custando muito mais.",
-                medio: "<strong>RISCO MÉDIO:</strong> Boa estratégia. Você mitiga o maior risco (bomba) e planeja os outros. É uma decisão balanceada.",
-                baixo: "<strong>BAIXO RISCO:</strong> A opção mais segura, mas com o maior custo imediato. Garante a confiabilidade de todos os ativos."
+                alto: "<strong>ALTO RISCO:</strong> Economia hoje, mas grande chance de uma falha catastrófica na bomba crítica.",
+                medio: "<strong>RISCO MÉDIO:</strong> Boa estratégia. Você mitiga o maior risco e planeja os outros. Decisão balanceada.",
+                baixo: "<strong>BAIXO RISCO:</strong> A opção mais segura, mas com o maior custo imediato. Garante a confiabilidade."
             };
             if(resultado) {
                 resultado.style.display = 'block';
@@ -142,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const resultado = document.getElementById('resultado-diagnostico');
             if(resultado) {
                 resultado.style.display = 'block';
-                resultado.innerHTML = correto ? `<div class="feedback-correto">✅ Diagnóstico correto! Vibração forte em 1x a rotação (1x RPM) é o principal sintoma de desbalanceamento.</div>` : `<div class="feedback-incorreto">❌ Diagnóstico incorreto. Falhas de rolamento e desalinhamento têm assinaturas de vibração diferentes (frequências mais altas e harmônicos).</div>`;
+                resultado.innerHTML = correto ? `<div class="feedback-correto">✅ Diagnóstico correto! Vibração forte em 1x RPM é o principal sintoma de desbalanceamento.</div>` : `<div class="feedback-incorreto">❌ Diagnóstico incorreto. Falhas de rolamento e desalinhamento têm outras assinaturas de vibração.</div>`;
             }
         }
         
@@ -152,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const resultado = document.getElementById('resultado-termografia');
             if(resultado) {
                 resultado.style.display = 'block';
-                resultado.innerHTML = correto ? `<div class="feedback-correto">✅ Análise correta! Uma diferença de temperatura (Delta T) de 50°C (78°C - 28°C) sobre a temperatura ambiente é um sinal crítico de mau contato ou sobrecarga, exigindo ação imediata.</div>` : `<div class="feedback-incorreto">❌ Análise incorreta. Uma diferença tão grande de temperatura nunca é normal e indica uma falha iminente ou um risco de incêndio.</div>`;
+                resultado.innerHTML = correto ? `<div class="feedback-correto">✅ Análise correta! Uma diferença de 50°C sobre o ambiente é um sinal crítico que exige ação imediata.</div>` : `<div class="feedback-incorreto">❌ Análise incorreta. Uma diferença tão grande de temperatura nunca é normal.</div>`;
             }
         }
 
@@ -162,12 +165,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const eficacia = parseInt(target.dataset.eficacia, 10);
             const resultado = document.getElementById('resultado-deteccao');
             const metodos = {
-                ultrassom: 'Ideal para localização exata em ambientes ruidosos. Rápido e eficiente para varrer grandes áreas.',
-                espuma: 'Confirma o local exato do vazamento visualmente, mas é mais demorado e difícil de aplicar em locais de difícil acesso.'
+                ultrassom: 'Ideal para localização exata em ambientes ruidosos. Rápido e eficiente.',
+                espuma: 'Confirma o local exato visualmente, mas é mais demorado e difícil de aplicar em alguns locais.'
             };
             if(resultado) {
                 resultado.style.display = 'block';
-                resultado.innerHTML = `<h5>🎯 Método: ${metodo.charAt(0).toUpperCase() + metodo.slice(1)}</h5><div class="resultado-item">Eficácia: ${eficacia}%</div><div class="resultado-item">${metodos[metodo]}</div>`;
+                resultado.innerHTML = `<h5>🎯 Método: ${target.textContent.trim()}</h5><div class="resultado-item">Eficácia: ${eficacia}%</div><div class="resultado-item">${metodos[metodo]}</div>`;
             }
         }
         
@@ -177,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const resultado = document.getElementById('resultado-estrutural');
             if(resultado) {
                 resultado.style.display = 'block';
-                resultado.innerHTML = correto ? `<div class="feedback-correto">✅ Decisão CORRETA! A segurança da vida humana é a prioridade máxima. Qualquer suspeita de falha estrutural exige interdição imediata e avaliação por um especialista.</div>` : `<div class="feedback-incorreto">❌ Decisão PERIGOSA! Nunca se deve subestimar uma falha estrutural. Monitorar uma trinca conhecida em um componente crítico é inaceitável.</div>`;
+                resultado.innerHTML = correto ? `<div class="feedback-correto">✅ Decisão CORRETA! A segurança da vida humana é a prioridade máxima.</div>` : `<div class="feedback-incorreto">❌ Decisão PERIGOSA! Nunca subestime uma falha estrutural.</div>`;
             }
         }
     });
@@ -211,7 +214,6 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Por favor, escreva sua reflexão antes de salvar.');
         }
     };
-    // Carregar reflexão salva ao iniciar
     if (document.getElementById('reflexao-1')) {
         document.getElementById('reflexao-1').value = localStorage.getItem('reflexao-1') || '';
     }
@@ -224,11 +226,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const percentage = total > 0 ? (marcados / total) * 100 : 0;
         const feedback = document.getElementById('feedback-checklist');
         let message = '';
-        if (percentage === 100) message = '<div class="feedback-correto">🎯 Excelente! Preparação completa. Você está pronto e seguro para a inspeção.</div>';
-        else if (percentage >= 80) message = '<div class="feedback-correto" style="background-color: #fff3cd; color: #856404;">✅ Boa preparação! Verifique os itens restantes para garantir 100% de segurança.</div>';
-        else message = '<div class="feedback-incorreto">⚠️ Preparação incompleta. Revise os itens não marcados. Segurança em primeiro lugar!</div>';
+        if (percentage === 100) message = '<div class="feedback-correto">🎯 Excelente! Preparação completa.</div>';
+        else if (percentage >= 80) message = '<div class="feedback-correto" style="background-color: #fff3cd; color: #856404;">✅ Boa preparação! Verifique os itens restantes.</div>';
+        else message = '<div class="feedback-incorreto">⚠️ Preparação incompleta. Segurança em primeiro lugar!</div>';
         feedback.style.display = 'block';
-        feedback.innerHTML = `<div><strong>Progresso da Preparação: ${percentage.toFixed(0)}%</strong></div>${message}`;
+        feedback.innerHTML = `<div><strong>Progresso: ${percentage.toFixed(0)}%</strong></div>${message}`;
     };
 
     window.avaliarProcedimento = function() {
@@ -238,14 +240,14 @@ document.addEventListener('DOMContentLoaded', () => {
         resultado.style.display = 'block';
 
         if (!freqSelecionada) {
-            resultado.innerHTML = `<div class="feedback-incorreto">❌ Por favor, selecione uma frequência para o procedimento.</div>`;
+            resultado.innerHTML = `<div class="feedback-incorreto">❌ Selecione uma frequência.</div>`;
             return;
         }
         if (itensCriticos < 3) {
-            resultado.innerHTML = `<div class="feedback-incorreto">❌ Procedimento fraco. Selecione pelo menos 3 itens críticos (com 🌡️, 📳, 🔊, ⚡, 🛢️) para uma inspeção preditiva eficaz.</div>`;
+            resultado.innerHTML = `<div class="feedback-incorreto">❌ Procedimento fraco. Selecione pelo menos 3 itens críticos.</div>`;
             return;
         }
-        resultado.innerHTML = `<div class="feedback-correto">✅ Ótimo procedimento! Frequência <strong>${freqSelecionada.textContent.trim()}</strong> com <strong>${itensCriticos}</strong> pontos críticos monitorados. Isso garante uma boa cobertura do equipamento.</div>`;
+        resultado.innerHTML = `<div class="feedback-correto">✅ Ótimo procedimento! Frequência <strong>${freqSelecionada.textContent.trim()}</strong> com <strong>${itensCriticos}</strong> pontos críticos.</div>`;
     };
 
     window.calcularROIFerramentas = function() {
@@ -255,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const resultado = document.getElementById('resultado-roi-tools');
         resultado.style.display = 'block';
         if (investimento === 0) {
-            resultado.innerHTML = `<div class="feedback-incorreto">❌ Insira um valor de investimento válido.</div>`;
+            resultado.innerHTML = `<div class="feedback-incorreto">❌ Insira um valor de investimento.</div>`;
             return;
         }
         const ganho = falhasEvitadas * custoFalha;
@@ -263,9 +265,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const payback = ganho > 0 ? (investimento / (ganho / 12)) : Infinity;
 
         resultado.innerHTML = `<h5>📈 Análise de ROI</h5>
-            <div class="resultado-item">Ganho Anual (falhas evitadas): R$ ${ganho.toLocaleString('pt-BR')}</div>
-            <div class="resultado-item destaque">Retorno Sobre Investimento (ROI): ${roi.toFixed(1)}%</div>
-            ${payback !== Infinity ? `<div class="resultado-item">Tempo de Payback: ${payback.toFixed(1)} meses</div>` : '<div class="resultado-item">O ganho não cobre o investimento no primeiro ano.</div>'}`;
+            <div class="resultado-item">Ganho Anual: R$ ${ganho.toLocaleString('pt-BR')}</div>
+            <div class="resultado-item destaque">ROI: ${roi.toFixed(1)}%</div>
+            ${payback !== Infinity ? `<div class="resultado-item">Payback: ${payback.toFixed(1)} meses</div>` : ''}`;
     };
 
     window.gerarChecklist = function() {
@@ -273,18 +275,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const criticidade = document.getElementById('criticidade-eq').value;
         const ambiente = document.getElementById('ambiente-eq').value;
         const checklists = {
-            motor: { sensitiva: ['Ruído', 'Vibração (tátil)', 'Temperatura (tátil)', 'Fixação', 'Limpeza'], instrumentada: ['Vibração (FFT)', 'Termografia (conexões)', 'Corrente (MCSA)'] },
-            bomba: { sensitiva: ['Vazamentos (selo)', 'Pressão (manômetro)', 'Vibração', 'Ruído'], instrumentada: ['Alinhamento a laser', 'Vibração (FFT)', 'Ultrassom (cavitação)'] },
-            redutor: { sensitiva: ['Nível do óleo', 'Vazamentos', 'Temperatura', 'Respiro'], instrumentada: ['Análise de óleo', 'Análise de vibração', 'Termografia'] },
-            compressor: { sensitiva: ['Vazamentos de ar', 'Temperatura de descarga', 'Pressão', 'Drenagem de condensado'], instrumentada: ['Análise de vibração', 'Medição de vazão', 'Termografia'] }
+            motor: { sensitiva: ['Ruído', 'Vibração', 'Temperatura', 'Fixação'], instrumentada: ['Vibração (FFT)', 'Termografia', 'Corrente (MCSA)'] },
+            bomba: { sensitiva: ['Vazamentos', 'Pressão', 'Vibração', 'Ruído'], instrumentada: ['Alinhamento', 'Vibração (FFT)', 'Ultrassom'] },
+            redutor: { sensitiva: ['Nível do óleo', 'Vazamentos', 'Temperatura', 'Respiro'], instrumentada: ['Análise de óleo', 'Vibração', 'Termografia'] },
+            compressor: { sensitiva: ['Vazamentos', 'Temperatura', 'Pressão', 'Drenagem'], instrumentada: ['Vibração', 'Vazão', 'Termografia'] }
         };
         const base = checklists[tipo];
-        let itens = `<h4>Inspeção Sensitiva (${criticidade === 'baixa' || criticidade === 'media' ? 'Semanal' : 'Diária'})</h4><ul>` + base.sensitiva.map(item => `<li>${item}</li>`).join('') + '</ul>';
+        let itens = `<h4>Sensitiva (${criticidade === 'baixa' ? 'Semanal' : 'Diária'})</h4><ul>` + base.sensitiva.map(item => `<li>${item}</li>`).join('') + '</ul>';
         if (criticidade === 'critica' || criticidade === 'alta') {
-            itens += `<h4>Inspeção Instrumentada (${criticidade === 'alta' ? 'Mensal' : 'Trimestral'})</h4><ul>` + base.instrumentada.map(item => `<li>${item}</li>`).join('') + '</ul>';
+            itens += `<h4>Instrumentada (${criticidade === 'alta' ? 'Mensal' : 'Trimestral'})</h4><ul>` + base.instrumentada.map(item => `<li>${item}</li>`).join('') + '</ul>';
         }
         if (ambiente === 'agressivo') {
-            itens += `<h4>Itens Adicionais (Ambiente Agressivo)</h4><ul><li>Verificar corrosão</li><li>Inspecionar vedações e proteções</li></ul>`;
+            itens += `<h4>Adicionais (Ambiente Agressivo)</h4><ul><li>Verificar corrosão</li><li>Inspecionar vedações</li></ul>`;
         }
         const resultado = document.getElementById('checklist-gerado');
         resultado.style.display = 'block';
@@ -297,10 +299,82 @@ document.addEventListener('DOMContentLoaded', () => {
         const resultado = document.getElementById('resultado-problemas');
         resultado.style.display = 'block';
         if (problemas === 5) {
-            resultado.innerHTML = `<div class="feedback-correto">✅ Excelente! Você identificou todos os 5 problemas neste registro. Um registro de qualidade precisa ser específico, quantitativo e acionável.</div>`;
+            resultado.innerHTML = `<div class="feedback-correto">✅ Excelente! Você identificou todos os 5 problemas.</div>`;
         } else {
-            resultado.innerHTML = `<div class="feedback-incorreto">❌ Quase lá! Existem 5 problemas no total. Um bom registro precisa de: ID do equipamento, data/hora, medição com valores, nome completo do responsável e uma ação clara.</div>`;
+            resultado.innerHTML = `<div class="feedback-incorreto">❌ Quase lá! Existem 5 problemas no total.</div>`;
         }
+    };
+    
+    // Módulo 4: Lógica do Gráfico de Tendências
+    function gerarDadosDeTendencia(dias, parametro) {
+        const labels = [];
+        const data = [];
+        const hoje = new Date();
+        let valorBase, variacao, tendencia;
+
+        switch (parametro) {
+            case 'vibracao': valorBase = 1.5; variacao = 0.5; tendencia = 0.008; break;
+            case 'corrente': valorBase = 25; variacao = 1.5; tendencia = 0.005; break;
+            default: valorBase = 55; variacao = 5; tendencia = 0.02; break;
+        }
+
+        for (let i = dias - 1; i >= 0; i--) {
+            const dataPonto = new Date(hoje);
+            dataPonto.setDate(hoje.getDate() - i);
+            labels.push(dataPonto.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }));
+            let valor = valorBase + (Math.random() - 0.5) * variacao + (dias - i) * tendencia;
+            if (Math.random() > 0.95) valor *= 1.3;
+            data.push(valor.toFixed(2));
+        }
+        return { labels, data };
+    }
+
+    window.atualizarGrafico = function() {
+        const parametroSelect = document.getElementById('parametro-grafico');
+        const parametro = parametroSelect.value;
+        const parametroTexto = parametroSelect.options[parametroSelect.selectedIndex].text;
+        const periodoSelect = document.getElementById('periodo-grafico');
+        const periodo = parseInt(periodoSelect.value, 10);
+        const periodoTexto = periodoSelect.options[periodoSelect.selectedIndex].text;
+        const resultadoEl = document.getElementById('interpretacao-grafico');
+        const { labels, data } = gerarDadosDeTendencia(periodo, parametro);
+        const interpretacoes = { 
+            temperatura: 'Tendência crescente indica possível problema de lubrificação, sobrecarga ou refrigeração.', 
+            vibracao: 'Picos súbitos indicam impactos ou falhas agudas. Tendência crescente sugere desgaste progressivo (rolamento, engrenagem).', 
+            corrente: 'Variações anormais podem indicar problemas na carga, no motor ou na rede elétrica.' 
+        };
+
+        resultadoEl.innerHTML = `<h6>📊 Análise de ${parametroTexto} - ${periodoTexto}</h6>
+            <p>${interpretacoes[parametro]}</p>
+            <div class="chart-container" style="position: relative; height:300px; width:100%;">
+                <canvas id="tendenciasChartCanvas"></canvas>
+            </div>`;
+        resultadoEl.style.display = 'block';
+
+        const ctx = document.getElementById('tendenciasChartCanvas').getContext('2d');
+        if (tendenciasChart) tendenciasChart.destroy();
+
+        tendenciasChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: parametroTexto,
+                    data: data,
+                    borderColor: 'rgba(0, 90, 156, 1)',
+                    backgroundColor: 'rgba(0, 90, 156, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { beginAtZero: false, title: { display: true, text: parametroTexto } }, x: { title: { display: true, text: 'Data' } } },
+                plugins: { legend: { position: 'top' }, title: { display: true, text: `Tendência de ${parametroTexto}` } }
+            }
+        });
     };
 
     window.calcularKPIs = function() {
@@ -311,7 +385,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const resultado = document.getElementById('resultado-kpis');
         resultado.style.display = 'block';
         if(planejadas === 0) {
-            resultado.innerHTML = `<div class="feedback-incorreto">Insira o número de inspeções planejadas.</div>`;
+            resultado.innerHTML = `<div class="feedback-incorreto">Insira o n° de inspeções planejadas.</div>`;
             return;
         }
         const conformidade = (realizadas / planejadas) * 100;
@@ -321,7 +395,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="resultado-item"><strong>Conformidade do Plano:</strong> ${conformidade.toFixed(1)}%</div>
             <div class="resultado-item"><strong>Assertividade da Inspeção:</strong> ${assertividade.toFixed(1)}%</div>
             <div class="resultado-item">${conformidade < 95 ? 'Atenção à baixa conformidade!' : 'Ótima conformidade!'}</div>
-            <div class="resultado-item">${assertividade < 80 ? 'Muitas falhas não detectadas a tempo. Melhorar técnicas.' : 'Excelente assertividade!'}</div>`;
+            <div class="resultado-item">${assertividade < 80 ? 'Muitas falhas não detectadas a tempo.' : 'Excelente assertividade!'}</div>`;
     };
 
     window.avaliarMelhoria = function() {
@@ -329,40 +403,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const feedback = document.getElementById('feedback-melhoria');
         feedback.style.display = 'block';
         let score = 0;
-        let checklist = {
-            id: false,
-            data: false,
-            medicao: false,
-            acao: false
-        };
-
-        if (texto.includes('mtr-') || texto.match(/motor\s*[\w-]+/)) { score++; checklist.id = true; }
-        if (texto.match(/\d{1,2}\/\d{1,2}\/\d{2,4}/) || texto.match(/\d{1,2}:\d{2}/)) { score++; checklist.data = true; }
-        if (texto.match(/\d+(\.\d+)?\s*(mm\/s|°c|a|bar|psi)/)) { score++; checklist.medicao = true; }
-        if (texto.includes('programar') || texto.includes('verificar') || texto.includes('ação:') || texto.includes('recomendo')) { score++; checklist.acao = true; }
+        if (texto.match(/mtr-|motor\s*[\w-]+/)) score++;
+        if (texto.match(/\d{1,2}\/\d{1,2}/)) score++;
+        if (texto.match(/\d+(\.\d+)?\s*(mm\/s|°c|a|bar)/)) score++;
+        if (texto.includes('programar') || texto.includes('ação:')) score++;
         
         if (score >= 3) {
-            feedback.innerHTML = `<div class="feedback-correto">✅ Excelente! Seu registro agora é profissional, contendo os elementos essenciais.</div>`;
+            feedback.innerHTML = `<div class="feedback-correto">✅ Excelente! Seu registro agora é profissional.</div>`;
         } else {
-            let dica = "❌ Tente novamente. Um bom registro precisa de:<ul>";
-            if (!checklist.id) dica += "<li>ID do equipamento (Ex: MTR-001)</li>";
-            if (!checklist.data) dica += "<li>Data e hora</li>";
-            if (!checklist.medicao) dica += "<li>Valores medidos com unidades (Ex: Vib: 2.5mm/s, Temp: 60°C)</li>";
-            if (!checklist.acao) dica += "<li>Ação recomendada (Ex: Programar análise FFT)</li>";
-            dica += "</ul>";
-            feedback.innerHTML = `<div class="feedback-incorreto">${dica}</div>`;
+            feedback.innerHTML = `<div class="feedback-incorreto">❌ Tente novamente. Um bom registro precisa de ID, data, valores e uma ação.</div>`;
         }
     };
-    
-    window.atualizarGrafico = function() {
-        const parametro = document.getElementById('parametro-grafico').value;
-        const periodo = document.getElementById('periodo-grafico').value;
-        const resultadoEl = document.getElementById('interpretacao-grafico');
-        const interpretacoes = { temperatura: 'Tendência crescente indica possível problema de lubrificação, sobrecarga ou refrigeração.', vibracao: 'Picos súbitos indicam impactos ou falhas agudas. Tendência crescente sugere desgaste progressivo (rolamento, engrenagem).', corrente: 'Variações anormais podem indicar problemas na carga, no motor ou na rede elétrica. Aumentos graduais podem sinalizar maior atrito mecânico.' };
-        resultadoEl.style.display = 'block';
-        resultadoEl.innerHTML = `<h6>📊 Análise de ${parametro.charAt(0).toUpperCase() + parametro.slice(1)} - ${periodo} dias</h6><p>${interpretacoes[parametro]}</p><div style="background: #f8f9fa; padding: 2rem; border: 2px dashed #dee2e6; text-align: center; margin-top: 1rem;">📈 [Gráfico simulado de ${parametro} mostrando tendência]</div>`;
-    };
-    
+
     // Módulo 5
     window.calcularMatrizDecisao = function() {
         const criticidade = parseFloat(document.getElementById('criticidade').value);
@@ -385,9 +437,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const horasReparo = parseFloat(document.getElementById('horas-reparo').value) || 0;
         const custoParadaHora = parseFloat(document.getElementById('custo-parada-hora').value) || 0;
         const tipoFalha = document.getElementById('tipo-falha-calc').value;
-        
         const custosPeca = { rolamento: 800, desbalanceamento: 200, desalinhamento: 300 };
-        const custoMaoDeObra = horasReparo * 150; // R$150/h
+        const custoMaoDeObra = horasReparo * 150;
         const custoParada = horasReparo * custoParadaHora;
         const custoTotal = (custosPeca[tipoFalha] || 0) + custoMaoDeObra + custoParada;
         
@@ -395,8 +446,8 @@ document.addEventListener('DOMContentLoaded', () => {
         resultado.style.display = 'block';
         resultado.innerHTML = `<h5>💸 Custo Total da Falha</h5>
             <div class="resultado-item">Custo da Parada: R$ ${custoParada.toLocaleString('pt-BR')}</div>
-            <div class="resultado-item">Custo de Mão de Obra: R$ ${custoMaoDeObra.toLocaleString('pt-BR')}</div>
-            <div class="resultado-item">Custo de Peças: R$ ${(custosPeca[tipoFalha] || 0).toLocaleString('pt-BR')}</div>
+            <div class="resultado-item">Mão de Obra: R$ ${custoMaoDeObra.toLocaleString('pt-BR')}</div>
+            <div class="resultado-item">Peças: R$ ${(custosPeca[tipoFalha] || 0).toLocaleString('pt-BR')}</div>
             <div class="resultado-item destaque">Custo Total: R$ ${custoTotal.toLocaleString('pt-BR')}</div>`;
     };
     
@@ -405,39 +456,27 @@ document.addEventListener('DOMContentLoaded', () => {
         const checkboxes = document.querySelectorAll('.checklist-inspecao-mecanica input:checked');
         resultado.style.display = 'block';
         if (checkboxes.length > 0) {
-            resultado.innerHTML = `<div class="feedback-correto">Checklist preenchido. Lembre-se: a consistência na execução do checklist é a chave para a detecção precoce de falhas.</div>`;
+            resultado.innerHTML = `<div class="feedback-correto">Checklist preenchido. A consistência é a chave!</div>`;
         } else {
-            resultado.innerHTML = `<div class="feedback-incorreto">Marque os itens inspecionados para avaliar sua inspeção.</div>`;
+            resultado.innerHTML = `<div class="feedback-incorreto">Marque os itens inspecionados.</div>`;
         }
     }
 
     // Módulo 7
     window.calcularDesequilibrio = function() {
-        const r = 28.5, s = 31.2, t = 29.8; // Valores fixos do exemplo
+        const r = 28.5, s = 31.2, t = 29.8;
         const media = (r + s + t) / 3;
-        const desvios = [Math.abs(r - media), Math.abs(s - media), Math.abs(t - media)];
-        const maxDesvio = Math.max(...desvios);
+        const maxDesvio = Math.max(Math.abs(r - media), Math.abs(s - media), Math.abs(t - media));
         const desequilibrio = media > 0 ? (maxDesvio / media) * 100 : 0;
         let classificacao = '';
-        let acao = '';
-        if (desequilibrio <= 2) {
-             classificacao = '🟢 Normal (<2%)';
-             acao = 'Operação segura. Monitorar.'
-        } else if (desequilibrio <= 5) {
-            classificacao = '🟡 Atenção (2-5%)';
-            acao = 'Investigar causa. Pode ser problema na rede ou no motor.'
-        } else {
-            classificacao = '🔴 Crítico (>5%)';
-            acao = 'Risco de superaquecimento e falha. Ação corretiva urgente.'
-        }
+        if (desequilibrio <= 2) classificacao = '🟢 Normal (<2%)';
+        else if (desequilibrio <= 5) classificacao = '🟡 Atenção (2-5%)';
+        else classificacao = '🔴 Crítico (>5%)';
         const resultado = document.getElementById('classificacao-desequilibrio');
         if (resultado) {
             resultado.style.display = 'block';
-            resultado.innerHTML = `
-                <div class="resultado-item">Desequilíbrio de Corrente: <strong>${desequilibrio.toFixed(2)}%</strong></div>
-                <div class="resultado-item">Classificação: <strong>${classificacao}</strong></div>
-                <div class="resultado-item">Ação Recomendada: ${acao}</div>
-            `;
+            resultado.innerHTML = `<div class="resultado-item">Desequilíbrio: <strong>${desequilibrio.toFixed(2)}%</strong></div>
+                <div class="resultado-item">Classificação: <strong>${classificacao}</strong></div>`;
         }
     };
     
@@ -446,17 +485,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const orcamento = document.getElementById('orcamento-sel').value;
         const nivel = document.getElementById('nivel-equipe-sel').value;
         let recomendacao = '';
-
-        if (orcamento === 'baixo') {
-            recomendacao = '📳 Medidor de vibração básico (caneta) + Termômetro infravermelho + Estetoscópio. Ideal para iniciar na preditiva com inspeção sensitiva melhorada.';
-        } else if (orcamento === 'medio') {
-            if(nivel === 'basico') {
-                 recomendacao = '📸 Câmera termográfica de entrada + Detector ultrassônico. Ferramentas com curva de aprendizado rápida e alto impacto em detecção de falhas elétricas e vazamentos.';
-            } else {
-                 recomendacao = '📳 Analisador de vibração de 1 canal + Software de tendência. Permite iniciar uma análise de falhas mais profunda.';
-            }
-        } else { // alto
-            recomendacao = '🚀 Suite completa: Analisador de vibração FFT multicanal, Câmera termográfica de alta resolução, Sistema de análise de óleo e Software de gestão preditiva (CMMS). Para um programa de classe mundial.';
+        if (orcamento === 'baixo') recomendacao = '📳 Medidor de vibração básico + Termômetro infravermelho.';
+        else if (orcamento === 'medio') {
+            if(nivel === 'basico') recomendacao = '📸 Câmera termográfica de entrada + Detector ultrassônico.';
+            else recomendacao = '📳 Analisador de vibração de 1 canal + Software.';
+        } else {
+            recomendacao = '🚀 Suite completa: Analisador FFT, Câmera de alta resolução, Análise de óleo, Software CMMS.';
         }
         const resultado = document.getElementById('recomendacao-ferramenta');
         if (resultado) {
@@ -473,30 +507,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const horasParadaMedia = parseFloat(document.getElementById('horas-parada-media').value) || 0;
         
         if (investimento === 0) {
-            document.getElementById('resultado-roi-avancado').style.display = 'block';
             document.getElementById('resultado-roi-avancado').innerHTML = `<div class="feedback-incorreto">Insira o valor do investimento.</div>`;
+            document.getElementById('resultado-roi-avancado').style.display = 'block';
             return;
         }
-
         const falhasEvitadas = falhasAno * reducao;
         const ganhoAnual = falhasEvitadas * custoParadaMedia * horasParadaMedia;
         const roi = ((ganhoAnual - investimento) / investimento) * 100;
-
         const resultado = document.getElementById('resultado-roi-avancado');
         resultado.style.display = 'block';
         resultado.innerHTML = `<h5>💰 Análise de ROI Detalhada</h5>
-            <div class="resultado-item">Falhas evitadas por ano: ${falhasEvitadas.toFixed(1)}</div>
-            <div class="resultado-item">Economia anual com paradas: <strong>R$ ${ganhoAnual.toLocaleString('pt-BR')}</strong></div>
-            <div class="resultado-item">Investimento: R$ ${investimento.toLocaleString('pt-BR')}</div>
-            <div class="resultado-item destaque">ROI no primeiro ano: ${roi.toFixed(1)}%</div>
-        `;
+            <div class="resultado-item">Falhas evitadas/ano: ${falhasEvitadas.toFixed(1)}</div>
+            <div class="resultado-item">Economia anual: <strong>R$ ${ganhoAnual.toLocaleString('pt-BR')}</strong></div>
+            <div class="resultado-item destaque">ROI (1º ano): ${roi.toFixed(1)}%</div>`;
     };
     
     // Módulo 9
     window.calcularViscosidadeIdeal = () => {
-        const resultado = document.getElementById('resultado-viscosidade');
-        resultado.style.display = 'block';
-        resultado.innerHTML = `<h5>🧮 Viscosidade Ideal</h5><div class="resultado-item destaque">ISO VG 320</div><p>Para esta aplicação (velocidade moderada, carga e temperatura elevadas), um óleo com viscosidade ISO VG 320 é recomendado para garantir um filme lubrificante adequado.</p>`;
+        document.getElementById('resultado-viscosidade').style.display = 'block';
+        document.getElementById('resultado-viscosidade').innerHTML = `<h5>🧮 Viscosidade Ideal</h5><div class="resultado-item destaque">ISO VG 320</div><p>Para esta aplicação, um óleo ISO VG 320 é recomendado.</p>`;
     };
     
     window.interpretarAnalise = function() {
@@ -505,18 +534,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const ferro = parseFloat(document.getElementById('ferro-atual').value) || 0;
         const tan = parseFloat(document.getElementById('tan-atual').value) || 0;
         let acoes = [];
-        
-        if (visc > 320 * 1.15) acoes.push('🔴 Viscosidade alta (>15%): pode indicar oxidação ou contaminação. Trocar óleo.');
-        if (agua > 500) acoes.push('🔴 Contaminação por água severa (>500ppm): Verificar vedações e fonte de umidade. Trocar óleo.');
-        if (ferro > 100) acoes.push('🔴 Desgaste severo (Ferro >100ppm): Investigar desalinhamento, desbalanceamento ou sobrecarga. Pode ser necessário reparo.');
-        if (tan > 1.5) acoes.push('🔴 Acidez alta (TAN > 1.5): Óleo oxidado, risco de corrosão. Trocar óleo imediatamente.');
-
+        if (visc > 320 * 1.15) acoes.push('🔴 Viscosidade alta: Oxidação/Contaminação.');
+        if (agua > 500) acoes.push('🔴 Água severa: Verificar vedações.');
+        if (ferro > 100) acoes.push('🔴 Desgaste severo: Investigar causa.');
+        if (tan > 1.5) acoes.push('🔴 Acidez alta: Óleo oxidado, risco de corrosão.');
         const resultado = document.getElementById('interpretacao-analise');
         resultado.style.display = 'block';
         if (acoes.length > 0) {
             resultado.innerHTML = `<h5>🔬 Diagnóstico e Ação</h5><ul>${acoes.map(a => `<li>${a}</li>`).join('')}</ul>`;
         } else {
-            resultado.innerHTML = '<div class="feedback-correto">✅ Laudo OK. Níveis dentro dos limites aceitáveis. Continuar monitorando.</div>';
+            resultado.innerHTML = '<div class="feedback-correto">✅ Laudo OK. Níveis aceitáveis.</div>';
         }
     };
     
@@ -527,14 +554,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const f_cont = parseFloat(document.getElementById('ambiente-contaminacao').value);
         const f_umid = parseFloat(document.getElementById('umidade-ambiente').value);
         const f_orie = parseFloat(document.getElementById('orientacao-eixo').value);
-        
-        // Fórmula simplificada de referência (FAG/SKF)
-        const K = 10000000; // Constante empírica
+        const K = 10000000;
         const intervalo = (K / (rpm * Math.sqrt(diametro)) - 4 * diametro) * f_temp * f_cont * f_umid * f_orie;
-
         const resultado = document.getElementById('resultado-intervalo');
         resultado.style.display = 'block';
-        resultado.innerHTML = `<h5>⏱️ Intervalo de Relubrificação</h5><div class="resultado-item destaque">Aproximadamente ${Math.round(intervalo)} horas de operação.</div>`;
+        resultado.innerHTML = `<h5>⏱️ Intervalo de Relubrificação</h5><div class="resultado-item destaque">Aprox. ${Math.round(intervalo)} horas.</div>`;
     };
 
     window.calcularVidaUtil = () => {
@@ -542,19 +566,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const P = parseFloat(document.getElementById('carga-aplicada').value) || 1;
         const vel = parseFloat(document.getElementById('velocidade-vida').value) || 1;
         const horasDia = parseFloat(document.getElementById('horas-operacao-dia').value) || 1;
-        
         if (P === 0) return;
-        
-        // p=3 para rolamentos de esferas (comum em motores)
         const p = 3;
-        const L10_milhoes_rev = Math.pow(C / P, p);
-        const L10h = (L10_milhoes_rev * 1000000) / (vel * 60);
+        const L10_rev = Math.pow(C / P, p) * 1000000;
+        const L10h = L10_rev / (vel * 60);
         const vida_anos = L10h / (horasDia * 365);
-
         const resultado = document.getElementById('resultado-vida-util');
         resultado.style.display = 'block';
         resultado.innerHTML = `<h5>🧮 Vida Útil L₁₀</h5>
-            <div class="resultado-item">Vida em horas (L₁₀h): ${Math.round(L10h).toLocaleString('pt-BR')} horas</div>
+            <div class="resultado-item">Vida em horas: ${Math.round(L10h).toLocaleString('pt-BR')} h</div>
             <div class="resultado-item destaque">Vida em anos: ${vida_anos.toFixed(1)} anos</div>`;
     };
 
@@ -564,23 +584,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const checkboxes = document.querySelectorAll('.checklist-pneumatico input:checked');
         resultado.style.display = 'block';
         if (checkboxes.length > 0) {
-            resultado.innerHTML = `<div class="feedback-correto">Checklist avaliado. Lembre-se: a qualidade do ar comprimido (seco e limpo) é tão importante quanto a condição mecânica do compressor.</div>`;
+            resultado.innerHTML = `<div class="feedback-correto">Checklist avaliado. A qualidade do ar é crucial!</div>`;
         } else {
-             resultado.innerHTML = `<div class="feedback-incorreto">Marque os itens inspecionados para avaliar.</div>`;
+             resultado.innerHTML = `<div class="feedback-incorreto">Marque os itens inspecionados.</div>`;
         }
     };
 
     window.calcularCustoVazamento = function() {
         const pressao = parseFloat(document.getElementById('pressao-sistema').value) || 7;
         const diametro = parseFloat(document.getElementById('diametro-furo').value) || 3;
-        const horas = (parseFloat(document.getElementById('horas-operacao').value) || 0) * 365; // Anual
+        const horas = (parseFloat(document.getElementById('horas-operacao').value) || 0) * 365;
         const custoM3 = parseFloat(document.getElementById('custo-ar').value) || 0.12;
-
-        // Fórmula de engenharia aproximada para vazão (m³/min)
-        const vazao = 1.8 * Math.pow(diametro, 2) * (pressao + 1) / 100; // Ajustada
+        const vazao = 1.8 * Math.pow(diametro, 2) * (pressao + 1) / 100;
         const perdaAnualM3 = vazao * 60 * horas;
         const custoAnual = perdaAnualM3 * custoM3;
-
         const resultado = document.getElementById('resultado-custo-vazamento');
         resultado.style.display = 'block';
         resultado.innerHTML = `<h5>💸 Análise de Perda Anual</h5>
@@ -592,7 +609,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.calcularVidaFadiga = () => {
         const resultado = document.getElementById('resultado-vida-fadiga');
         resultado.style.display = 'block';
-        resultado.innerHTML = `<h5>⏱️ Análise de Fadiga (Simplificada)</h5><p>Com base nos dados, a vida útil estimada está dentro do esperado para o projeto. Recomenda-se inspeção por ultrassom ou líquido penetrante a cada 2 anos para detectar trincas incipientes, especialmente por se tratar de Aço Carbono.</p>`;
+        resultado.innerHTML = `<h5>⏱️ Análise de Fadiga (Simplificada)</h5><p>Recomenda-se inspeção por ultrassom ou líquido penetrante a cada 2 anos para detectar trincas incipientes.</p>`;
     };
     
     window.calcularRiscoEstrutural = () => {
@@ -600,18 +617,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const carga = parseFloat(document.getElementById('carga-operacional').value);
         const ambiente = parseFloat(document.getElementById('ambiente-agressividade').value);
         const manutencao = parseFloat(document.getElementById('manutencao-qualidade').value);
-        
-        // Uma má manutenção (nota baixa) aumenta o risco
         const risco = (idade * 0.3) + ((carga / 10) * 0.3) + (ambiente * 0.2) + ((6 - manutencao) * 0.2);
-        
         let classificacao = '';
-        if (risco > 7) classificacao = '🔴 ALTO RISCO - Requer inspeção especializada imediata.';
+        if (risco > 7) classificacao = '🔴 ALTO RISCO - Inspeção especializada imediata.';
         else if (risco > 4) classificacao = '🟡 RISCO MODERADO - Agendar inspeção detalhada.';
-        else classificacao = '🟢 BAIXO RISCO - Manter plano de inspeção padrão.';
-
+        else classificacao = '🟢 BAIXO RISCO - Manter plano padrão.';
         const resultado = document.getElementById('resultado-risco-estrutural');
         resultado.style.display = 'block';
-        resultado.innerHTML = `<h5>⚖️ Nível de Risco Estrutural</h5><div class="resultado-item destaque">${classificacao} (Pontuação: ${risco.toFixed(1)})</div>`;
+        resultado.innerHTML = `<h5>⚖️ Nível de Risco Estrutural</h5><div class="resultado-item destaque">${classificacao} (Score: ${risco.toFixed(1)})</div>`;
     };
 
     // Módulo 12
@@ -620,14 +633,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const seguranca = parseFloat(document.getElementById('impacto-seguranca').value);
         const custo = parseFloat(document.getElementById('custo-manutencao').value);
         const ambiental = parseFloat(document.getElementById('impacto-ambiental').value);
-
         const score = (impacto * 0.4) + (seguranca * 0.3) + (custo * 0.2) + (ambiental * 0.1);
-        
         let classificacao = '';
         if (score >= 7) classificacao = '🔴 A - CRÍTICO';
         else if (score >= 4) classificacao = '🟠 B - IMPORTANTE';
         else classificacao = '🟢 C - NORMAL';
-
         const resultado = document.getElementById('resultado-criticidade');
         resultado.style.display = 'block';
         resultado.innerHTML = `<h5>🎯 Classificação ABC</h5><div class="resultado-item"><strong>Score:</strong> ${score.toFixed(1)}</div><div class="resultado-item destaque"><strong>Classificação:</strong> ${classificacao}</div>`;
@@ -635,37 +645,32 @@ document.addEventListener('DOMContentLoaded', () => {
     
     window.gerarRota = function() {
         const tempo = parseFloat(document.getElementById('tempo-disponivel').value) || 4;
-        const numPontos = Math.floor((tempo * 60) / 15); // 15 min por ponto de inspeção
+        const numPontos = Math.floor((tempo * 60) / 15);
         const resultado = document.getElementById('rota-gerada');
         resultado.style.display = 'block';
         resultado.innerHTML = `<h5>🗺️ Rota de Inspeção Sugerida</h5>
-            <p>Com <strong>${tempo} horas</strong>, é possível inspecionar aproximadamente <strong>${numPontos} pontos</strong> críticos.</p>
-            <p><strong>Exemplo de Rota Priorizada por Criticidade:</strong></p>
-            <ol><li>Motores Críticos da Linha 1 (Vibração/Temp)</li><li>Bombas de Água de Processo (Vazamento/Pressão)</li><li>Redutores Principais (Nível de óleo/Temp)</li><li>Painéis Elétricos de Alta Tensão (Termografia)</li></ol>
-        `;
+            <p>Com <strong>${tempo} horas</strong>, é possível inspecionar aprox. <strong>${numPontos} pontos</strong>.</p>
+            <p><strong>Exemplo de Rota:</strong></p>
+            <ol><li>Motores Críticos Linha 1</li><li>Bombas de Processo</li><li>Redutores Principais</li><li>Painéis de Alta Tensão</li></ol>`;
     };
     
     window.calcularKPIsAvancados = function() {
         const horasOp = parseFloat(document.getElementById('horas-operacao-mes').value) || 1;
         const tempoReparo = parseFloat(document.getElementById('tempo-reparo-total').value) || 0;
-        const falhasMes = parseFloat(document.getElementById('falhas-mes').value) || 1;
-        
+        const falhasMes = parseFloat(document.getElementById('falhas-mes').value) || 0;
+        const resultado = document.getElementById('resultado-kpis-avancados');
+        resultado.style.display = 'block';
         if (falhasMes === 0) {
-             document.getElementById('resultado-kpis-avancados').innerHTML = `<div class="feedback-correto">Sem falhas no período! MTBF e Disponibilidade tendem a infinito (excelente).</div>`;
-             document.getElementById('resultado-kpis-avancados').style.display = 'block';
+             resultado.innerHTML = `<div class="feedback-correto">Sem falhas no período! MTBF e Disponibilidade excelentes.</div>`;
              return;
         }
-
         const mtbf = (horasOp - tempoReparo) / falhasMes;
         const mttr = tempoReparo / falhasMes;
         const disponibilidade = (mtbf / (mtbf + mttr)) * 100;
-        
-        const resultado = document.getElementById('resultado-kpis-avancados');
-        resultado.style.display = 'block';
         resultado.innerHTML = `<h5>📊 KPIs de Confiabilidade</h5>
-            <div class="resultado-item"><strong>MTBF (Tempo Médio Entre Falhas):</strong> ${mtbf.toFixed(1)} horas</div>
-            <div class="resultado-item"><strong>MTTR (Tempo Médio Para Reparo):</strong> ${mttr.toFixed(1)} horas</div>
-            <div class="resultado-item destaque"><strong>Disponibilidade Inerente:</strong> ${disponibilidade.toFixed(2)}%</div>`;
+            <div class="resultado-item"><strong>MTBF:</strong> ${mtbf.toFixed(1)} h</div>
+            <div class="resultado-item"><strong>MTTR:</strong> ${mttr.toFixed(1)} h</div>
+            <div class="resultado-item destaque"><strong>Disponibilidade:</strong> ${disponibilidade.toFixed(2)}%</div>`;
     };
     
     window.calcularROIPrograma = function() {
@@ -681,35 +686,30 @@ document.addEventListener('DOMContentLoaded', () => {
         const investimentoTotal = custoFerramentas + custoTreinamento;
         const custoAnual = custoSoftware + custoOperacional;
         const ganhoParadas = custoParadaAtual * reducaoParadas;
-        const ganhoEstoque = estoqueAtual * reducaoEstoque; // Ganho único no 1º ano
+        const ganhoEstoque = estoqueAtual * reducaoEstoque;
         const ganhoAnualTotal = ganhoParadas - custoAnual;
         
         if (investimentoTotal === 0) {
-            document.getElementById('resultado-roi-programa').innerHTML = `<div class="feedback-incorreto">Insira o valor do investimento para calcular o ROI.</div>`;
+            document.getElementById('resultado-roi-programa').innerHTML = `<div class="feedback-incorreto">Insira o valor do investimento.</div>`;
             document.getElementById('resultado-roi-programa').style.display = 'block';
             return;
         }
-
         const roi = ((ganhoParadas + ganhoEstoque - investimentoTotal - custoAnual) / (investimentoTotal)) * 100;
-
         const resultado = document.getElementById('resultado-roi-programa');
         resultado.style.display = 'block';
         resultado.innerHTML = `<h5>💰 Análise de ROI do Programa</h5>
             <div class="resultado-item">Investimento Inicial: R$ ${investimentoTotal.toLocaleString('pt-BR')}</div>
             <div class="resultado-item">Custo Anual do Programa: R$ ${custoAnual.toLocaleString('pt-BR')}</div>
-            <div class="resultado-item">Ganho Anual (Redução de Paradas): R$ ${ganhoParadas.toLocaleString('pt-BR')}</div>
-            <div class="resultado-item">Ganho Único (Redução de Estoque): R$ ${ganhoEstoque.toLocaleString('pt-BR')}</div>
-            <div class="resultado-item destaque">ROI (Primeiro Ano): ${roi.toFixed(1)}%</div>
-            <div class="resultado-item">Ganho Líquido Anual (Após 1º ano): R$ ${ganhoAnualTotal.toLocaleString('pt-BR')}</div>
-            `;
+            <div class="resultado-item">Ganho Anual (Paradas): R$ ${ganhoParadas.toLocaleString('pt-BR')}</div>
+            <div class="resultado-item destaque">ROI (1º Ano): ${roi.toFixed(1)}%</div>`;
     };
 
     window.expandirFase = function(fase) {
         const ferramentas = {
-            plan: { titulo: '📋 Ferramentas de Planejamento (PLAN)', itens: ['Análise de Criticidade (ABC)', 'Análise de Modos de Falha (FMEA)', 'Diagrama de Ishikawa (Causa e Efeito)', '5W2H (Plano de Ação)'] },
-            do: { titulo: '⚡ Ferramentas de Execução (DO)', itens: ['Procedimentos Operacionais Padrão (POP)', 'Checklists de Inspeção', 'Ordens de Serviço (OS)', 'Treinamento Prático'] },
-            check: { titulo: '🔍 Ferramentas de Verificação (CHECK)', itens: ['Indicadores de Performance (KPIs)', 'Gráficos de Controle', 'Análise de Tendências', 'Auditorias de Processo'] },
-            act: { titulo: '🎯 Ferramentas de Ação (ACT)', itens: ['Análise de Causa Raiz (RCA)', 'Lições Aprendidas', 'Padronização de Melhorias', 'Benchmarking'] }
+            plan: { titulo: '📋 Ferramentas de Planejamento (PLAN)', itens: ['Análise de Criticidade (ABC)', 'Análise de Modos de Falha (FMEA)', 'Diagrama de Ishikawa', '5W2H'] },
+            do: { titulo: '⚡ Ferramentas de Execução (DO)', itens: ['Procedimentos Padrão (POP)', 'Checklists', 'Ordens de Serviço (OS)', 'Treinamento'] },
+            check: { titulo: '🔍 Ferramentas de Verificação (CHECK)', itens: ['Indicadores (KPIs)', 'Gráficos de Controle', 'Análise de Tendências', 'Auditorias'] },
+            act: { titulo: '🎯 Ferramentas de Ação (ACT)', itens: ['Análise de Causa Raiz (RCA)', 'Lições Aprendidas', 'Padronização', 'Benchmarking'] }
         };
         const ferramenta = ferramentas[fase];
         const container = document.getElementById('ferramentas-fase');
@@ -718,29 +718,26 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // =================================================================================
-    // SISTEMA DE QUIZ E CERTIFICAÇÃO (MÓDULO 13) - JÁ ESTAVA FUNCIONAL
+    // SISTEMA DE QUIZ E CERTIFICAÇÃO (MÓDULO 13)
     // =================================================================================
     
-    // --- Variáveis e Funções para o Certificado ---
     const LOGO_BASE64 = null; // IMPORTANTE: Substitua null pela string base64 do seu logo
 
     function formatarCPF(cpf) {
         cpf = cpf.replace(/\D/g, '');
-        if (cpf.length === 11) {
-            return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-        }
+        if (cpf.length === 11) return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
         return cpf;
     }
 
     const perguntas = [
         { pergunta: "Qual tipo de manutenção age somente após a ocorrência da falha?", opcoes: ["Preditiva", "Preventiva", "Corretiva", "Detectiva"], resposta: "Corretiva" },
         { pergunta: "A inspeção que utiliza termografia e análise de vibração é classificada como:", opcoes: ["Sensitiva", "Corretiva", "Instrumentada", "Autônoma"], resposta: "Instrumentada" },
-        { pergunta: "Qual o principal objetivo de um checklist de inspeção bem estruturado?", opcoes: ["Aumentar o tempo da inspeção", "Garantir a padronização e a qualidade da inspeção", "Substituir a necessidade de um inspetor qualificado", "Gerar mais papelada para a manutenção"], resposta: "Garantir a padronização e a qualidade da inspeção" },
-        { pergunta: "Um registro de inspeção com a anotação 'Vibração: 2.8 mm/s (+0.3 vs sem. ant)' é um exemplo de:", opcoes: ["Registro ruim e vago", "Registro quantitativo e com análise de tendência", "Registro desnecessariamente complexo", "Registro de manutenção corretiva"], resposta: "Registro quantitativo e com análise de tendência" },
-        { pergunta: "Vibração excessiva em 1x a frequência de rotação (1x RPM) é um sintoma clássico de qual falha?", opcoes: ["Falha de rolamento", "Desgaste de engrenagem", "Desalinhamento", "Desbalanceamento"], resposta: "Desbalanceamento" },
-        { pergunta: "Qual ferramenta é mais eficaz para detectar um ponto quente em um disjuntor de um painel elétrico?", opcoes: ["Analisador de vibração", "Estetoscópio mecânico", "Câmera termográfica", "Alicate amperímetro"], resposta: "Câmera termográfica" },
-        { pergunta: "A contaminação por água e partículas de ferro em uma amostra de óleo de um redutor indica:", opcoes: ["Operação normal do equipamento", "Necessidade de aumentar a velocidade", "Desgaste interno e provável falha de vedação", "Que o óleo é de boa qualidade"], resposta: "Desgaste interno e provável falha de vedação" },
-        { pergunta: "O ciclo PDCA (Plan-Do-Check-Act) é uma ferramenta para:", opcoes: ["Calcular o custo de uma falha", "Apenas planejar a manutenção", "Promover a melhoria contínua dos processos", "Desmontar um equipamento"], resposta: "Promover a melhoria contínua dos processos" },
+        { pergunta: "O principal objetivo de um checklist de inspeção é:", opcoes: ["Aumentar o tempo da inspeção", "Garantir a padronização e a qualidade", "Substituir um inspetor qualificado", "Gerar mais papelada"], resposta: "Garantir a padronização e a qualidade" },
+        { pergunta: "Um registro com 'Vibração: 2.8 mm/s (+0.3 vs sem. ant)' é um exemplo de:", opcoes: ["Registro vago", "Registro quantitativo com tendência", "Registro complexo demais", "Registro de corretiva"], resposta: "Registro quantitativo com tendência" },
+        { pergunta: "Vibração em 1x RPM é sintoma clássico de:", opcoes: ["Falha de rolamento", "Desgaste de engrenagem", "Desalinhamento", "Desbalanceamento"], resposta: "Desbalanceamento" },
+        { pergunta: "Qual ferramenta detecta um ponto quente em um disjuntor?", opcoes: ["Analisador de vibração", "Estetoscópio", "Câmera termográfica", "Alicate amperímetro"], resposta: "Câmera termográfica" },
+        { pergunta: "Água e ferro em uma amostra de óleo indicam:", opcoes: ["Operação normal", "Aumentar a velocidade", "Desgaste interno e falha de vedação", "Óleo de boa qualidade"], resposta: "Desgaste interno e falha de vedação" },
+        { pergunta: "O ciclo PDCA é uma ferramenta para:", opcoes: ["Calcular o custo de falha", "Apenas planejar", "Promover a melhoria contínua", "Desmontar um equipamento"], resposta: "Promover a melhoria contínua" },
     ];
     let perguntaAtual = 0;
     let pontuacao = 0;
@@ -778,13 +775,11 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             document.getElementById('feedback').innerHTML = `<span style="color:var(--cor-erro)">❌ Incorreto. A resposta certa é "${respostaCorreta}".</span>`;
         }
-
         document.querySelectorAll('#opcoes-quiz button').forEach(btn => {
             btn.disabled = true;
             if (btn.textContent === respostaCorreta) btn.classList.add('correta');
             else if (btn.textContent === opcaoSelecionada) btn.classList.add('incorreta');
         });
-
         setTimeout(() => {
             perguntaAtual++;
             if (perguntaAtual < perguntas.length) {
@@ -822,7 +817,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (pais === 'angola') {
                 docLabel.textContent = 'Seu BI (Bilhete de Identidade):';
                 docInput.placeholder = 'Digite seu número de BI';
-                docInput.maxLength = 20; // Ajuste conforme necessário
+                docInput.maxLength = 20;
             }
         });
     }
@@ -842,107 +837,73 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function gerarCertificadoPDF(nome, documento, pais) {
         if (!jsPDF) {
-            alert("Erro: A biblioteca para gerar PDF não foi carregada. Verifique sua conexão com a internet.");
+            alert("Erro: Biblioteca PDF não carregada. Verifique a internet.");
             return;
         }
         try {
             const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
-            
             doc.setFillColor(230, 240, 255);
             doc.rect(0, 0, 297, 210, 'F');
             doc.setDrawColor(0, 51, 102);
             doc.setLineWidth(2);
             doc.rect(5, 5, 287, 200);
-            
             if (LOGO_BASE64) {
                 const imgProps = doc.getImageProperties(LOGO_BASE64);
-                const imgWidth = 50;
-                const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
-                doc.addImage(LOGO_BASE64, 'PNG', 20, 15, imgWidth, imgHeight);
+                doc.addImage(LOGO_BASE64, 'PNG', 20, 15, 50, (imgProps.height * 50) / imgProps.width);
             }
-    
             doc.setFont("helvetica", "bold");
             doc.setFontSize(18);
             doc.setTextColor(0, 51, 102);
             doc.text("Manutenção Industrial ARQUIVOS", 148.5, 25, { align: "center" });
-    
             doc.setFontSize(30);
             doc.text("CERTIFICADO DE CONCLUSÃO", 148.5, 45, { align: "center" });
-    
             doc.setFont("helvetica", "normal");
             doc.setFontSize(16);
             doc.setTextColor(50, 50, 50);
             doc.text(`Certificamos que`, 148.5, 65, { align: "center" });
-    
             doc.setFont("helvetica", "bold");
             doc.setFontSize(24);
             doc.setTextColor(0, 102, 204);
             doc.text(nome.toUpperCase(), 148.5, 77, { align: "center" });
-    
             doc.setFont("helvetica", "normal");
             doc.setFontSize(14);
             doc.setTextColor(50, 50, 50);
-            
-            let documentoTextoParaCertificado = '';
-            if (pais === 'angola') {
-                documentoTextoParaCertificado = `portador(a) do BI nº ${documento},`;
-            } else {
-                documentoTextoParaCertificado = `portador(a) do CPF nº ${formatarCPF(documento)},`;
-            }
-            
-            doc.text(`${documentoTextoParaCertificado} concluiu com aproveitamento o curso de`, 148.5, 87, { align: "center" });
-            
+            let docTexto = pais === 'angola' ? `portador(a) do BI nº ${documento},` : `portador(a) do CPF nº ${formatarCPF(documento)},`;
+            doc.text(`${docTexto} concluiu com aproveitamento o curso de`, 148.5, 87, { align: "center" });
             doc.setFont("helvetica", "bold");
             doc.setFontSize(18);
             doc.setTextColor(0, 51, 102);
             doc.text("INSPEÇÃO DE MÁQUINAS INDUSTRIAIS", 148.5, 99, { align: "center" });
-            
             doc.setFont("helvetica", "normal");
             doc.setFontSize(14);
             doc.text("Carga Horária: 2 horas", 148.5, 109, { align: "center" });
-    
             doc.setFont("helvetica", "bold");
             doc.setFontSize(10);
             doc.text("Conteúdos Estudados:", 20, 125);
             doc.setFont("helvetica", "normal");
             doc.setFontSize(9); 
-            const conteudos = [
-                "Introdução e Tipos de Inspeção (Preventiva, Preditiva)", "Inspeção Sensitiva e Instrumentada (Termografia, Vibração)",
-                "Procedimentos Padrão e Checklists", "Registro e Análise de Dados de Inspeção",
-                "Análise de Falhas Mecânicas (Rolamentos, Acoplamentos)", "Análise de Falhas Elétricas (Motores, Painéis)",
-                "Ferramentas Avançadas (Ultrassom, Análise de Óleo)", "Desgaste, Lubrificação e Vida Útil de Componentes",
-                "Inspeção de Sistemas Pneumáticos e Hidráulicos", "Inspeção Estrutural e de Segurança", "Criação de Planos de Inspeção e Melhoria Contínua"
-            ];
-            
-            const col1 = conteudos.slice(0, 6);
-            const col2 = conteudos.slice(6);
+            const conteudos = [ "Introdução e Tipos de Inspeção", "Inspeção Sensitiva e Instrumentada", "Procedimentos Padrão e Checklists", "Registro e Análise de Dados", "Análise de Falhas Mecânicas", "Análise de Falhas Elétricas", "Ferramentas Avançadas", "Lubrificação e Vida Útil", "Sistemas Pneumáticos e Hidráulicos", "Inspeção Estrutural e de Segurança", "Planos de Inspeção e Melhoria Contínua" ];
             let yPos = 132;
-            col1.forEach(item => { doc.text(`• ${item}`, 20, yPos); yPos += 6; });
+            conteudos.slice(0, 6).forEach(item => { doc.text(`• ${item}`, 20, yPos); yPos += 6; });
             yPos = 132;
-            col2.forEach(item => { doc.text(`• ${item}`, 155, yPos); yPos += 6; });
-    
+            conteudos.slice(6).forEach(item => { doc.text(`• ${item}`, 155, yPos); yPos += 6; });
             const agora = new Date();
-            const dataHoraFormatada = agora.toLocaleString('pt-BR', { 
-                day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
-            });
-    
+            const dataHora = agora.toLocaleString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
             doc.setFontSize(12);
             doc.line(90, 185, 205, 185);
             doc.setFont("helvetica", "bold");
             doc.text("Jonathan da Silva Oliveira - Instrutor", 147.5, 190, { align: "center" });
-            
             doc.setFont("helvetica", "normal");
-            doc.text(`Emitido em: ${dataHoraFormatada}`, 147.5, 197, { align: "center" });
-            
-            doc.save(`Certificado - Inspeção Industrial - ${nome}.pdf`);
+            doc.text(`Emitido em: ${dataHora}`, 147.5, 197, { align: "center" });
+            doc.save(`Certificado - ${nome}.pdf`);
         } catch(e) {
             console.error("Erro ao gerar PDF:", e);
-            alert("Ocorreu um erro ao gerar o certificado. Verifique o console para mais detalhes.");
+            alert("Ocorreu um erro ao gerar o certificado.");
         }
     }
 
     function checkAndInitQuiz() {
-        if (currentModuleIndex === totalModules - 1) { // Último módulo
+        if (currentModuleIndex === totalModules - 1) {
             setTimeout(iniciarQuiz, 500);
         }
     }
