@@ -193,22 +193,22 @@
             <h3>Elementos de um Procedimento Eficaz</h3>
             
             <div class="checklist-interativo">
-                <h4>✅ Checklist de Preparação da Inspeção</h4>
-                <p>Marque os itens conforme você os prepara:</p>
-                
-                <div class="checklist-items">
-                    <label><input type="checkbox"> 🔐 Autorização da operação obtida</label>
-                    <label><input type="checkbox"> 📋 Formulário de inspeção preparado</label>
-                    <label><input type="checkbox"> 🛠️ Ferramentas calibradas e funcionando</label>
-                    <label><input type="checkbox"> 🦺 EPI adequado vestido</label>
-                    <label><input type="checkbox"> 📱 Comunicação com sala de controle estabelecida</label>
-                    <label><input type="checkbox"> 🗂️ Histórico do equipamento consultado</label>
-                    <label><input type="checkbox"> ⏰ Tempo suficiente reservado</label>
-                </div>
-                
-                <button class="action-button" onclick="verificarChecklist()">🎯 Verificar Preparação</button>
-                <div id="feedback-checklist" class="feedback-checklist" style="display: none;"></div>
-            </div>
+    <h4>✅ Checklist de Preparação da Inspeção</h4>
+    <p>Marque os itens conforme você os prepara:</p>
+    
+    <div class="checklist-items">
+        <label><input type="checkbox"> 🔐 Autorização da operação obtida</label>
+        <label><input type="checkbox"> 📋 Formulário de inspeção preparado</label>
+        <label><input type="checkbox"> 🛠️ Ferramentas calibradas e funcionando</label>
+        <label><input type="checkbox"> 🦺 EPI adequado vestido</label>
+        <label><input type="checkbox"> 📱 Comunicação com sala de controle estabelecida</label>
+        <label><input type="checkbox"> 🗂️ Histórico do equipamento consultado</label>
+        <label><input type="checkbox"> ⏰ Tempo suficiente reservado</label>
+    </div>
+    
+    <button class="action-button" onclick="verificarChecklist()"><span class="btn-icon">🎯</span> Verificar Preparação</button>
+    <div id="feedback-checklist" class="feedback-checklist" style="display: none;"></div>
+</div>
 
             <h3>Frequência de Inspeção</h3>
             
@@ -419,28 +419,28 @@
             <h3>Análise de Tendências</h3>
             
             <div class="analise-tendencias">
-                <h4>📈 Simulador de Análise de Tendências</h4>
-                <div class="controles-grafico">
-                    <div>
-                        <label for="parametro-grafico">Parâmetro:</label>
-                        <select id="parametro-grafico">
-                            <option value="temperatura">Temperatura</option>
-                            <option value="vibracao">Vibração</option>
-                            <option value="corrente">Corrente</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="periodo-grafico">Período:</label>
-                        <select id="periodo-grafico">
-                            <option value="30">30 dias</option>
-                            <option value="90">90 dias</option>
-                            <option value="365">1 ano</option>
-                        </select>
-                    </div>
-                </div>
-                <button class="action-button" onclick="atualizarGrafico()">📊 Atualizar Análise</button>
-                <div id="interpretacao-grafico" class="resultado-calc" style="display: none;"></div>
-            </div>
+    <h4>📈 Simulador de Análise de Tendências</h4>
+    <div class="controles-grafico">
+        <div>
+            <label for="parametro-grafico">Parâmetro:</label>
+            <select id="parametro-grafico">
+                <option value="temperatura">Temperatura</option>
+                <option value="vibracao">Vibração</option>
+                <option value="corrente">Corrente</option>
+            </select>
+        </div>
+        <div>
+            <label for="periodo-grafico">Período:</label>
+            <select id="periodo-grafico">
+                <option value="30">30 dias</option>
+                <option value="90">90 dias</option>
+                <option value="365">1 ano</option>
+            </select>
+        </div>
+    </div>
+    <button class="action-button" onclick="atualizarGrafico()"><span class="btn-icon">📊</span> Atualizar Análise</button>
+    <div id="interpretacao-grafico" class="resultado-calc" style="display: none;"></div>
+</div>
 
             <h3>KPIs de Inspeção</h3>
             
@@ -629,16 +629,7 @@
                 <div id="resultado-termografia" class="resultado-analise" style="display: none;"></div>
             </div>
 
-            <div class="analise-corrente">
-                <h3>⚡ Análise de Assinatura de Corrente (MCSA)</h3>
-                <p><strong>Leituras:</strong> Fase R: 28,5A, Fase S: 31,2A, Fase T: 29,8A. Nominal: 30A.</p>
-                <div class="calculadora-desequilibrio">
-                    <input type="hidden" id="corrente-maxima" value="31.2">
-                    <input type="hidden" id="corrente-minima" value="28.5">
-                    <button class="calc-button" onclick="calcularDesequilibrio()">🧮 Calcular Desequilíbrio</button>
-                </div>
-                <div id="classificacao-desequilibrio" class="resultado-calc" style="display: none;"></div>
-            </div>
+            
         </section>
 
         <!-- MÓDULO 8: FERRAMENTAS AVANÇADAS DE INSPEÇÃO -->
@@ -651,38 +642,50 @@
                 <div class="ferramenta-card"><h4>🔊 Detector Ultrassônico</h4><p>Detecta vazamentos, arco elétrico e problemas de lubrificação.</p></div>
                 <div class="ferramenta-card"><h4>🌡️ Câmera Termográfica</h4><p>Identifica pontos quentes em sistemas elétricos e mecânicos.</p></div>
                 <div class="ferramenta-card"><h4>📳 Analisador de Vibração FFT</h4><p>Diagnóstico preciso de falhas mecânicas através da análise de frequências.</p></div>
-                <div class="ferramenta-card"><h4>🔬 Sistema de Análise de Óleo</h4><p>Monitora o desgaste interno dos equipamentos.</p></div>
+                <div class="ferramenta-card"><hyle="display: none;"></div>
             </div>
 
+            <div class="analise-corrente">
+    <h3>⚡ Análise de Assinatura de Corrente (MCSA)</h3>
+    <p><strong>Leituras:</strong> Fase R: 28,5A, Fase S: 31,2A, Fase T: 29,8A. Nominal: 30A.</p>
+    <div class="calculadora-desequilibrio">
+        <button class="calc-button" onclick="calcularDesequilibrio()"><span class="btn-icon">🧮</span> Calcular Desequilíbrio</button>
+    </div>
+    <div id="classificacao-desequilibrio" class="resultado-calc" style="display: none;"></div>
+</div>
+        </section>
+
+        <!-- MÓDULO 8: FERRAMENTAS AVAN   </div>
+
             <div class="matriz-selecao">
-                <h3>🎯 Seleção da Ferramenta Ideal</h3>
-                <div class="simulador-selecao-ferramenta">
-                    <div class="pergunta-selecao">
-                        <label>Tipo de equipamento:</label>
-                        <select id="tipo-equipamento-sel">
-                            <option value="motores">Motores elétricos</option>
-                            <option value="paineis">Painéis elétricos</option>
-                        </select>
-                    </div>
-                    <div class="pergunta-selecao">
-                        <label>Orçamento:</label>
-                        <select id="orcamento-sel">
-                            <option value="baixo">Até R$ 10.000</option>
-                            <option value="medio">R$ 10.000 - R$ 50.000</option>
-                            <option value="alto">Acima de R$ 50.000</option>
-                        </select>
-                    </div>
-                    <div class="pergunta-selecao">
-                        <label>Nível da equipe:</label>
-                        <select id="nivel-equipe-sel">
-                            <option value="basico">Básico</option>
-                            <option value="avancado">Avançado</option>
-                        </select>
-                    </div>
-                    <button class="action-button" onclick="recomendarFerramenta()">🎯 Recomendar</button>
-                    <div id="recomendacao-ferramenta" class="resultado-calc" style="display: none;"></div>
-                </div>
-            </div>
+    <h3>🎯 Seleção da Ferramenta Ideal</h3>
+    <div class="simulador-selecao-ferramenta">
+        <div class="pergunta-selecao">
+            <label>Tipo de equipamento:</label>
+            <select id="tipo-equipamento-sel">
+                <option value="motores">Motores elétricos</option>
+                <option value="paineis">Painéis elétricos</option>
+            </select>
+        </div>
+        <div class="pergunta-selecao">
+            <label>Orçamento:</label>
+            <select id="orcamento-sel">
+                <option value="baixo">Até R$ 10.000</option>
+                <option value="medio">R$ 10.000 - R$ 50.000</option>
+                <option value="alto">Acima de R$ 50.000</option>
+            </select>
+        </div>
+        <div class="pergunta-selecao">
+            <label>Nível da equipe:</label>
+            <select id="nivel-equipe-sel">
+                <option value="basico">Básico</option>
+                <option value="avancado">Avançado</option>
+            </select>
+        </div>
+        <button class="action-button" onclick="recomendarFerramenta()"><span class="btn-icon">🎯</span> Recomendar</button>
+        <div id="recomendacao-ferramenta" class="resultado-calc" style="display: none;"></div>
+    </div>
+</div>
 
             <div class="calculadora-roi-avancada">
                 <h3>💰 Calculadora de ROI Personalizada</h3>
@@ -781,14 +784,18 @@
             </div>
 
             <div class="diagnostico-vazamentos">
-                <h3>🔍 Detector de Vazamentos - Simulador</h3>
-                <p>Você ouve um som de vazamento. Qual técnica usar para localizar?</p>
-                <div class="opcoes-deteccao">
-                    <button class="opcao-deteccao" data-metodo="ultrassom" data-eficacia="95">🔊 Detector Ultrassônico</button>
-                    <button class="opcao-deteccao" data-metodo="espuma" data-eficacia="85">🧽 Solução de Espuma</button>
-                </div>
-                <div id="resultado-deteccao" class="resultado-deteccao" style="display: none;"></div>
-            </div>
+    <h3>🔍 Detector de Vazamentos - Simulador</h3>
+    <p>Você ouve um som de vazamento. Qual técnica usar para localizar?</p>
+    <div class="opcoes-deteccao">
+        <button class="opcao-deteccao" data-metodo="ultrassom" data-eficacia="95">
+            <span class="btn-icon">🔊</span> Detector Ultrassônico
+        </button>
+        <button class="opcao-deteccao" data-metodo="espuma" data-eficacia="85">
+            <span class="btn-icon">🧼</span> Solução de Espuma
+        </button>
+    </div>
+    <div id="resultado-deteccao" class="resultado-deteccao" style="display: none;"></div>
+</div>
 
             <div class="calculadora-vazamento">
                 <h3>💰 Custo de Vazamentos de Ar</h3>
@@ -851,34 +858,33 @@
         <section id="module-12" class="module">
             <h2>Módulo 12: Plano de Inspeção e Melhoria Contínua</h2>
             <p>Aqui você aprenderá a criar o DNA da excelência operacional, transformando inspeções em um programa de classe mundial.</p>
-            
             <div class="calculadora-criticidade">
-                <h3>⚖️ Calculadora de Criticidade ABC</h3>
-                <div class="fatores-criticidade">
-                    <label>Impacto Produção (1-10): <span id="valor-impacto">5</span></label>
-                    <input type="range" id="impacto-producao" value="5" oninput="document.getElementById('valor-impacto').textContent = this.value">
-                    <label>Impacto Segurança (1-10): <span id="valor-seguranca">3</span></label>
-                    <input type="range" id="impacto-seguranca" value="3" oninput="document.getElementById('valor-seguranca').textContent = this.value">
-                    <label>Custo Manutenção (1-10): <span id="valor-custo">4</span></label>
-                    <input type="range" id="custo-manutencao" value="4" oninput="document.getElementById('valor-custo').textContent = this.value">
-                    <label>Impacto Ambiental (1-10): <span id="valor-ambiental">2</span></label>
-                    <input type="range" id="impacto-ambiental" value="2" oninput="document.getElementById('valor-ambiental').textContent = this.value">
-                </div>
-                <button class="calc-button" onclick="calcularCriticidade()">🎯 Calcular</button>
-                <div id="resultado-criticidade" class="resultado-calc" style="display: none;"></div>
+    <h3>⚖️ Calculadora de Criticidade ABC</h3>
+    <div class="fatores-criticidade">
+        <label>Impacto Produção (1-10): <span id="valor-impacto">5</span></label>
+        <input type="range" id="impacto-producao" min="1" max="10" value="5" oninput="document.getElementById('valor-impacto').textContent = this.value">
+        <label>Impacto Segurança (1-10): <span id="valor-seguranca">3</span></label>
+        <input type="range" id="impacto-seguranca" min="1" max="10" value="3" oninput="document.getElementById('valor-seguranca').textContent = this.value">
+        <label>Custo Manutenção (1-10): <span id="valor-custo">4</span></label>
+        <input type="range" id="custo-manutencao" min="1" max="10" value="4" oninput="document.getElementById('valor-custo').textContent = this.value">
+        <label>Impacto Ambiental (1-10): <span id="valor-ambiental">2</span></label>
+        <input type="range" id="impacto-ambiental" min="1" max="10" value="2" oninput="document.getElementById('valor-ambiental').textContent = this.value">
+    </div>
+    <button class="calc-button" onclick="calcularCriticidade()"><span class="btn-icon">🎯</span> Calcular</button>
+    <div id="resultado-criticidade" class="resultado-calc" style="display: none;"></div>
             </div>
             
             <div class="gerador-rotas">
-                <h3>🗺️ Gerador de Rotas de Inspeção</h3>
-                <div class="inputs-rota">
-                    <label>Área:</label> <select id="area-inspecao"><option value="producao">Produção</option></select>
-                    <label>Tempo (h):</label> <input type="number" id="tempo-disponivel" value="4">
-                    <label>Equipe:</label> <input type="number" id="equipe-size" value="2">
-                    <label>Priorizar por:</label> <select id="prioridade-rota"><option value="criticidade">Criticidade</option></select>
-                </div>
-                <button class="action-button" onclick="gerarRota()">🗺️ Gerar Rota</button>
-                <div id="rota-gerada" class="resultado-calc" style="display: none;"></div>
-            </div>
+    <h3>🗺️ Gerador de Rotas de Inspeção</h3>
+    <div class="inputs-rota">
+        <label for="area-inspecao">Área:</label> <select id="area-inspecao"><option value="producao">Produção</option></select>
+        <label for="tempo-disponivel">Tempo (h):</label> <input type="number" id="tempo-disponivel" value="4">
+        <label for="equipe-size">Equipe:</label> <input type="number" id="equipe-size" value="2">
+        <label for="prioridade-rota">Priorizar por:</label> <select id="prioridade-rota"><option value="criticidade">Criticidade</option></select>
+    </div>
+    <button class="action-button" onclick="gerarRota()"><span class="btn-icon">🗺️</span> Gerar Rota</button>
+    <div id="rota-gerada" class="resultado-calc" style="display: none;"></div>
+</div>
 
             <div class="calculadora-kpis-avancada">
                 <h3>🧮 Calculadora de KPIs Avançados</h3>
