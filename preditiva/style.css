@@ -109,7 +109,8 @@ header p {
 .simulador-escolha { background-color: #e8f5e8; border-color: #28a745; }
 .checklist-interativo, .checklist-master { background-color: #fff8e1; border-color: #ffeb3b; }
 
-.opcao-exercicio, .opcao-sim, .opcao-caso, .opcao-diag, .opcao-termo, .opcao-seg, .opcao-freq, .sentido-btn, .opcao-gestao, .opcao-deteccao, .opcao-estrutural {
+/* ESTILO UNIFICADO PARA TODOS OS BOTÕES DE OPÇÃO */
+.opcao-exercicio, .opcao-sim, .opcao-caso, .opcao-diag, .opcao-termo, .opcao-seg, .opcao-freq, .sentido-btn, .opcao-gestao, .opcao-deteccao, .opcao-estrutural, .opcao-corr, .opcao-caso-final {
     display: block;
     width: 100%;
     background: linear-gradient(135deg, #ffffff, #f8f9fa);
@@ -123,7 +124,7 @@ header p {
     font-weight: 500;
 }
 
-.opcao-exercicio:hover, .opcao-sim:hover, .opcao-caso:hover, .opcao-diag:hover, .opcao-termo:hover, .opcao-seg:hover, .opcao-freq:hover, .sentido-btn:hover, .opcao-gestao:hover, .opcao-deteccao:hover, .opcao-estrutural:hover {
+.opcao-exercicio:hover, .opcao-sim:hover, .opcao-caso:hover, .opcao-diag:hover, .opcao-termo:hover, .opcao-seg:hover, .opcao-freq:hover, .sentido-btn:hover, .opcao-gestao:hover, .opcao-deteccao:hover, .opcao-estrutural:hover, .opcao-corr:hover, .opcao-caso-final:hover {
     border-color: var(--cor-secundaria);
     transform: translateY(-2px) translateX(5px);
     box-shadow: 0 6px 15px rgba(0, 90, 156, 0.15);
@@ -179,7 +180,8 @@ input[type="range"] {
 .feedback-correto { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
 .feedback-incorreto { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
 
-.resultado-calc, .resultado-gestao, .resultado-preparacao, .resultado-roi-tools, .resultado-checklist, .kpis-grid, .resultado-kpis, .resultado-problemas, .interpretacao-grafico, .resultado-diagnostico, .resultado-custo-falha, .resultado-analise, .resultado-desequilibrio, .recomendacao-personalizada, .resultado-roi-detalhado, .interpretacao-completa, .resultado-inspecao-pneumatica, .resultado-deteccao, .resultado-custo-vazamento, .resultado-estrutural, .resultado-vida-fadiga, .resultado-risco-estrutural, .banner-resultado, .ferramentas-detalhes, .analise-investimento {
+/* ESTILO UNIFICADO PARA TODAS AS CAIXAS DE RESULTADO/FEEDBACK */
+.resultado-calc, .resultado-gestao, .resultado-preparacao, .resultado-roi-tools, .resultado-checklist, .kpis-grid, .resultado-kpis, .resultado-problemas, .interpretacao-grafico, .resultado-diagnostico, .resultado-custo-falha, .resultado-analise, .resultado-desequilibrio, .recomendacao-personalizada, .resultado-roi-detalhado, .interpretacao-completa, .resultado-inspecao-pneumatica, .resultado-deteccao, .resultado-custo-vazamento, .resultado-estrutural, .resultado-vida-fadiga, .resultado-risco-estrutural, .banner-resultado, .ferramentas-detalhes, .analise-investimento, .feedback-caso, #diagnostico-fluido {
     display: none;
     margin-top: 1rem;
     padding: 1.5rem;
@@ -392,20 +394,11 @@ tbody tr:nth-child(even) { background-color: #f8f9fa; }
 /* =================================================== */
 /* ESTILO GERAL E UNIFICADO PARA TODOS OS CHECKLISTS   */
 /* =================================================== */
-
-/* Seletor genérico para todas as labels de checklist */
-.checklist-items label,
-.checklist-construtor label,
-.problemas-opcoes label,
-.itens-checklist label,
-.categoria-checklist > label {
-    /* Layout e Espaçamento */
+.checklist-items label, .checklist-construtor label, .problemas-opcoes label, .itens-checklist label, .categoria-checklist > label {
     display: flex;
     align-items: center;
     gap: 12px;
     cursor: pointer;
-    
-    /* Aparência */
     background-color: #f8f9fa;
     border: 1px solid #dee2e6;
     border-radius: 8px;
@@ -413,39 +406,22 @@ tbody tr:nth-child(even) { background-color: #f8f9fa; }
     margin-bottom: 8px;
     font-weight: 500;
     line-height: 1.5;
-    
-    /* Transições */
     transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
-/* Efeito Hover */
-.checklist-items label:hover,
-.checklist-construtor label:hover,
-.problemas-opcoes label:hover,
-.itens-checklist label:hover,
-.categoria-checklist > label:hover {
+.checklist-items label:hover, .checklist-construtor label:hover, .problemas-opcoes label:hover, .itens-checklist label:hover, .categoria-checklist > label:hover {
     background-color: #e9ecef;
     border-color: #ced4da;
 }
 
-/* Esconder o checkbox original */
-.checklist-items input[type="checkbox"],
-.checklist-construtor input[type="checkbox"],
-.problemas-opcoes input[type="checkbox"],
-.itens-checklist input[type="checkbox"],
-.categoria-checklist input[type="checkbox"] {
+.checklist-items input[type="checkbox"], .checklist-construtor input[type="checkbox"], .problemas-opcoes input[type="checkbox"], .itens-checklist input[type="checkbox"], .categoria-checklist input[type="checkbox"] {
     position: absolute;
     opacity: 0;
     width: 0;
     height: 0;
 }
 
-/* Criar a caixa do checkbox customizado */
-.checklist-items label::before,
-.checklist-construtor label::before,
-.problemas-opcoes label::before,
-.itens-checklist label::before,
-.categoria-checklist > label::before {
+.checklist-items label::before, .checklist-construtor label::before, .problemas-opcoes label::before, .itens-checklist label::before, .categoria-checklist > label::before {
     content: "";
     flex-shrink: 0;
     width: 20px;
@@ -459,29 +435,17 @@ tbody tr:nth-child(even) { background-color: #f8f9fa; }
     justify-content: center;
 }
 
-/* Estilo do checkbox quando MARCADO (usando :has() para compatibilidade com navegadores modernos) */
-.checklist-items label:has(input:checked)::before,
-.checklist-construtor label:has(input:checked)::before,
-.problemas-opcoes label:has(input:checked)::before,
-.itens-checklist label:has(input:checked)::before,
-.categoria-checklist > label:has(input:checked)::before {
+.checklist-items label:has(input:checked)::before, .checklist-construtor label:has(input:checked)::before, .problemas-opcoes label:has(input:checked)::before, .itens-checklist label:has(input:checked)::before, .categoria-checklist > label:has(input:checked)::before {
     background-color: var(--cor-secundaria);
     border-color: var(--cor-secundaria);
-    
-    /* "V" de checkmark (SVG embutido para compatibilidade máxima) */
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e");
     background-repeat: no-repeat;
     background-position: center;
     background-size: 60%;
 }
 
-/* Mudar a aparência da label inteira quando marcada */
-.checklist-items label:has(input:checked),
-.checklist-construtor label:has(input:checked),
-.problemas-opcoes label:has(input:checked),
-.itens-checklist label:has(input:checked),
-.categoria-checklist > label:has(input:checked) {
-    background-color: #e3f2fd; /* Fundo azul claro */
+.checklist-items label:has(input:checked), .checklist-construtor label:has(input:checked), .problemas-opcoes label:has(input:checked), .itens-checklist label:has(input:checked), .categoria-checklist > label:has(input:checked) {
+    background-color: #e3f2fd;
     border-color: var(--cor-secundaria);
 }
 
@@ -534,6 +498,35 @@ tbody tr:nth-child(even) { background-color: #f8f9fa; }
     font-weight: bold;
 }
 
+/* ESTILO PARA O CICLO PDCA */
+.pdca-interativo {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+.btn-fase {
+    width: 100%;
+}
+.ferramentas-pdca {
+    display: none;
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background-color: #f0f6fc;
+    border-left: 5px solid var(--cor-secundaria);
+    border-radius: 8px;
+    animation: fadeIn 0.4s ease;
+}
+.ferramentas-pdca h4 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: var(--cor-primaria);
+}
+.ferramentas-pdca ul {
+    padding-left: 20px;
+    margin: 0;
+}
+.ferramentas-pdca li {
+    margin-bottom: 0.5rem;
+}
+
 
 /* MEDIA QUERIES */
 @media (max-width: 768px) {
@@ -569,31 +562,28 @@ tbody tr:nth-child(even) { background-color: #f8f9fa; }
         grid-template-columns: 1fr;
     }
 }
+
 /* ================================================= */
 /* CORREÇÕES VISUAIS PARA INTERAÇÕES ESPECÍFICAS     */
 /* ================================================= */
-
-/* Alinhamento de ícones dentro de botões */
 .calc-button, .action-button, .interactive-button, .btn-fase, .opcao-deteccao {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px; /* Espaço entre o ícone e o texto */
+    gap: 8px;
 }
 
 .opcao-deteccao {
     width: 100%;
-    justify-content: flex-start; /* Alinha o conteúdo à esquerda */
+    justify-content: flex-start;
 }
 
-/* Garante que o ícone do botão não tenha margem extra */
 .btn-icon {
     margin: 0;
     padding: 0;
-    line-height: 1; /* Garante alinhamento vertical */
+    line-height: 1;
 }
 
-/* Ajuste nos inputs do gerador de rotas para melhor espaçamento */
 .gerador-rotas .inputs-rota {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -607,5 +597,5 @@ tbody tr:nth-child(even) { background-color: #f8f9fa; }
 }
 
 .gerador-rotas input, .gerador-rotas select {
-    margin-top: 0; /* Remove margem superior desnecessária */
+    margin-top: 0;
 }
