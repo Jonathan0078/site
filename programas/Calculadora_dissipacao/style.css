@@ -34,20 +34,29 @@ body {
 header {
     background: linear-gradient(90deg, var(--cor-primaria), var(--cor-secundaria));
     color: #ffffff;
-    padding: 1.5rem 1rem;
-    text-align: center;
+    padding: 1.5rem 2rem;
     border-bottom: 5px solid var(--cor-destaque);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.header-content {
+    text-align: left;
 }
 
 header h1 {
     font-family: 'Oswald', sans-serif;
     font-size: 2.2rem;
+    margin: 0;
 }
 
 header p {
     font-family: 'Roboto Mono', monospace;
     font-size: 1.1em;
     opacity: 0.9;
+    margin: 0;
 }
 
 .main-container {
@@ -209,16 +218,24 @@ h2 {
 }
 .hidden { display: none !important; }
 
-/* Menu Flutuante */
-.menu-flutuante { position: fixed; top: 32px; right: 32px; z-index: 1001; }
+/* Menu no Cabeçalho */
+.menu-container {
+    position: relative;
+    z-index: 1001;
+}
 .menu-btn {
     background: var(--cor-destaque); color: var(--cor-primaria);
-    border: none; border-radius: 8px; padding: 12px 20px;
+    border: none; border-radius: 8px; padding: 12px 24px;
     font-weight: 700; font-size: 1.1rem; cursor: pointer;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+.menu-btn:hover {
+    transform: translateY(-2px);
+    background-color: #ffdb4d;
 }
 .menu-popup {
-    display: none; position: absolute; top: 60px; right: 0;
+    display: none; position: absolute; top: calc(100% + 10px); right: 0;
     background: #fff; border-radius: 10px;
     box-shadow: 0 4px 24px rgba(0,0,0,0.18);
     min-width: 260px; padding: 0; z-index: 1002;
@@ -277,7 +294,7 @@ h2 {
 /* Estilos para Impressão */
 @media print {
     body, html { background: #fff !important; color: #000 !important; }
-    header, .menu-flutuante, #form-mancal, .export-container, .aviso-dados, .view-container:not(#view-calculadora), #grafico-whatif-container {
+    header, #form-mancal, .export-container, .aviso-dados, .view-container:not(#view-calculadora), #grafico-whatif-container {
         display: none !important;
     }
     .main-container, .calculator-container, #resultado-container {
@@ -291,6 +308,17 @@ h2 {
 }
 
 /* Layout Responsivo */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1.5rem 1rem;
+    }
+    .menu-container, .menu-btn, .menu-popup {
+        width: 100%;
+    }
+}
+
 @media (max-width: 600px) {
     .main-container { margin: 1rem auto; padding: 0 0.5rem; }
     header h1 { font-size: 1.8rem; }
@@ -298,6 +326,5 @@ h2 {
     .calculator-container, .resultado-container, .historico-container, .multiplos-mancais-container { padding: 1rem; }
     .export-container { flex-direction: column; }
     .export-container button { width: 100%; }
-    .menu-flutuante { top: 16px; right: 16px; }
     .mancal-item { flex-direction: column; align-items: stretch; }
 }
