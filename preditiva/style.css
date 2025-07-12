@@ -474,3 +474,57 @@ tbody tr:nth-child(even) { background-color: #f8f9fa; }
         grid-template-columns: 1fr;
     }
 }
+/* ================================================= */
+/* CORREÇÕES VISUAIS PARA INTERAÇÕES ESPECÍFICAS     */
+/* ================================================= */
+
+/* Alinhamento dos itens no Checklist de Preparação */
+.checklist-items label {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espaço entre o checkbox e o texto/ícone */
+    margin-bottom: 0.8rem;
+}
+
+.checklist-items input[type="checkbox"] {
+    width: auto; /* Permite que o checkbox tenha seu tamanho natural */
+    margin: 0; /* Remove margens padrão */
+    flex-shrink: 0; /* Impede que o checkbox encolha */
+}
+
+/* Alinhamento de ícones dentro de botões */
+.calc-button, .action-button, .interactive-button, .btn-fase, .opcao-deteccao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Espaço entre o ícone e o texto */
+}
+
+.opcao-deteccao {
+    width: 100%;
+    justify-content: flex-start; /* Alinha o conteúdo à esquerda */
+}
+
+/* Garante que o ícone do botão não tenha margem extra */
+.btn-icon {
+    margin: 0;
+    padding: 0;
+    line-height: 1; /* Garante alinhamento vertical */
+}
+
+/* Ajuste nos inputs do gerador de rotas para melhor espaçamento */
+.gerador-rotas .inputs-rota {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.gerador-rotas label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+}
+
+.gerador-rotas input, .gerador-rotas select {
+    margin-top: 0; /* Remove margem superior desnecessária */
+}
