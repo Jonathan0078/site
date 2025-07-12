@@ -139,6 +139,22 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        // Módulo 5: Desafio Final
+        if (target.classList.contains('opcao-caso-final')) {
+            const correto = target.dataset.correta === 'true';
+            const feedbackMsg = target.dataset.feedback;
+            const feedbackContainer = document.getElementById('feedback-caso-final');
+            
+            if (feedbackContainer) {
+                feedbackContainer.style.display = 'block';
+                if (correto) {
+                    feedbackContainer.innerHTML = `<div class="feedback-correto">✅ ${feedbackMsg}</div>`;
+                } else {
+                    feedbackContainer.innerHTML = `<div class="feedback-incorreto">❌ ${feedbackMsg}</div>`;
+                }
+            }
+        }
+
         // Módulo 6: Simulador de Diagnóstico
         if (target.classList.contains('opcao-diag')) {
             const correto = target.dataset.correto === 'true';
@@ -156,6 +172,21 @@ document.addEventListener('DOMContentLoaded', () => {
             if(resultado) {
                 resultado.style.display = 'block';
                 resultado.innerHTML = correto ? `<div class="feedback-correto">✅ Análise correta! Uma diferença de 50°C sobre o ambiente é um sinal crítico que exige ação imediata.</div>` : `<div class="feedback-incorreto">❌ Análise incorreta. Uma diferença tão grande de temperatura nunca é normal.</div>`;
+            }
+        }
+
+        // Módulo 7: Simulador de Medição de Corrente (CORRIGIDO)
+        if (target.classList.contains('opcao-corr')) {
+            const correto = target.dataset.correto === 'true';
+            const feedbackMsg = target.dataset.feedback;
+            const resultado = document.getElementById('resultado-corrente');
+            if(resultado) {
+                resultado.style.display = 'block';
+                 if (correto) {
+                    resultado.innerHTML = `<div class="feedback-correto">✅ ${feedbackMsg}</div>`;
+                } else {
+                    resultado.innerHTML = `<div class="feedback-incorreto">❌ ${feedbackMsg}</div>`;
+                }
             }
         }
 
@@ -604,6 +635,24 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="resultado-item">Perda de ar: ${Math.round(perdaAnualM3).toLocaleString('pt-BR')} m³/ano</div>
             <div class="resultado-item destaque">Custo do Vazamento: R$ ${custoAnual.toLocaleString('pt-BR', {minimumFractionDigits: 2})}/ano</div>`;
     };
+    
+    // Módulo 10: Check-up do Fluido Hidráulico (CORRIGIDO)
+    window.diagnosticarFluido = function() {
+        const sintoma = document.getElementById('sintoma-fluido').value;
+        const resultado = document.getElementById('diagnostico-fluido');
+        const diagnosticos = {
+            leitoso: '🚨 **Contaminação por Água!** Causa corrosão, reduz a lubrificação e a vida útil dos componentes. Verifique vedações e trocadores de calor.',
+            espuma: '⚠️ **Contaminação por Ar ou Nível Baixo!** Causa cavitação na bomba e operação errática. Verifique o nível do óleo, vedações da sucção e o respiro.',
+            escuro: '🔥 **Óleo Oxidado/Queimado!** Perdeu suas propriedades lubrificantes. Causa: alta temperatura. Verifique o sistema de refrigeração e troque o óleo.',
+            particulas: '💥 **Desgaste Interno Severo!** As partículas são de componentes se desintegrando. Pare o equipamento, filtre/troque o óleo e investigue a causa raiz (bomba, motor, etc).'
+        };
+        if (sintoma !== 'selecione') {
+            resultado.style.display = 'block';
+            resultado.innerHTML = `<p>${diagnosticos[sintoma]}</p>`;
+        } else {
+            resultado.style.display = 'none';
+        }
+    };
 
     // Módulo 11
     window.calcularVidaFadiga = () => {
@@ -704,6 +753,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="resultado-item destaque">ROI (1º Ano): ${roi.toFixed(1)}%</div>`;
     };
 
+    // Módulo 12: Ciclo PDCA (CORRIGIDO)
     window.expandirFase = function(fase) {
         const ferramentas = {
             plan: { titulo: '📋 Ferramentas de Planejamento (PLAN)', itens: ['Análise de Criticidade (ABC)', 'Análise de Modos de Falha (FMEA)', 'Diagrama de Ishikawa', '5W2H'] },
