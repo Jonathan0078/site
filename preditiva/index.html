@@ -313,359 +313,440 @@
         <section id="module-3" class="module">
             <h2>Módulo 3: Procedimentos Padrão e Checklists</h2>
             
-            <p>Um procedimento bem estruturado é a diferença entre uma inspeção eficiente e uma inspeção que deixa pontos importantes passar despercebidos. É o seu GPS para navegar pela complexidade dos equipamentos.</p>
+        <p>Nos módulos anteriores, entendemos <strong>por que</strong> inspecionar (Módulo 1) e <strong>com o que</strong> inspecionar (Módulo 2). Agora, vamos mergulhar na parte mais crítica: <strong>como</strong> transformar esse conhecimento em uma rotina eficiente e segura. Um procedimento bem estruturado, que chamamos de <strong>Plano de Inspeção</strong>, é a diferença entre uma inspeção que gera resultados consistentes e uma que deixa pontos importantes passarem despercebidos. Ele é o seu GPS para navegar pela complexidade dos equipamentos.</p>
 
-            <div class="dica-destaque">
-                <h4>🎯 Objetivo dos Procedimentos</h4>
-                <p>Garantir que <strong>qualquer técnico</strong> possa realizar a inspeção com a <strong>mesma qualidade</strong>, independente de experiência. É a sua receita de bolo para o sucesso!</p>
-            </div>
+        <div class="dica-destaque">
+            <h4>🎯 O Objetivo de um Plano de Inspeção</h4>
+            <p>O objetivo é <strong>padronizar a excelência</strong>. Um bom plano garante que <strong>qualquer técnico qualificado</strong> possa realizar a inspeção com a <strong>mesma qualidade e atenção aos detalhes</strong>, independentemente do seu nível de experiência. Ele transforma o conhecimento individual em um ativo da empresa e é a sua receita de bolo para o sucesso repetível.</p>
+        </div>
 
-            <h3>Elementos de um Procedimento Eficaz</h3>
+        <h3>Os Pilares de um Procedimento Eficaz</h3>
+        <p>Um documento de procedimento de inspeção robusto não é apenas uma lista de tarefas. Ele deve conter informações claras para guiar o inspetor do início ao fim. Os componentes essenciais são:</p>
+            <ul>
+                <li><strong>Cabeçalho:</strong> Identificação do equipamento (TAG), área, data e nome do inspetor.</li>
+                <li><strong>Requisitos de Segurança:</strong> EPIs obrigatórios, necessidade de Permissão de Trabalho (PT), procedimentos de Bloqueio e Etiquetagem (LOTO), se aplicável.</li>
+                <li><strong>Ferramentas Necessárias:</strong> Lista de todas as ferramentas sensitivas e instrumentadas que serão usadas.</li>
+                <li><strong>Passo a Passo (A Rota):</strong> A sequência lógica de pontos a serem inspecionados, com instruções claras para cada um.</li>
+                <li><strong>Parâmetros de Aceitação:</strong> O que é considerado "normal"? (Ex: "Temperatura do mancal < 70°C", "Vibração < 4 mm/s"). Isso remove a subjetividade.</li>
+                <li><strong>Campo para Anotações e Registros:</strong> Espaço para registrar os valores medidos e descrever qualquer anomalia encontrada.</li>
+            </ul>
+
+        <div class="checklist-interativo">
+            <h4>✅ Checklist de Preparação para a Rota de Inspeção</h4>
+            <p>Antes de colocar o pé na área, um profissional se prepara. Marque os itens essenciais para garantir uma inspeção segura e eficaz:</p>
             
-            <div class="checklist-interativo">
-    <h4>✅ Checklist de Preparação da Inspeção</h4>
-    <p>Marque os itens conforme você os prepara:</p>
-    
-    <div class="checklist-items">
-        <label><input type="checkbox"> 🔐 Autorização da operação obtida</label>
-        <label><input type="checkbox"> 📋 Formulário de inspeção preparado</label>
-        <label><input type="checkbox"> 🛠️ Ferramentas calibradas e funcionando</label>
-        <label><input type="checkbox"> 🦺 EPI adequado vestido</label>
-        <label><input type="checkbox"> 📱 Comunicação com sala de controle estabelecida</label>
-        <label><input type="checkbox"> 🗂️ Histórico do equipamento consultado</label>
-        <label><input type="checkbox"> ⏰ Tempo suficiente reservado</label>
-    </div>
-    
-    <button class="action-button" onclick="verificarChecklist()"><span class="btn-icon">🎯</span> Verificar Preparação</button>
-    <div id="feedback-checklist" class="feedback-checklist" style="display: none;"></div>
-</div>
-
-            <h3>Frequência de Inspeção</h3>
+            <div class="checklist-items">
+                <label><input type="checkbox"> 🔐 <strong>Permissão de Trabalho (PT)</strong> e autorização da operação obtidas.</label>
+                <label><input type="checkbox"> 📋 <strong>Plano de Inspeção / Rota</strong> impresso ou no tablet.</label>
+                <label><input type="checkbox"> 🛠️ <strong>Ferramentas verificadas</strong>, baterias carregadas e calibradas.</label>
+                <label><input type="checkbox"> 🦺 <strong>EPIs corretos</strong> para a área (capacete, óculos, luvas, protetor auricular) vestidos.</label>
+                <label><input type="checkbox"> 📱 <strong>Comunicação</strong> (rádio/celular) com a sala de controle estabelecida.</label>
+                <label><input type="checkbox"> 🗂️ <strong>Histórico recente</strong> do equipamento consultado para saber o que procurar.</label>
+                <label><input type="checkbox"> ⏰ <strong>Tempo suficiente</strong> reservado na sua agenda para executar a rota com atenção.</label>
+            </div>
             
-            <div class="simulador-procedimento">
-                <h4>🔧 Construtor de Procedimento</h4>
-                <p>Vamos criar um procedimento para um motor crítico da produção:</p>
-                
-                <div class="construtor-procedimento">
-                    <div class="etapa-procedimento">
-                        <h5>1. Definir Frequência:</h5>
-                        <div class="opcoes-freq">
-                            <button class="opcao-freq" data-freq="semanal">Semanal</button>
-                            <button class="opcao-freq" data-freq="quinzenal">Quinzenal</button>
-                            <button class="opcao-freq" data-freq="mensal">Mensal</button>
-                            <button class="opcao-freq" data-freq="trimestral">Trimestral</button>
-                        </div>
-                    </div>
-                    
-                    <div class="etapa-procedimento">
-                        <h5>2. Selecionar Itens Críticos:</h5>
-                        <div class="checklist-construtor">
-                            <label><input type="checkbox" data-item="critico"> 🌡️ Temperatura dos mancais</label>
-                            <label><input type="checkbox" data-item="normal"> 🔧 Parafusos da base</label>
-                            <label><input type="checkbox" data-item="critico"> 📳 Vibração</label>
-                            <label><input type="checkbox" data-item="critico"> 🔊 Ruído anormal</label>
-                            <label><input type="checkbox" data-item="normal"> 🧽 Limpeza externa</label>
-                            <label><input type="checkbox" data-item="critico"> ⚡ Corrente elétrica</label>
-                            <label><input type="checkbox" data-item="normal"> 🏷️ Etiquetas de identificação</label>
-                            <label><input type="checkbox" data-item="critico"> 🛢️ Vazamentos</label>
-                        </div>
-                    </div>
-                </div>
-                
-                <button class="action-button" onclick="avaliarProcedimento()">📊 Avaliar Procedimento</button>
-                <div id="resultado-procedimento" class="resultado-calc" style="display: none;"></div>
-            </div>
+            <button class="action-button" onclick="verificarChecklist()"><span class="btn-icon">🎯</span> Verificar Preparação</button>
+            <div id="feedback-checklist" class="feedback-checklist" style="display: none;"></div>
+        </div>
 
-            <h3>Ferramentas por Tipo de Inspeção</h3>
+        <h3>Definindo a Frequência de Inspeção</h3>
+        <p>Com que frequência um equipamento deve ser inspecionado? A resposta é: <strong>depende</strong>. Definir a frequência correta é um balanço entre custo e risco. Uma frequência muito alta gera custos desnecessários; uma frequência muito baixa aumenta o risco de falhas não detectadas. Os principais fatores são:</p>
+            <ul>
+                <li><strong>Criticidade do Ativo:</strong> Equipamentos que param a fábrica inteira (críticos) devem ser inspecionados com muito mais frequência.</li>
+                <li><strong>Condições de Operação:</strong> Um motor em ambiente quente e com poeira precisará de mais atenção do que um idêntico em uma sala limpa.</li>
+                <li><strong>Histórico de Falhas:</strong> Equipamentos com falhas recorrentes exigem um monitoramento mais próximo.</li>
+                <li><strong>Recomendação do Fabricante:</strong> É sempre um bom ponto de partida, mas deve ser ajustado à sua realidade operacional.</li>
+            </ul>
+
+        <div class="simulador-procedimento">
+            <h4>🔧 Construtor de Plano de Inspeção</h4>
+            <p>Vamos criar um plano de inspeção básico para um motor elétrico que aciona uma bomba crítica para a produção, operando em um ambiente padrão.</p>
             
-            <div class="kit-ferramentas">
-                <h4>🧰 Kits de Ferramentas por Aplicação</h4>
+            <div class="construtor-procedimento">
+                <div class="etapa-procedimento">
+                    <h5>1. Definir Frequência da Rota Preditiva:</h5>
+                    <p>Considerando a criticidade, qual seria uma frequência razoável para a inspeção instrumentada?</p>
+                    <div class="opcoes-freq">
+                        <button class="opcao-freq" data-freq="semanal">Semanal</button>
+                        <button class="opcao-freq" data-freq="quinzenal">Quinzenal</button>
+                        <button class="opcao-freq" data-freq="mensal">Mensal</button>
+                        <button class="opcao-freq" data-freq="trimestral">Trimestral</button>
+                    </div>
+                </div>
                 
-                <div class="kits-grid">
-                    <div class="kit-card">
-                        <h5>🔧 Kit Básico - Inspeção Sensitiva</h5>
-                        <div class="kit-conteudo">
-                            <p><strong>Investimento:</strong> R$ 500 - R$ 1.500</p>
-                            <ul>
-                                <li>🔦 Lanterna LED potente</li>
-                                <li>🪞 Espelho de inspeção</li>
-                                <li>👂 Estetoscópio mecânico</li>
-                                <li>🌡️ Termômetro infravermelho</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="kit-card">
-                        <h5>📊 Kit Intermediário - Instrumentada Básica</h5>
-                        <div class="kit-conteudo">
-                            <p><strong>Investimento:</strong> R$ 5.000 - R$ 15.000</p>
-                            <ul>
-                                <li>📳 Medidor de vibração portátil</li>
-                                <li>🔊 Detector ultrassônico</li>
-                                <li>⚡ Alicate amperímetro</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="kit-card">
-                        <h5>🚀 Kit Avançado - Preditiva Completa</h5>
-                        <div class="kit-conteudo">
-                            <p><strong>Investimento:</strong> R$ 50.000 - R$ 150.000</p>
-                            <ul>
-                                <li>📸 Câmera termográfica</li>
-                                <li>📈 Analisador de vibração FFT</li>
-                                <li>🔬 Kit análise de óleo</li>
-                            </ul>
-                        </div>
+                <div class="etapa-procedimento">
+                    <h5>2. Selecionar Itens para a Rota:</h5>
+                    <p>Marque os itens que devem constar no plano de inspeção para este motor.</p>
+                    <div class="checklist-construtor">
+                        <label><input type="checkbox" data-item="critico"> 🌡️ Medir temperatura dos mancais (Termografia)</label>
+                        <label><input type="checkbox" data-item="normal"> 🔧 Verificar aperto dos parafusos da base (Visual)</label>
+                        <label><input type="checkbox" data-item="critico"> 📳 Coletar dados de vibração (Analisador)</label>
+                        <label><input type="checkbox" data-item="critico"> 🔊 Escutar ruído anormal (Sensitiva/Estetoscópio)</label>
+                        <label><input type="checkbox" data-item="normal"> 🧽 Verificar limpeza das aletas de ventilação (Visual)</label>
+                        <label><input type="checkbox" data-item="critico"> ⚡ Medir corrente elétrica das fases (Alicate Amperímetro)</label>
+                        <label><input type="checkbox" data-item="normal"> 🏷️ Checar legibilidade das etiquetas de identificação (Visual)</label>
+                        <label><input type="checkbox" data-item="critico"> 🛢️ Procurar por vazamentos de graxa nos selos (Visual)</label>
                     </div>
                 </div>
             </div>
-
-            <div class="roi-calculator">
-                <h4>📈 Calculadora de ROI das Ferramentas</h4>
-                <div class="calc-inputs">
-                    <label for="investimento-tools">Investimento em ferramentas (R$):</label>
-                    <input type="number" id="investimento-tools" placeholder="Ex: 25000" value="25000">
-                    
-                    <label for="falhas-evitadas">Falhas evitadas por ano:</label>
-                    <input type="number" id="falhas-evitadas" placeholder="Ex: 4" value="4">
-                    
-                    <label for="custo-falha">Custo médio por falha (R$):</label>
-                    <input type="number" id="custo-falha" placeholder="Ex: 15000" value="15000">
-                </div>
-                
-                <button class="calc-button" onclick="calcularROIFerramentas()">💰 Calcular ROI</button>
-                <div id="resultado-roi-tools" class="resultado-calc" style="display: none;"></div>
-            </div>
-
-            <h3>Segurança na Inspeção</h3>
             
-            <div class="quiz-seguranca">
-                <h4>🛡️ Quiz de Segurança</h4>
-                <p><strong>Situação:</strong> Você precisa medir a corrente de um motor em funcionamento. Qual o procedimento correto?</p>
-                
-                <div class="opcoes-seguranca">
-                    <button class="opcao-seg" data-correto="false">
-                        Ir direto e medir rapidamente
-                    </button>
-                    <button class="opcao-seg" data-correto="true">
-                        Comunicar a operação, usar EPI, verificar autorização
-                    </button>
-                    <button class="opcao-seg" data-correto="false">
-                        Esperar o equipamento parar
-                    </button>
-                </div>
-                
-                <div id="feedback-seguranca" class="feedback-caso" style="display: none;"></div>
-            </div>
+            <button class="action-button" onclick="avaliarProcedimento()">📊 Avaliar Plano de Inspeção</button>
+            <div id="resultado-procedimento" class="resultado-calc" style="display: none;"></div>
+        </div>
+        
+        <h3>O Arsenal do Inspetor: Ferramentas e Justificativas</h3>
+        <p>A escolha da ferramenta certa depende do seu objetivo e do nível de maturidade da sua manutenção. Não é preciso começar com o mais caro. O importante é começar de forma inteligente, investindo onde o retorno é maior.</p>
 
-            <div class="checklist-master">
-                <h4>🏗️ Gerador de Checklist Personalizado</h4>
-                
-                <div class="gerador-inputs">
-                    <div>
-                        <label for="tipo-equipamento">Tipo de Equipamento:</label>
-                        <select id="tipo-equipamento">
-                            <option value="motor">Motor Elétrico</option>
-                            <option value="bomba">Bomba Centrífuga</option>
-                            <option value="redutor">Redutor</option>
-                            <option value="compressor">Compressor</option>
-                        </select>
-                    </div>
-                    
-                    <div>
-                        <label for="criticidade-eq">Criticidade:</label>
-                        <select id="criticidade-eq">
-                            <option value="critica">Crítica</option>
-                            <option value="alta">Alta</option>
-                            <option value="media">Média</option>
-                            <option value="baixa">Baixa</option>
-                        </select>
-                    </div>
-                    
-                    <div>
-                        <label for="ambiente-eq">Ambiente:</label>
-                        <select id="ambiente-eq">
-                            <option value="normal">Normal</option>
-                            <option value="agressivo">Agressivo</option>
-                            <option value="limpo">Sala Limpa</option>
-                        </select>
+        <div class="kit-ferramentas">
+            <h4>🧰 Kits de Ferramentas por Nível de Maturidade</h4>
+            <div class="kits-grid">
+                <div class="kit-card">
+                    <h5>🔧 Kit Básico - Inspeção Sensitiva Aprimorada</h5>
+                    <div class="kit-conteudo">
+                        <p><strong>Investimento:</strong> R$ 500 - R$ 1.500</p>
+                        <ul>
+                            <li>🔦 Lanterna LED potente</li>
+                            <li>🪞 Espelho de inspeção telescópico</li>
+                            <li>👂 Estetoscópio mecânico/industrial</li>
+                            <li>🌡️ Termômetro infravermelho (pirômetro)</li>
+                        </ul>
                     </div>
                 </div>
-                
-                <button class="action-button" onclick="gerarChecklist()">📋 Gerar Checklist</button>
-                <div id="checklist-gerado" class="resultado-calc" style="display: none;"></div>
+                <div class="kit-card">
+                    <h5>📊 Kit Intermediário - Instrumentada Básica</h5>
+                    <div class="kit-conteudo">
+                        <p><strong>Investimento:</strong> R$ 5.000 - R$ 15.000</p>
+                        <ul>
+                            <li>📳 Medidor de vibração portátil (caneta)</li>
+                            <li>🔊 Detector ultrassônico básico</li>
+                            <li>⚡ Alicate amperímetro True RMS</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="kit-card">
+                    <h5>🚀 Kit Avançado - Preditiva Completa</h5>
+                    <div class="kit-conteudo">
+                        <p><strong>Investimento:</strong> R$ 50.000 - R$ 150.000+</p>
+                        <ul>
+                            <li>📸 Câmera termográfica de boa resolução</li>
+                            <li>📈 Analisador de vibração FFT (com software)</li>
+                            <li>🔬 Kit para coleta e análise de óleo</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
+        </div>
+
+        <div class="roi-calculator">
+            <h4>📈 Calculadora de ROI (Retorno sobre Investimento) das Ferramentas</h4>
+            <p>Justificar a compra de uma nova ferramenta fica mais fácil quando você mostra o retorno financeiro. Vamos calcular quanto uma ferramenta pode economizar ao evitar falhas.</p>
+            <div class="calc-inputs">
+                <label for="investimento-tools">Investimento em ferramentas (R$):</label>
+                <input type="number" id="investimento-tools" placeholder="Ex: 25000" value="25000">
+                
+                <label for="falhas-evitadas">Falhas evitadas por ano:</label>
+                <input type="number" id="falhas-evitadas" placeholder="Ex: 4" value="4">
+                
+                <label for="custo-falha">Custo médio por falha (R$):</label>
+                <input type="number" id="custo-falha" placeholder="Ex: 15000" value="15000">
+            </div>
+            <button class="calc-button" onclick="calcularROIFerramentas()">💰 Calcular ROI</button>
+            <div id="resultado-roi-tools" class="resultado-calc" style="display: none;"></div>
+        </div>
+
+        <h3>Segurança na Inspeção: A Prioridade Zero</h3>
+        <p>Nenhuma inspeção vale um acidente. Antes de se aproximar de qualquer equipamento, sua mente deve estar focada em segurança. Os conceitos-chave são:</p>
+            <ul>
+                <li><strong>APR (Análise Preliminar de Risco):</strong> Sempre se pergunte: "O que pode dar errado aqui?". Identifique os riscos (choque elétrico, partes móveis, alta temperatura, ruído) antes de agir.</li>
+                <li><strong>LOTO (Lockout/Tagout - Bloqueio e Etiquetagem):</strong> Para qualquer intervenção que exija contato direto ou remoção de proteções, o equipamento DEVE ser desenergizado, bloqueado e etiquetado.</li>
+                <li><strong>Conheça seu Limite:</strong> Se você não tem certeza ou não se sente seguro para realizar uma tarefa, NÃO FAÇA. Peça ajuda a um colega mais experiente ou ao seu supervisor.</li>
+            </ul>
+
+        <div class="quiz-seguranca">
+            <h4>🛡️ Quiz Rápido de Segurança</h4>
+            <p><strong>Situação:</strong> Você precisa medir a corrente de um motor em um painel elétrico aberto. O que você faz PRIMEIRO?</p>
+            <div class="opcoes-seguranca">
+                <button class="opcao-seg" data-correto="false" data-feedback="Incorreto. Abrir um painel sem autorização e EPIs adequados (como luvas isolantes e vestimenta anti-chama) é extremamente perigoso e viola normas de segurança.">
+                    Abrir o painel e medir rapidamente.
+                </button>
+                <button class="opcao-seg" data-correto="true" data-feedback="Correto! A segurança vem em primeiro lugar. Isso envolve ter a Permissão de Trabalho, usar o EPI correto para o risco elétrico e comunicar a todos os envolvidos.">
+                    Realizar uma APR, garantir a Permissão de Trabalho e vestir os EPIs específicos para risco elétrico.
+                </button>
+                <button class="opcao-seg" data-correto="false" data-feedback="Incorreto. A medição de corrente é feita com o equipamento em operação para ser válida. O procedimento correto envolve segurança com o equipamento energizado, não a sua parada.">
+                    Pedir para parar o equipamento, pois não se pode medir com ele funcionando.
+                </button>
+            </div>
+            <div id="feedback-seguranca" class="feedback-caso" style="display: none;"></div>
+        </div>
+
+        <h3>Da Teoria à Prática: Gerando seu Próprio Checklist</h3>
+        <p>Um plano de inspeção é um documento vivo. Ele deve ser adaptado para cada tipo de equipamento. Use a ferramenta abaixo para gerar uma base de checklist personalizada, que você pode refinar para a sua realidade.</p>
+        
+        <div class="checklist-master">
+            <h4>🏗️ Gerador de Checklist Personalizado</h4>
+            <div class="gerador-inputs">
+                <div>
+                    <label for="tipo-equipamento">Tipo de Equipamento:</label>
+                    <select id="tipo-equipamento">
+                        <option value="motor">Motor Elétrico</option>
+                        <option value="bomba">Bomba Centrífuga</option>
+                        <option value="redutor">Redutor</option>
+                        <option value="compressor">Compressor</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="criticidade-eq">Criticidade:</label>
+                    <select id="criticidade-eq">
+                        <option value="critica">Crítica</option>
+                        <option value="alta">Alta</option>
+                        <option value="media">Média</option>
+                        <option value="baixa">Baixa</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="ambiente-eq">Ambiente:</label>
+                    <select id="ambiente-eq">
+                        <option value="normal">Normal</option>
+                        <option value="agressivo">Agressivo (poeira, umidade)</option>
+                        <option value="limpo">Sala Limpa</option>
+                    </select>
+                </div>
+            </div>
+            <button class="action-button" onclick="gerarChecklist()">📋 Gerar Checklist</button>
+            <div id="checklist-gerado" class="resultado-calc" style="display: none;"></div>
+        </div>
+
+        <div class="dica-destaque">
+            <h4>Resumo do Módulo e Próximos Passos</h4>
+            <p>Parabéns! Você agora entende os elementos fundamentais para planejar e executar uma inspeção industrial de forma profissional. Vimos a importância de ter um plano, como se preparar, a lógica por trás da frequência e, acima de tudo, como manter a segurança em primeiro lugar.</p>
+            <p><strong>Lembre-se:</strong> um bom inspetor não apenas segue uma lista, ele entende o porquê de cada passo. Use os planos como seu guia, mas mantenha seus sentidos e sua curiosidade sempre alertas!</p>
+            <p>No próximo módulo, vamos explorar o que fazer com todos os dados que coletamos: <strong>Análise de Dados e Criação de Relatórios de Impacto</strong>.</p>
+        </div>
         </section>
 
         <!-- MÓDULO 4: REGISTRO E ANÁLISE DE DADOS -->
         <section id="module-4" class="module">
             <h2>Módulo 4: Registro e Análise de Dados</h2>
             
-            <p>Os dados são o coração da manutenção preditiva. Sem registro adequado, é impossível identificar tendências, prever falhas ou tomar decisões embasadas. Um bom registro hoje vale ouro amanhã!</p>
+        <p>Se a inspeção é o ato de coletar evidências, a análise de dados é o trabalho de detetive que conecta os pontos. Dados guardados em uma gaveta ou em uma planilha esquecida não têm valor. O poder da manutenção preditiva nasce quando transformamos esses dados brutos em informações claras, tendências visíveis e, o mais importante, em decisões que evitam falhas. Um bom registro hoje é o que garante a produção de amanhã.</p>
 
-            <div class="simulador-impacto">
-                <h4>⚠️ O Custo dos Registros Ruins</h4>
-                <p>Um registro de "Tudo ok" em janeiro poderia ter evitado uma falha de R$ 45.000 em março. Registros adequados teriam detectado a vibração crescente, permitindo um reparo programado de apenas R$ 3.000.</p>
-            </div>
-
-            <h3>Anatomia de um Registro Perfeito</h3>
-            
-            <div class="qualidade-registro">
-                <div class="exemplo-ruim">
-                    <h4>❌ Exemplo RUIM:</h4>
-                    <div class="registro-ruim">
-                        Motor ok. Sem problemas. Técnico: João
-                    </div>
-                </div>
-                
-                <div class="exemplo-bom">
-                    <h4>✅ Exemplo BOM:</h4>
-                    <div class="registro-bom">
-                        MOTOR MTR-001-P - 15/07/2024 14:30h - João Silva<br>
-                        Vibração: 2.8 mm/s (+0.3 vs sem. ant)<br>
-                        Temp: 65°C | Corrente: 18.5A<br>
-                        AÇÃO: Programar FFT em 7 dias.
-                    </div>
-                </div>
-            </div>
-
-            <div class="analise-problemas">
-                <h4>🔍 Análise de Problemas nos Registros</h4>
-                <p>Identifique os problemas no registro: "Motor da linha 2 com problema. Vibrando mais que normal. Verificar depois. João."</p>
-                
-                <div class="problemas-opcoes">
-                    <label><input type="checkbox" data-problema="data"> Falta data e hora</label>
-                    <label><input type="checkbox" data-problema="identificacao"> Falta ID específico</label>
-                    <label><input type="checkbox" data-problema="medicoes"> Falta medição quantitativa</label>
-                    <label><input type="checkbox" data-problema="acao"> Ação vaga</label>
-                    <label><input type="checkbox" data-problema="responsavel"> Responsável incompleto</label>
-                </div>
-                
-                <button class="action-button" onclick="verificarProblemas()">🎯 Verificar Análise</button>
-                <div id="resultado-problemas" class="resultado-calc" style="display: none;"></div>
-            </div>
-
-            <h3>Análise de Tendências</h3>
-            
-            <div class="analise-tendencias">
-    <h4>📈 Simulador de Análise de Tendências</h4>
-    <div class="controles-grafico">
-        <div>
-            <label for="parametro-grafico">Parâmetro:</label>
-            <select id="parametro-grafico">
-                <option value="temperatura">Temperatura</option>
-                <option value="vibracao">Vibração</option>
-                <option value="corrente">Corrente</option>
-            </select>
+        <div class="simulador-impacto">
+            <h4>⚠️ O Custo dos Registros Ruins: Uma História Real</h4>
+            <p>Imagine um motor crítico. Em janeiro, o registro do inspetor dizia apenas "Tudo ok". Em fevereiro, "Vibração parece um pouco alta". Em março, o motor falhou catastroficamente, causando uma parada de 8 horas e um prejuízo de <strong>R$ 45.000</strong>.</p>
+            <p>Uma análise posterior mostrou que registros adequados (com valores numéricos) teriam detectado a tendência de aumento da vibração desde janeiro, permitindo um reparo programado que custaria apenas <strong>R$ 3.000</strong>. A diferença não está na máquina, mas na qualidade da informação.</p>
         </div>
-        <div>
-            <label for="periodo-grafico">Período:</label>
-            <select id="periodo-grafico">
-                <option value="30">30 dias</option>
-                <option value="90">90 dias</option>
-                <option value="365">1 ano</option>
-            </select>
-        </div>
-    </div>
-    <button class="action-button" onclick="atualizarGrafico()"><span class="btn-icon">📊</span> Atualizar Análise</button>
-      <!-- O CONTEÚDO DESTA DIV SERÁ GERADO PELO JAVASCRIPT -->
-    <div id="interpretacao-grafico" class="resultado-calc" style="display: none;"></div>          
-    </div>
 
-            <h3>KPIs de Inspeção</h3>
+        <h3>Anatomia de um Registro Perfeito</h3>
+        <p>A qualidade de um registro define sua utilidade futura. Um registro vago é inútil para análises. Um registro completo e preciso é a base da confiabilidade.</p>
+
+        <div class="qualidade-registro">
+            <div class="exemplo-ruim">
+                <h4>❌ Exemplo RUIM: "O Inútil"</h4>
+                <div class="registro-ruim">
+                    Motor ok. Sem problemas. Técnico: João
+                </div>
+                <p class="analise-ruim"><strong>Por que é ruim?</strong> Não diz QUAL motor, QUANDO foi inspecionado, o QUE foi medido ou QUALQUER dado que possa ser usado para comparação futura. É o mesmo que não registrar nada.</p>
+            </div>
             
-            <div class="kpis-inspecao">
-                <h4>📊 Calculadora de KPIs</h4>
-                <div class="calc-inputs">
-                    <label for="inspecoes-planejadas">Inspeções planejadas (mês):</label>
-                    <input type="number" id="inspecoes-planejadas" value="100">
-                    <label for="inspecoes-realizadas">Inspeções realizadas:</label>
-                    <input type="number" id="inspecoes-realizadas" value="95">
-                    <label for="falhas-detectadas">Falhas detectadas:</label>
-                    <input type="number" id="falhas-detectadas" value="12">
-                    <label for="falhas-parada">Falhas que causaram parada:</label>
-                    <input type="number" id="falhas-parada" value="2">
+            <div class="exemplo-bom">
+                <h4>✅ Exemplo BOM: "O Profissional"</h4>
+                <div class="registro-bom">
+                    <strong>Ativo:</strong> MTR-001-P | <strong>Data:</strong> 15/07/2024 14:30h | <strong>Inspetor:</strong> João Silva<br>
+                    <strong>Vibração (mm/s):</strong> 2.8 (+0.3 vs. sem. ant)<br>
+                    <strong>Temp. Mancal (°C):</strong> 65 (Estável)<br>
+                    <strong>Corrente (A):</strong> 18.5 (Normal)<br>
+                    <strong>Nota/Ação:</strong> Vibração em tendência de alta. Agendar coleta com analisador FFT para a próxima semana para diagnóstico.
                 </div>
-                <button class="calc-button" onclick="calcularKPIs()">📈 Calcular KPIs</button>
-                <div id="resultado-kpis" class="resultado-calc" style="display: none;"></div>
+                <p class="analise-boa"><strong>Por que é bom?</strong> É específico, quantitativo, contextualizado (compara com o passado) e gera uma ação clara.</p>
             </div>
+        </div>
 
-            <div class="lab-qualidade">
-                <h4>🧪 Laboratório de Melhoria</h4>
-                <p>Transforme este registro ruim em um registro profissional:</p>
-                <div class="exercicio-melhoria">
-                    <div>
-                        <h5>📄 Original:</h5>
-                        <textarea readonly>Motor funcionando. Sem problemas aparentes. João.</textarea>
-                    </div>
-                    <div>
-                        <h5>✨ Melhorado:</h5>
-                        <textarea id="registro-melhorado" placeholder="Reescreva aqui..." rows="6"></textarea>
-                    </div>
-                </div>
-                <button class="action-button" onclick="avaliarMelhoria()">🎯 Avaliar Melhoria</button>
-                <div id="feedback-melhoria" class="feedback-caso" style="display: none;"></div>
+        <div class="analise-problemas">
+            <h4>🔍 Análise Forense de Registros</h4>
+            <p>Vamos dissecar um registro típico encontrado em muitas ordens de serviço. Identifique todos os problemas no registro abaixo:</p>
+            <p class="registro-analise"><em>"Motor da linha 2 com problema. Vibrando mais que normal. Verificar depois. João."</em></p>
+            
+            <div class="problemas-opcoes">
+                <label><input type="checkbox" data-problema="data"> <strong>Falta Data e Hora:</strong> Impossível criar uma linha do tempo.</label>
+                <label><input type="checkbox" data-problema="identificacao"> <strong>Falta ID Específico:</strong> Qual dos 5 motores da "linha 2"?</label>
+                <label><input type="checkbox" data-problema="medicoes"> <strong>Falta Medição Quantitativa:</strong> O que é "mais que normal"? 3 mm/s ou 10 mm/s?</label>
+                <label><input type="checkbox" data-problema="acao"> <strong>Ação Vaga:</strong> "Verificar depois" não é um plano.</label>
+                <label><input type="checkbox" data-problema="responsavel"> <strong>Responsável Incompleto:</strong> Qual "João"?</label>
             </div>
+            
+            <button class="action-button" onclick="verificarProblemas()">🎯 Verificar Análise</button>
+            <div id="resultado-problemas" class="resultado-calc" style="display: none;"></div>
+        </div>
+
+        <h3>Análise de Tendências: Vendo o Futuro nos Dados do Passado</h3>
+        <p>A análise de tendências é o processo de plotar os dados de inspeção em um gráfico ao longo do tempo. Isso nos permite ver além da medição de hoje e identificar a "velocidade" com que um problema está se desenvolvendo. É a ferramenta mais poderosa para prever quando uma falha ocorrerá.</p>
+
+        <div class="analise-tendencias">
+            <h4>📈 Simulador de Análise de Tendências</h4>
+            <p>Use os controles para visualizar diferentes parâmetros e períodos para o <strong>Motor MTR-001-P</strong> e interprete os resultados.</p>
+            <div class="controles-grafico">
+                <div>
+                    <label for="parametro-grafico">Parâmetro:</label>
+                    <select id="parametro-grafico">
+                        <option value="temperatura">Temperatura (°C)</option>
+                        <option value="vibracao">Vibração (mm/s)</option>
+                        <option value="corrente">Corrente (A)</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="periodo-grafico">Período:</label>
+                    <select id="periodo-grafico">
+                        <option value="90">Últimos 90 dias</option>
+                        <option value="180">Últimos 180 dias</option>
+                        <option value="365">Último Ano</option>
+                    </select>
+                </div>
+            </div>
+            <button class="action-button" onclick="atualizarGrafico()"><span class="btn-icon">📊</span> Gerar e Analisar Gráfico</button>
+            <!-- O GRÁFICO SERÁ EXIBIDO AQUI (via JS, por exemplo, com Chart.js) -->
+            <canvas id="grafico-tendencia" style="max-height: 250px; margin-top: 15px;"></canvas>
+            <div id="interpretacao-grafico" class="resultado-calc" style="display: none;"></div>          
+        </div>
+
+        <h3>Medindo o Sucesso: KPIs Essenciais de Inspeção</h3>
+        <p>Como saber se seu programa de inspeção está funcionando? Usando Indicadores-Chave de Performance (KPIs). Eles transformam a atividade de inspeção em resultados que a gestão pode entender.</p>
+        <ul>
+            <li><strong>Aderência ao Plano:</strong> Mede a disciplina da equipe. Quantas das inspeções planejadas foram realmente executadas? (Meta: >95%)</li>
+            <li><strong>Taxa de Detecção de Falhas:</strong> Mede a eficácia da inspeção. Quantas falhas foram encontradas pela inspeção antes de causarem paradas? (Meta: Quanto maior, melhor)</li>
+        </ul>
+
+        <div class="kpis-inspecao">
+            <h4>📊 Calculadora de KPIs da Inspeção</h4>
+            <div class="calc-inputs">
+                <label for="inspecoes-planejadas">Inspeções planejadas (mês):</label>
+                <input type="number" id="inspecoes-planejadas" value="120">
+                <label for="inspecoes-realizadas">Inspeções realizadas (mês):</label>
+                <input type="number" id="inspecoes-realizadas" value="114">
+                <label for="falhas-detectadas">Anomalias detectadas pela inspeção:</label>
+                <input type="number" id="falhas-detectadas" value="15">
+                <label for="falhas-parada">Falhas que causaram parada (não detectadas):</label>
+                <input type="number" id="falhas-parada" value="1">
+            </div>
+            <button class="calc-button" onclick="calcularKPIs()">📈 Calcular Meus KPIs</button>
+            <div id="resultado-kpis" class="resultado-calc" style="display: none;"></div>
+        </div>
+        
+        <h3>O Passo Final: Criando Relatórios de Impacto</h3>
+        <p>Dados e KPIs são ótimos, mas para conseguir a aprovação de um reparo ou investimento, você precisa contar uma história convincente. Um bom relatório de anomalia deve ser claro, conciso e focado no impacto.</p>
+        <div class="dica-destaque">
+            <h4>📝 Estrutura de um Relatório Matador</h4>
+            <ol>
+                <li><strong>Identificação:</strong> Qual equipamento e onde ele está?</li>
+                <li><strong>Diagnóstico:</strong> O que está errado? (Ex: "Desgaste severo no rolamento acoplado").</li>
+                <li><strong>Evidência:</strong> Como você sabe? (Anexe o gráfico de tendência de vibração, a imagem térmica, etc.).</li>
+                <li><strong>Análise de Risco:</strong> O que acontece se não fizermos nada? (Ex: "Risco de falha catastrófica em 2-3 semanas, parada de produção de 10h, custo de R$ 50.000").</li>
+                <li><strong>Recomendação:</strong> O que deve ser feito? (Ex: "Programar troca do rolamento na próxima parada de oportunidade").</li>
+            </ol>
+        </div>
+
+
+        <div class="lab-qualidade">
+            <h4>🧪 Laboratório de Melhoria de Relatórios</h4>
+            <p>Agora é sua vez! Junte tudo o que aprendeu. Transforme este registro ruim em um registro profissional e acionável, pronto para ser inserido em um relatório.</p>
+            <div class="exercicio-melhoria">
+                <div>
+                    <h5>📄 Original:</h5>
+                    <textarea readonly>Motor da extrusora funcionando. Parece que tá com um barulho estranho. João.</textarea>
+                </div>
+                <div>
+                    <h5>✨ Sua Versão Profissional:</h5>
+                    <textarea id="registro-melhorado" placeholder="Seja específico! Use o formato do 'Exemplo Bom' que vimos..." rows="6"></textarea>
+                </div>
+            </div>
+            <button class="action-button" onclick="avaliarMelhoria()">🎯 Avaliar Melhoria</button>
+            <div id="feedback-melhoria" class="feedback-caso" style="display: none;"></div>
+        </div>
+    </section>
         </section>
 
         <!-- MÓDULO 5: ESTUDO DE CASOS -->
         <section id="module-5" class="module">
             <h2>Módulo 5: Estudos de Caso Reais</h2>
             
-            <p>Nada substitui a experiência prática! Vamos analisar situações reais que você pode encontrar no dia a dia da manutenção industrial.</p>
+        <p>Até agora, construímos sua base de conhecimento. Você sabe <strong>por que</strong>, <strong>com o que</strong> e <strong>como</strong> inspecionar. Agora, é hora da verdade. A manutenção industrial raramente apresenta problemas de forma organizada. Muitas vezes, você enfrentará múltiplos alertas ao mesmo tempo, com recursos limitados. Sua capacidade de tomar a decisão certa, sob pressão, é o que define um profissional de elite. Nada substitui a experiência prática, então vamos analisar situações reais que você encontrará no dia a dia.</p>
 
-            <div class="caso-interativo">
-                <h3>📋 Caso 1: Motor com Vibração Anormal</h3>
-                <div class="cenario-caso">
-                    <p>Durante inspeção, você detecta vibração anormal no motor M-05 (bomba de alimentação crítica). Se parar, a produção para por 8 horas.</p>
+        <h3>Os Três Pilares da Tomada de Decisão</h3>
+        <p>Antes de saltarmos para os casos, você precisa entender os três fatores que guiam toda decisão de manutenção. Um erro comum é tratar todos os problemas como iguais.</p>
+        <div class="dica-destaque">
+            <h4>🧠 A Fórmula da Prioridade</h4>
+            <p>Uma forma simples de pensar é: <strong>Criticidade do Ativo</strong> (Qual o impacto se ele falhar?) + <strong>Severidade da Anomalia</strong> (Qual a gravidade do problema agora?) = <strong>Urgência da Ação</strong> (O quão rápido eu preciso agir?).</p>
+            <ul>
+                <li><strong>Criticidade:</strong> É uma característica <strong>do equipamento</strong>. Uma bomba que para a fábrica é mais crítica que um ventilador de escritório.</li>
+                <li><strong>Severidade:</strong> É uma característica <strong>da condição atual</strong>. Um rolamento a 90°C é mais severo que um a 65°C.</li>
+            </ul>
+            <p>Um problema severo em um equipamento de baixa criticidade pode ser menos urgente que um problema moderado em um equipamento supercrítico.</p>
+        </div>
+
+        <div class="caso-interativo">
+            <h3>📋 Caso 1: O Dilema da Bomba Crítica</h3>
+            <div class="cenario-caso">
+                <p>Durante sua rota de inspeção, você se aproxima do motor <strong>M-05</strong>, que aciona a bomba principal de alimentação de matéria-prima. Este é um ativo de <strong>criticidade AAA</strong>: se ele parar, a produção para completamente em menos de 10 minutos.</p>
+                <p>Seu medidor de vibração portátil mostra um valor de <strong>7.8 mm/s</strong> na vertical, bem acima do limite de alarme (4.5 mm/s). A temperatura está em 75°C, também elevada. O som está mais agudo do que na semana passada.</p>
+            </div>
+            <h4>🤔 Qual sua decisão imediata?</h4>
+            <div class="opcoes-caso">
+                <button class="opcao-caso" data-caso="1" data-correta="false" data-feedback="Incorreto. Dada a alta criticidade e a severidade da anomalia (dados quantitativos de vibração e temperatura), esperar é um risco altíssimo. A falha pode ocorrer a qualquer momento.">📝 Anotar detalhadamente e agendar análise completa para a próxima semana.</button>
+                <button class="opcao-caso" data-caso="1" data-correta="true" data-feedback="Correto! A combinação de criticidade máxima e severidade alta exige ação imediata. Você precisa de um diagnóstico preciso (análise espectral de vibração) para entender a falha e dar à equipe de planejamento tempo para preparar a intervenção.">🚨 Parar a inspeção, comunicar imediatamente o PCM e a Operação, e solicitar uma análise de vibração de emergência no mesmo dia.</button>
+            </div>
+            <div id="feedback-caso-1" class="feedback-caso" style="display: none;"></div>
+            <div id="consequencias-1" class="consequencias" style="display: none;">
+                <h4>Análise de Consequências:</h4>
+                <p>✅ <strong>Opção Correta:</strong> A análise de emergência confirma um defeito no rolamento. O reparo é programado para o fim de semana. <strong>Custo: R$ 8.000</strong> (peças + mão de obra planejada).</p>
+                <p>💥 <strong>Opção Incorreta:</strong> Dois dias depois, o motor falha catastroficamente. A produção para por 8 horas. <strong>Custo: R$ 80.000</strong> (perda de produção + peças de emergência + horas extras).</p>
+            </div>
+        </div>
+
+        <div class="simulador-decisoes">
+            <h3>🎯 Simulador de Triagem: O Desafio do Plantão</h3>
+            <div class="situacao-simulador">
+                <p>São 10h da manhã e você, como único inspetor do dia, recebe três chamados simultâneos da operação. Você só tem tempo e recursos para uma análise aprofundada imediata.</p>
+                <ul>
+                    <li><strong>(A) Motor da Esteira de Embalagem:</strong> Ativo <strong>não crítico</strong>. A operação relata um "ruído estranho".</li>
+                    <li><strong>(B) Bomba de Recirculação de Água:</strong> Ativo <strong>crítico</strong>. A vibração medida pela operação foi de <strong>6.5 mm/s</strong>.</li>
+                    <li><strong>(C) Compressor de Ar de Instrumento:</strong> Ativo <strong>semi-crítico</strong> (o reserva assume, mas com perda de eficiência). A temperatura na descarga está <strong>15°C acima do normal</strong>.</li>
+                </ul>
+                <h5>💰 Qual sua estratégia de priorização?</h5>
+            </div>
+            <div class="opcoes-simulador-gestao">
+                <button class="opcao-gestao" data-risco="alto" data-feedback="Estratégia de altíssimo risco. Você ignora a criticidade e os dados preliminares. Uma falha na bomba (B) pode parar a fábrica, tornando a economia inicial irrelevante.">💸 Foco na Economia: Inspecionar o motor (A) primeiro por ser mais rápido e deixar os outros para depois.</button>
+                <button class="opcao-gestao" data-risco="baixo" data-feedback="A melhor decisão! Você usou a fórmula 'Criticidade + Severidade'. A bomba (B) é o maior risco para o negócio. Você age nela primeiro e depois planeja as ações para (C) e (A), em ordem de importância.">🛡️ Foco na Confiabilidade: Priorizar a bomba (B) para análise imediata, depois o compressor (C) e por último o motor (A).</button>
+                <button class="opcao-gestao" data-risco="medio" data-feedback="Decisão razoável, mas não ótima. Você acertou em não priorizar o ativo não crítico, mas a vibração alta na bomba crítica (B) representa um risco maior e mais iminente do que a temperatura no compressor semi-crítico (C).">⚖️ Foco na Severidade: Priorizar o compressor (C) porque o aumento de temperatura parece mais alarmante.</button>
+            </div>
+            <div id="resultado-gestao" class="resultado-gestao" style="display: none;"></div>
+        </div>
+
+        <div class="matriz-decisao">
+            <h3>📊 A Matriz de Decisão Inteligente (Ferramenta de Priorização)</h3>
+            <p>Vamos transformar a intuição em um processo lógico. Use esta matriz para quantificar a prioridade de uma anomalia, ajudando a justificar suas decisões para a equipe de planejamento e gestão.</p>
+            <div class="fatores-matriz">
+                <div>
+                    <label>Criticidade do Ativo (1-10): <span id="valor-criticidade">5</span></label>
+                    <input type="range" id="criticidade" min="1" max="10" value="5" oninput="document.getElementById('valor-criticidade').textContent = this.value">
                 </div>
-                <h4>🤔 Qual sua decisão?</h4>
-                <div class="opcoes-caso">
-                    <button class="opcao-caso" data-caso="1" data-correta="false">📝 Anotar e verificar em 1 semana</button>
-                    <button class="opcao-caso" data-caso="1" data-correta="true">🚨 Acionar análise de vibração no mesmo dia</button>
+                <div>
+                    <label>Severidade da Anomalia (1-10): <span id="valor-severidade">5</span></label>
+                    <input type="range" id="severidade" min="1" max="10" value="5" oninput="document.getElementById('valor-severidade').textContent = this.value">
                 </div>
-                <div id="feedback-caso-1" class="feedback-caso" style="display: none;"></div>
-                <div id="consequencias-1" class="consequencias" style="display: none;">
-                    <strong>Opção Correta:</strong> Reparo programado (custo R$8 mil).<br>
-                    <strong>Opção Incorreta:</strong> 40% de chance de falha (custo R$80 mil).
+                <div>
+                    <label>Potencial de Evolução (Urgência, 1-10): <span id="valor-urgencia">5</span></label>
+                    <input type="range" id="urgencia" min="1" max="10" value="5" oninput="document.getElementById('valor-urgencia').textContent = this.value">
                 </div>
             </div>
+            <button class="calc-button" onclick="calcularMatrizDecisao()">🎯 Calcular Índice de Prioridade</button>
+            <div id="resultado-matriz" class="resultado-matriz" style="display: none;"></div>
+        </div>
 
-            <div class="simulador-decisoes">
-                <h3>🎯 Simulador de Gestão de Prioridades</h3>
-                <div class="situacao-simulador">
-                    <p>Você tem 3 chamados: <strong>(A)</strong> Motor não crítico com ruído; <strong>(B)</strong> Bomba crítica com vibração; <strong>(C)</strong> Compressor semi-crítico com temperatura alta.</p>
-                    <h5>💰 Escolha sua estratégia:</h5>
-                </div>
-                <div class="opcoes-simulador-gestao">
-                    <button class="opcao-gestao" data-custo="0" data-risco="alto">💸 Economia: Monitorar e esperar</button>
-                    <button class="opcao-gestao" data-custo="1500" data-risco="medio">⚖️ Equilíbrio: Analisar bomba hoje, resto amanhã</button>
-                    <button class="opcao-gestao" data-custo="6000" data-risco="baixo">🛡️ Segurança: Análise completa hoje</button>
-                </div>
-                <div id="resultado-gestao" class="resultado-gestao" style="display: none;"></div>
-            </div>
-
-            <div class="matriz-decisao">
-                <h3>🎯 Matriz de Decisão Inteligente</h3>
-                <p>Use esta matriz para priorizar suas inspeções:</p>
-                <div class="fatores-matriz">
-                    <div>
-                        <label>Criticidade (1-10): <span id="valor-criticidade">5</span></label>
-                        <input type="range" id="criticidade" min="1" max="10" value="5" oninput="document.getElementById('valor-criticidade').textContent = this.value">
-                    </div>
-                    <div>
-                        <label>Severidade (1-10): <span id="valor-severidade">5</span></label>
-                        <input type="range" id="severidade" min="1" max="10" value="5" oninput="document.getElementById('valor-severidade').textContent = this.value">
-                    </div>
-                    <div>
-                        <label>Urgência (1-10): <span id="valor-urgencia">5</span></label>
-                        <input type="range" id="urgencia" min="1" max="10" value="5" oninput="document.getElementById('valor-urgencia').textContent = this.value">
-                    </div>
-                </div>
-                <button class="calc-button" onclick="calcularMatrizDecisao()">🎯 Calcular Prioridade</button>
-                <div id="resultado-matriz" class="resultado-matriz" style="display: none;"></div>
-            </div>
+        <div class="dica-destaque">
+            <h4>🏆 Parabéns, Inspetor de Confiabilidade!</h4>
+            <p>Ao completar este módulo, você concluiu a jornada fundamental da inspeção industrial. Você não é mais alguém que apenas "olha máquinas", mas um profissional que entende de estratégia, tecnologia, análise de dados e, o mais importante, tomada de decisão baseada em risco.</p>
+            <p>O caminho da excelência é contínuo. Continue praticando, seja curioso e nunca perca a oportunidade de aprender com cada falha e cada sucesso. Você agora tem as ferramentas para fazer a diferença na segurança e na lucratividade da sua empresa.</p>
+        </div>
+    </section>
         </section>
 
         <!-- MÓDULO 6: PRINCIPAIS FALHAS MECÂNICAS -->
