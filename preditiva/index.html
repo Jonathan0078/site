@@ -176,81 +176,138 @@
         <section id="module-2" class="module">
             <h2>Módulo 2: Tipos de Inspeção - Sensitiva vs Instrumentada</h2>
             
-            <p>Existem duas formas de fazer inspeção: usando nossos sentidos naturais (sensitiva) ou com instrumentos especializados (instrumentada). Ambas são importantes e complementares!</p>
+         <p>Um inspetor industrial é como um detetive. Para solucionar os "mistérios" das máquinas, ele utiliza um conjunto de ferramentas que vão desde seus próprios sentidos aguçados até equipamentos de alta tecnologia. Existem duas formas de fazer inspeção: usando nossos sentidos naturais (<strong>sensitiva</strong>) ou com instrumentos especializados (<strong>instrumentada</strong>). O segredo de um profissional de elite é saber que elas não são concorrentes, mas sim <strong>complementares e inseparáveis</strong>.</p>
 
-            <h3>🧠 Inspeção Sensitiva: Os 5 Sentidos + Intuição</h3>
+        <div class="dica-destaque">
+            <h4>🤝 A Parceria Perfeita</h4>
+            <p>Pense assim: a <strong>inspeção sensitiva é o primeiro alerta</strong>. É o "feeling" de que algo está diferente. A <strong>inspeção instrumentada é o diagnóstico preciso</strong>. Ela confirma a suspeita com dados, mede a gravidade do problema e permite tomar a decisão correta. Uma sem a outra é incompleta.</p>
+        </div>
+
+        <h3>🧠 Inspeção Sensitiva: Os 5 Sentidos + A Experiência</h3>
+        <p>Esta é a base de toda a inspeção, a primeira linha de defesa contra falhas. É uma habilidade que se desenvolve com o tempo, atenção e, principalmente, conhecimento sobre o funcionamento normal do equipamento. Um bom inspetor cria uma "linha de base" mental de como a máquina deve se parecer, soar e sentir.</p>
+
+        <div class="sentidos-interativo">
+            <h4>Explore cada sentido na inspeção (clique para descobrir):</h4>
+            <div class="sentidos-buttons">
+                <button class="sentido-btn" data-sentido="visao">👀 Visão</button>
+                <button class="sentido-btn" data-sentido="audicao">👂 Audição</button>
+                <button class="sentido-btn" data-sentido="tato">✋ Tato</button>
+                <button class="sentido-btn" data-sentido="olfato">👃 Olfato</button>
+                <button class="sentido-btn" data-sentido="intuicao">❤️ O Sexto Sentido (Intuição)</button>
+            </div>
             
-            <div class="sentidos-interativo">
-                <h4>Explore cada sentido na inspeção:</h4>
-                <div class="sentidos-buttons">
-                    <button class="sentido-btn" data-sentido="visao">👀 Visão</button>
-                    <button class="sentido-btn" data-sentido="audicao">👂 Audição</button>
-                    <button class="sentido-btn" data-sentido="tato">✋ Tato</button>
-                    <button class="sentido-btn" data-sentido="olfato">👃 Olfato</button>
-                    <button class="sentido-btn" data-sentido="intuicao">❤️ Intuição</button>
+            <div id="detalhes-sentido" class="detalhes-sentido">
+                <!-- Conteúdo a ser preenchido via JavaScript, exemplos: -->
+                <div data-content="visao" style="display:none;">
+                    <h4>O que procurar com a Visão?</h4>
+                    <p>É o sentido mais utilizado. Procure por anomalias que fogem do padrão:</p>
+                    <ul>
+                        <li><strong>Vazamentos:</strong> Óleo, água, vapor, ar comprimido.</li>
+                        <li><strong>Danos Estruturais:</strong> Trincas, corrosão, deformações, peças soltas ou quebradas.</li>
+                        <li><strong>Sujeira e Desgaste:</strong> Acúmulo de poeira que pode causar superaquecimento, correias desfiando.</li>
+                        <li><strong>Alterações:</strong> Marcas de superaquecimento (descoloração), desalinhamento visível, nível de óleo baixo ou com cor estranha.</li>
+                    </ul>
                 </div>
-                
-                <div id="detalhes-sentido" class="detalhes-sentido">Selecione um sentido acima para ver os detalhes.</div>
+                <div data-content="audicao" style="display:none;">
+                    <h4>O que escutar com a Audição?</h4>
+                    <p>Feche os olhos e foque nos sons. Cada máquina tem sua "música" de operação normal. Procure por:</p>
+                    <ul>
+                        <li><strong>Ruídos Cíclicos:</strong> "TOC-TOC-TOC" pode indicar um dente de engrenagem quebrado ou folga.</li>
+                        <li><strong>Zumbidos ou Chiados:</strong> Podem indicar problemas em rolamentos (em estágio final) ou ruído elétrico.</li>
+                        <li><strong>Sons de Arraste ou "Assobio":</strong> Clássicos de vazamentos de ar ou vapor.</li>
+                        <li><strong>Impactos e Batidas:</strong> Sinais claros de peças soltas ou desalinhamento severo.</li>
+                    </ul>
+                </div>
+                <div data-content="tato" style="display:none;">
+                    <h4>O que sentir com o Tato? (Com Segurança!)</h4>
+                    <p><strong>Aviso:</strong> Sempre tenha cuidado ao tocar em equipamentos. Use o dorso da mão para se aproximar de superfícies quentes e nunca toque em partes móveis.</p>
+                    <ul>
+                        <li><strong>Temperatura:</strong> Compare a temperatura de mancais, motores e painéis com equipamentos similares. Um lado mais quente que o outro é um forte indício de problema.</li>
+                        <li><strong>Vibração:</strong> Coloque a mão (ou a ponta de uma chave de fenda) na carcaça. Você consegue sentir uma vibração excessiva, que mudou desde a última inspeção?</li>
+                    </ul>
+                </div>
+                <div data-content="olfato" style="display:none;">
+                    <h4>O que cheirar com o Olfato?</h4>
+                    <p>O olfato é um poderoso detector químico. Procure por:</p>
+                    <ul>
+                        <li><strong>Cheiro de Queimado:</strong> O sinal mais óbvio de superaquecimento em componentes elétricos (verniz dos enrolamentos) ou mecânicos (borracha de correias).</li>
+                        <li><strong>Cheiro de Gás ou Produtos Químicos:</strong> Indicação clara de vazamentos perigosos.</li>
+                        <li><strong>Cheiro de Óleo Quente:</strong> Pode indicar degradação do lubrificante ou um vazamento sobre uma superfície quente.</li>
+                    </ul>
+                </div>
+                <div data-content="intuicao" style="display:none;">
+                    <h4>O que é o "Sexto Sentido" do Inspetor?</h4>
+                    <p>Não é mágica, é <strong>experiência acumulada</strong>. Após ver centenas de equipamentos funcionando, seu cérebro cria um padrão de "normalidade". A intuição é a capacidade de perceber um desvio mínimo nesse padrão, mesmo sem conseguir apontar imediatamente a causa.</p>
+                    <p>É aquele sentimento de "<em>Hmm, essa máquina não está como ontem...</em>". <strong>Sempre confie na sua intuição e investigue!</strong> Ela é, muitas vezes, o gatilho para usar a inspeção instrumentada.</p>
+                </div>
             </div>
+        </div>
 
-            <div class="dica-destaque">
-                <h4>⚡ Dica de Ouro</h4>
-                <p>Um inspetor experiente consegue detectar 70% dos problemas apenas com seus sentidos. O segredo está no <strong>treino constante</strong> e na <strong>atenção aos detalhes</strong>!</p>
-            </div>
+        <div class="dica-destaque alerta">
+            <h4>⚠️ Limitações da Inspeção Sensitiva</h4>
+            <p>Um inspetor experiente consegue detectar muitos problemas com seus sentidos, mas essa abordagem tem limites:</p>
+            <ul>
+                <li><strong>Não é Quantitativa:</strong> Você pode sentir que está "quente", mas não sabe se são 60°C (aceitável) ou 90°C (crítico).</li>
+                <li><strong>É Subjetiva:</strong> O que é um "ruído alto" para um pode ser normal para outro.</li>
+                <li><strong>Detecta Falhas em Estágio Tardio:</strong> Geralmente, quando um problema é perceptível pelos sentidos, a falha já está em um estágio avançado.</li>
+            </ul>
+            <p>É aqui que a tecnologia entra para nos dar superpoderes!</p>
+        </div>
 
-            <h3>🔬 Inspeção Instrumentada: Precisão e Dados</h3>
+        <h3>🔬 Inspeção Instrumentada: Precisão e Dados para Decisão</h3>
+        <p>A instrumentada utiliza tecnologia para traduzir os sinais físicos da máquina (calor, vibração, som) em dados numéricos e gráficos. Isso nos permite detectar falhas em estágios muito iniciais, acompanhar sua evolução e planejar a correção com máxima eficiência.</p>
+
+        <div class="comparativo-instrumentada">
+            <h4>Principais Técnicas e Suas Aplicações:</h4>
             
-            <div class="comparativo-instrumentada">
-                <h4>Principais Instrumentos e Suas Aplicações:</h4>
-                
-                <div class="cards-instrumentos">
-                    <div class="card-instrumento">
-                        <h5>🌡️ Termografia</h5>
-                        <p><strong>O que faz:</strong> Detecta variações de temperatura</p>
-                        <p><strong>Aplicação:</strong> Conexões elétricas, mancais, sistemas térmicos</p>
-                    </div>
+            <div class="cards-instrumentos">
+                <div class="card-instrumento">
+                    <h5>🌡️ Termografia</h5>
+                    <p><strong>O que faz:</strong> Cria um "mapa de calor" do equipamento, tornando a temperatura visível.</p>
+                    <p><strong>Diagnóstico Principal:</strong> Sobrecarga e maus contatos em painéis elétricos, defeitos de isolamento térmico, atrito excessivo em mancais e rolamentos.</p>
+                </div>
 
-                    <div class="card-instrumento">
-                        <h5>📳 Análise de Vibração</h5>
-                        <p><strong>O que faz:</strong> Mede oscilações mecânicas</p>
-                        <p><strong>Aplicação:</strong> Motores, bombas, compressores, redutores</p>
-                    </div>
+                <div class="card-instrumento">
+                    <h5>📳 Análise de Vibração</h5>
+                    <p><strong>O que faz:</strong> É o "eletrocardiograma" das máquinas. Mede as oscilações mecânicas.</p>
+                    <p><strong>Diagnóstico Principal:</strong> Desbalanceamento, desalinhamento, folgas, problemas em rolamentos e engrenagens muito antes de serem audíveis.</p>
+                </div>
 
-                    <div class="card-instrumento">
-                        <h5>🔊 Ultrassom</h5>
-                        <p><strong>O que faz:</strong> Detecta sons de alta frequência</p>
-                        <p><strong>Aplicação:</strong> Vazamentos, arco elétrico, lubrificação</p>
-                    </div>
+                <div class="card-instrumento">
+                    <h5>🔊 Ultrassom</h5>
+                    <p><strong>O que faz:</strong> "Ouve" sons de altíssima frequência, inaudíveis para o ser humano.</p>
+                    <p><strong>Diagnóstico Principal:</strong> Vazamentos de ar comprimido e gases, arco elétrico, falhas de lubrificação e defeitos em rolamentos de baixa rotação.</p>
+                </div>
 
-                    <div class="card-instrumento">
-                        <h5>🔬 Análise de Óleo</h5>
-                        <p><strong>O que faz:</strong> Analisa contaminação e desgaste</p>
-                        <p><strong>Aplicação:</strong> Motores, redutores, sistemas hidráulicos</p>
-                    </div>
+                <div class="card-instrumento">
+                    <h5>🔬 Análise de Óleo</h5>
+                    <p><strong>O que faz:</strong> É o "exame de sangue" do equipamento. Analisa a saúde do lubrificante e busca por partículas de desgaste.</p>
+                    <p><strong>Diagnóstico Principal:</strong> Contaminação por água ou outras partículas, degradação do lubrificante, desgaste acelerado de componentes internos (engrenagens, pistões).</p>
                 </div>
             </div>
+        </div>
 
-            <div class="simulador-escolha">
-                <h4>🎯 Simulador de Escolha</h4>
-                <p><strong>Situação:</strong> Um motor elétrico de 50 HP está apresentando ruído anormal durante a operação. A equipe de produção relata que o som "mudou" há 3 dias.</p>
-                
-                <p><strong>Qual a melhor estratégia de inspeção?</strong></p>
-                
-                <div class="opcoes-simulador">
-                    <button class="opcao-sim" data-correto="false">
-                        Apenas inspeção visual e auditiva
-                    </button>
-                    <button class="opcao-sim" data-correto="true">
-                        Análise de vibração + termografia
-                    </button>
-                    <button class="opcao-sim" data-correto="false">
-                        Análise de óleo do motor
-                    </button>
-                </div>
-                
-                <div id="resultado-simulador" class="resultado-simulador" style="display: none;"></div>
+        <div class="simulador-escolha">
+            <h4>🎯 Simulador de Escolha: O Detetive em Ação</h4>
+            <p><strong>Situação:</strong> Um motor elétrico de 50 HP que aciona uma bomba crítica está apresentando um ruído anormal ("zumbido agudo") que não existia antes. A equipe de produção relata que o som "mudou" há 3 dias. A carcaça do motor parece um pouco mais quente ao toque na região do rolamento.</p>
+            
+            <p><strong>Sua intuição (sensitiva) já deu o alerta. Qual a melhor estratégia instrumentada para ter um diagnóstico preciso?</strong></p>
+            
+            <div class="opcoes-simulador">
+                <button class="opcao-sim" data-correto="false" data-feedback="Incorreto. A inspeção sensitiva já foi feita e, sozinha, não fornece dados para planejar a ação. Precisamos quantificar o problema.">
+                    Apenas continuar com inspeção visual e auditiva diária
+                </button>
+                <button class="opcao-sim" data-correto="true" data-feedback="Correto! A Análise de Vibração é a principal ferramenta para diagnosticar falhas em rolamentos e outros defeitos mecânicos. A Termografia complementa perfeitamente, quantificando o aquecimento e ajudando a confirmar a gravidade do atrito.">
+                    Realizar uma Análise de Vibração + uma inspeção com Termografia
+                </button>
+                <button class="opcao-sim" data-correto="false" data-feedback="Incorreto. Motores elétricos padrão não possuem um reservatório de óleo para análise (apenas graxa nos rolamentos). Essa técnica é para redutores, sistemas hidráulicos ou motores a combustão.">
+                    Coletar uma amostra para Análise de Óleo do motor
+                </button>
             </div>
-        </section>
+            
+            <div id="resultado-simulador" class="resultado-simulador" style="display: none;"></div>
+        </div>
+    </section>
 
         <!-- MÓDULO 3: PROCEDIMENTOS PADRÃO -->
         <section id="module-3" class="module">
